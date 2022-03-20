@@ -1,0 +1,164 @@
+nakon sto bootujemo u arch live, radimo:
+1. proveravamo imamo li internet:
+	ping archlinux.org
+2. namestamo sat:
+	timedatectl set-ntp true
+3. pravimo particije na disku:
+	3.1. da izlistamo particije:
+		fdisk -l
+	3.2. sada biramo disk za instalaciju, na primer /dev/nvme0n1, i otvaramo ga:
+		fdisk /dev/nvme0n1
+	3.3. sada pravimo partition table:
+		fdisk o
+	3.4. pravimo particije:
+		n
+		od 0x800 do 0x80800 (256MiB za boot)
+		n
+		od 0x80800 do 0x80800+0x800*(broj MiB za glavnu particiju)
+	3.5. pisemo promene na disk:
+		w
+4. listamo nove particije:
+	fdisk -l
+5. formatiramo nove particije (pp da su nazvane nvme0n1p1 i nvme0n1p2):
+	mkfs.fat -F 32 /dev/nvme0n1p1
+	mkfs.ext4 /dev/nvme0n1p2
+6. mountujemo particije:
+	mount /dev/nvme0n1p2 /mnt
+	mkdir /mnt/efi
+	mount /dev/nvme0n1p1 /mnt/efi
+7. instaliramo linux na disk:
+	pacstrap /mnt base base-devel linux linux-firmware
+8. pravimo fstab fajl:
+	genfstab -U /mnt >> /mnt/etc/fstab
+9. ulazimo u sistem sa diska:
+	arch-chroot /mnt /bin/bash
+10. namestamo internet:
+	pacman -S networkmanager
+	systemctl enable NetworkManager
+11. namestamo grub:
+	pacman -S grub efibootmgr amd-ucode
+	grub-install --target=x86_64-efi --efi-sirectory=/efi --bootloader-id=GRUB
+	nano /etc/default/grub:
+		(promeni "GRUB_TIMEOUT")
+	grub-mkconfig -o /boot/grub/grub.cfg
+12. namestamo password:
+	passwd
+13. namestamo jezik:
+	pacman -S nano
+	nano /etc/locale.gen
+	(odkomentiramo en_US, ima ih dva: jedan za utf8 i jedan za iso)
+	locale-gen
+	echo "LANG=en_US.UTF-8" >> /etc/locale.conf
+14. imenujemo glavni shell:
+	echo "arch" >> /etc/hostname
+15. namestamo lokalno vreme:
+	ln -sf /usr/share/zoneinfo/Europe/Belgrade /etc/localtime
+16. gasimo:
+	exit
+	umount -R /mnt
+	reboot
+
+useradd -mg wheel korsic
+passwd korsic
+pacman -S sudo
+	u fajlu /etc/sudoers odkomentiraj liniju "%sudo ALL=(ALL) ALL"
+groupadd sudo
+gpasswd -a korsic sudo
+nano /etc/nanorc:
+	(odkomentiraj liniju "set zap")
+nano /etc/pacman.conf: (odkomentiraj liniju)
+	#Color
+nano /etc/bash.bashrc: (dodaj na kraj)
+	alias ls='ls --color=tty'
+	alias q='exit'
+pacman -S xorg-sever xorg-xinit
+cd /etc/systemd/system
+mkdir getty@tty1.service.d
+cd getty@tty1.service.d
+nano autologin.conf:
+	[Service]
+	ExecStart=
+	ExecStart=-/sbin/agetty -o '-p -f -- \\u' --noclear --autologin korsic - $TERM
+	Type=simple
+	Environment=XDG_SESSION_TYPE=x11
+pacman -S git
+exit
+	login se kao korsic (ne root)
+mkdir /tmp/pikaur_git
+cd /tmp/pikaur_git
+git clone https://aur.archlinux.org/pikaur.git
+cd pikaur
+makepkg -si
+sudo pikaur -Sy			(da bi napravio pikaur.conf)
+sudo nano /korsic/home/.config/pikaur.conf:
+	(promeni ove opcije ovako)
+	keepbuilddeps = yes
+	noedit = yes
+	donteditbydefault = yes
+!!!!	u sledecoj liniji pravis "samo" pola RAMa dostupno za buildovanje AUR paketa
+		(i 2 GB za repositories)
+		mozees da promenis, ili da zaobidjes potpuno (prvu liniju) i buildujes na disku
+sudo nano /etc/fstab: (dodaj na kraj)
+	tmpfs /home/korsic/.cache/pikaur tmpfs defaults 0 0
+	tmpfs /home/korsic/.local/share/pikaur/aur_repos tmpfs defaults,size=2048M 0 0
+(?) sudo mount -t tmpfs tmpfs -o defaults /home/korsic/.cache/pikaur
+(?) sudo mount -t tmpfs tmpfs -o defaults,size=2048M /home/korsic/.local/share/pikaur/aur_repos
+pikaur -S xidlehook numlockx xbindkeys
+---
+	instaliraj window manager, terminal emulator, file manager (po zelji)
+	ovi wm su svi zajedno mali: i3, openbox, awesome, xfwm4, icewm
+	ovi te su svi zajedno mali: rxvt-unicode, alacritty, tilda, xfce4-terminal, xterm
+	ovi fm su svi zajedno mali: pcmanfm-gtk3, thunar + thunar-volman, spacefm (aur)
+	za neke od ovih wm-ova trebace mi i:
+		picom		za bolje renderovanje
+		nitrogen	za pozadine
+		tint2		za panel (taskbar)
+		dmenu/rofi	za menu
+	za specificne programe prati setup na wiki
+---
+pacman -S i3 rofi nitrogen picom xorg-xrdb pipewire pipewire-pulse wireplumber rtkit
+	## ovi paketi instaliraju 3 user servisa i 2 user socketa.
+	   2 servisa treba da su disablovana, a ostalo da je enablovano
+proveri:
+	systemctl --user status pipewire.* pipwire-pulse.*
+ako radi:
+	pactl set-sink-volume @DEFAULT_SINK@ 100%
+cd ~
+nano .xinitrc:
+	[[ -f ~/.Xresources ]] && xrdb -merge -I$HOME ~/.Xresources
+	xset s noblank
+	xset s noexpose
+	xset s 0 0
+	xset +dpms
+	xset 0 180 0
+	numlockx &
+	xset r rate 250 30
+	xbindkeys &
+	if ! pgrep -f xidlehook; then
+	  xidlehook --timer 600 'systemctl suspend -i' '' &
+	fi
+	picom --experimental-backends &
+	corectrl &
+	nitrogen --restore &
+	exec i3
+nano .bashrc:
+	(obrisi liniju:)
+		alias ls=...
+	(dodaj na kraj)
+		if [ -z "${DISPLAY}" ] && [ "${XDG_VTNR}" -eq 1 ]
+		then
+		  startx
+		fi
+# u slucaju da koristis awesome
+nano .Xresources:
+	Xft.dpi: 192
+mkdir .config/awesome
+cd .config/awesome
+cp /etc/xdg/awesome/rc.lua rc.lua
+nano rc.lua: (dodaj na kraj)
+	-- Autostarts
+	awful.spawn.with_shell("nitrogen --restore")
+
+
+
+

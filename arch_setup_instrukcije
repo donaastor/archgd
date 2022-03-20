@@ -1,0 +1,450 @@
+------------ CHEAT SHEET ------------
+1. SSD trim:
+	da bi rekao SSD-u koje strane se ne koriste,
+	(sto ostaje da visi nakon sto se neki fajl obrise)
+	pokreni ovu komandu:
+		sudo fstrim -v /
+	(vidi man fstrim za vise opcija...)
+	pokreni ovo ako si obrisao puno memorije sa diska,
+	ili jednostavno posle dosta vremena...
+	mozes i enablovati timer koji to obavlja nedeljno:
+		sudo systemd enable fstrim.timer
+------------    SETUP    ------------
+pikaur -S corectrl
+sudo pacman -S vulkan-tools mesa-utils
+cp /usr/share/applications/org.corectrl.corectrl.desktop ~/.config/autostart/org.corectrl.corectrl.desktop
+sudo nano /etc/polkit-1/rules.d/90-corectrl.rules:
+
+polkit.addRule(function(action, subject) {
+	if (	(action.id == "org.corectrl.helper.init" ||
+		action.id == "org.corectrl.helperkiller.init") &&
+		subject.local == true &&
+		subject.active == true &&
+		subject.isInGroup("wheel")
+	) {
+		return polkit.Result.YES;
+	}
+});
+
+sudo nano /etc/default/grub:
+	(dodaj parametar na liniju)
+	GRUB_CMDLINE_LINUX_DEFAULT="<other_params>... amdgpu.ppfeaturemask=0xffffffff"
+grub-mkconfig -o /boot/grub/grub/cfg
+	#	nano ~/.config/awesome/rc.lua:
+	# 		(dodaj u Autostarts)
+	#		awful.spawn.with_shell("corectrl")
+nnao ~/.xinitrc: (dodaj posle linije "picom &")
+	corectrl &
+pacman -S linux-headers dkms
+pikaur -S zenpower3-dkms zenmonitor3-git
+modprobe zenpower
+sensors-detect
+	(samo cepaj enter)
+Corectrl:
+	GPU: ON
+	CPU: OFF
+	GPU Ventilation: Curve:	40C-40%
+							60C-75%
+							70C-100%
+	Apply, Save
+	System/Settings: Start minimized
+sudo cat /sys/power/mem_sleep
+(ako se isprintalo "[s2idle] deep" umesto "s2idle [deep]", onda:)
+	nano /etc/default/grub:
+		(dodaj parametar na liniju)
+		GRUB_CMDLINE_LINUX_DEFAULT="<other_params>... mem_sleep_default"
+	sudo grub-mkconfig -o /boot/grub/grub.cfg
+reboot
+ako samo ti koristis komp:
+	sudo nano /etc/default/grub:
+		(dodaj parametar na liniju)
+		GRUB_CMDLINE_LINUX_DEFAULT="<other_params>... mitigations=off"
+	sudo grub-mkconfig -o /boot/grub/grub.cfg
+	...
+	..polkit stvari
+	...
+sudo nano /usr/local/bin/numlock:
+	#!/bin/bash
+
+	for tty in /dev/tty{1..6}
+	do
+	  /usr/bin/setleds -D +num < "$tty";
+	done
+sudo chmod 755 /usr/local/bin/numlock
+sudo nano /etc/systemd/system/numlock.service:
+	[Unit]
+	Description=numlock
+
+	[Service]
+	ExecStart=/usr/local/bin/numlock
+	StandardInput=tty
+	RemainAfterExit=yes
+
+	[Install]
+	WantedBy=multi-user.target
+sudo systemctl enable numlock
+mkdir /tmp/i3git
+cd /tmp/i3git
+git clone --depth=1 https://github.com/donaastor/i3-config.git
+cd i3-config
+rmdir .git
+mv .xbindkeys ~/
+mv . ~/.config/i3
+xbindkeys
+sudo pacman -S man-db man-pages
+sudo mandb
+sudo pacman -S libva-mesa-driver libva-utils
+vainfo
+mkdir /home/korsic/trenut
+nano /etc/fstab: (dodaj na kraj)
+	tmpfs /home/korsic/trenut tmpfs defaults,size=2048M 0 0
+(?) sudo mount -t tmpfs tmpfs -o defaults,size=2048M /home/korsic/trenut
+curl -s 'https://download.opensuse.org/repositories/home:/ungoogled_chromium/Arch/x86_64/home_ungoogled_chromium_Arch.key' | sudo pacman-key -a -
+echo '
+[home_ungoogled_chromium_Arch]
+SigLevel = Required TrustAll
+Server = https://download.opensuse.org/repositories/home:/ungoogled_chromium/Arch/$arch' | sudo tee --append /etc/pacman.conf
+pacman -Sy
+pacman -S ungoogled-chromium
+pikaur -Scc
+pacman -Rs clang nodejs gn ninja lld
+pacman -Scc
+mkdir /home/korsic/chromium
+mkdir /home/korsic/chromium/cache
+sudo nano /etc/fstab: (dodaj na kraj)
+	tmpfs /home/korsic/chromium/cache tmpfs noatime,nodev,nosuid,size=1152M 0 0
+(?) sudo mount -t tmpfs tmpfs -o noatime,nodev,nosuid,size=1152M /home/korsic/chromium/cache
+nano /etc/chromium-flags.conf:
+	--disk-cache-dir=/home/korsic/chromium/cache
+	--disk-cache-size=1073741824
+	--ignore-gpu-blocklist
+	--enable-gpu-rasterization
+	--enable-zero-copy
+	--enable-features=VaapiVideoDecoder
+	--use-gl=egl
+	(mozda ce trebati)		--disable-gpu-driver-bug-workarounds
+	(mozda ce trebati)		--disable-features=UseChromeOSDirectVideoDecoder
+# da bi video da li treba ove flagove da probas, otvori u chromiumu URL "chrome://gpu" i procitaj je li pise "Hardware accelerated"
+sudo pacman -S profile-sync-daemon
+psd
+systemctl --user enable psd
+systemctl --user start psd
+chromium:
+	settings:
+		Autofill:
+			Passwords:
+				UKLJUCI Offer to save passwords
+		Security and Privacy:
+			Security:
+				UKLJUCI Always use secure connections
+				UKLJUCI Use secure DNS
+			Site Settings:
+				ISKLJUCI JavaScript
+		Appearance:
+			UKLJUCI Show home button
+			ISKLJUCI Show bookmarks bar
+		Search engine:
+			POSTAVI "Search engine used in the address bar" na "DuckDuckGo"
+		(advanced)
+		Languages:
+			UKLJUCI Offer to translate pages that aren't in a language you read
+			ISKLJUCI Spell check
+	promeni flag:
+		chrome://flags/#extension-mime-request-handling
+	na	"Always prompt for install"
+	otvori URL:
+		https://chrome.google.com/webstore/category/extensions
+	ukljuci JavaScript
+	pretrazi "ublock origin"
+		(ili samo idi na "https://chrome.google.com/webstore/search/ublock%20origin")
+	udji na "uBlock Origin" i kopiraj URL
+		(ili samo idi na desni klik i "Copy link address")
+	iskljuci JavaScript
+	otvori URL:
+		https://crxextractor.com/
+	ukljuci JavaScript
+	klikni "START FOR FREE"
+	pastuj kopirani URL u polje gde pise "URL from Chrome WebStore"
+	stisni Download i cd-uj se u folder gde si skinuo fajl
+		(recimo da se fajl zove extension.crx)
+	mkdir /home/korsic/chromium/extensions
+	mkdir /home/korsic/chromium/extensions/uBlock
+	pacman -S unzip
+	unzip extension.crx -d /home/korsic/chromium/extensions/uBlock
+	rm -r /home/korsic/chromium/extensions/uBlock/_metadata
+	idi na:
+		chrome://extensions/
+	ukljuci "Developer mode"
+	klikni "Load unpacked" i odaberi /home/korsic/chromium/extensions/uBlock
+	uBlock -> Details:
+		iskljuci "Collect errors"
+		udji u Extension options:
+			ako imas neke zelje...
+	...
+	..bookmarks
+	...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Taraba (#) je komentar.
+
+za ArcoLinuxD 21.09.11:
+	Kernel: Linux kernel, Amd-ucode
+	Drivers: xf86-video-amdgpu ili xf86-video-ati
+	Services: Network Discovery, Printing Support, Samba, Sound
+	Login: Login Manager: Sddm
+	Desktop: Desktop: Xfce4
+	Partitions: Erase disk, no swap
+	Users:	Full name: Korsic
+			Login: korsic
+			Computer name: korsic-pc
+			Password: *****
+			YES - autologin
+			YES - same password
+posle instalacije: stisni Done (reboot), pa izvuci USB
+******  Sistem  ********************************************************************************
+Ctrl+Alt+M (Settings):
+	Appearance:
+		Settings: Window Scaling: 2x
+	Window Manager:
+		Style: Theme: Default-xhdpi
+Log Out
+Log In
+terminal:
+	mirror
+	sudo pacman-key --init
+	sudo pacman-key --populate
+	sudo pacman -Syu
+	skel
+	upall
+	pacman -S thunar
+	pacman -S geany
+	yay -S corectrl
+[sad otvori ovaj fajl]
+
+Ctrl+Alt+M (Settings):
+	Power Manager:
+		System:		Suspend, 15 minutes, Lock screen when going to sleep
+		Display:	OFF, Blank after: Never
+	Workspaces: 1
+	Mouse and Touchpad: Acceleration: 2.0
+	Keyboard:
+		Application Shortcuts:
+			Ctrl+Alt+M -> xfce4-popup-whiskermenu
+			Ctrl+Alt+V -> vivaldi-stable
+			Ctrl+Alt+G -> geany
+			Ctrl+Alt+F -> thunar
+			Ctrl+Alt+R -> gksu --disable-grab dbus-run-session thunar
+			Ctrl+Alt+T -> xfce4-terminal
+			Ctrl+Alt+H -> gksu --disable-grab systemctl start logmein-hamachi
+			Super+L -> systemctl suspend --now
+			Print (Prt Scr) -> flameshot gui
+		Layout:
+			Use system defaults: OFF
+			Change Layout Options: Alt+Shift
+			Add: Russian (legacy), Serbian (Cyrillic, ZE and ZHE swapped), Serbian (Latin, QWERTY)
+desni klik na taskbar -> Panel:
+	Add New Items: Keyboard Layouts
+	Panel Preferences: Items: "Keyboard Layouts" up x2
+Taskbar -> Clock -> Properties: Format = Custom: %a, %_d. %b, %Y, %H:%M:%S
+thunar(root):
+	View -> List View
+	iskopiraj 90-corectrl.rules u /etc/polkit-1/rules.d/
+	iskopiraj sve iz foldera "desktop" u /usr/share/applications/
+	iskopiraj accels.scm u ~/.config/Thunar/
+	dodaj u /etc/fstab: none /home/korsic/trenut tmpfs defaults,size=2048M 0 0
+	dodaj u /etc/environment: QT_SCALE_FACTOR=1.5
+thunar:
+	View -> List View
+	u ~/.bashrc zakomentiraj neofetch
+	napravi fajl ~/.bashrc-personal:
+		alias q='exit'
+terminal:
+	cp /usr/share/applications/org.corectrl.corectrl.desktop ~/.config/autostart/org.corectrl.corectrl.desktop
+	mkdir ~/trenut
+	export QT_SCALE_FACTOR=1.5
+	sudo timedatectl set-ntp true
+	# sudo systemctl enable ntpd
+	# sudo ntpd -u ntp:ntp
+	# sudo ntpd -qg
+	# ntpq -p
+	pacman -S --needed discord telegram-desktop whatsapp-nativefier geany-plugins libreoffice-fresh guvcview simplescreenrecorder vlc gimp flameshot vivaldi vivaldi-ffmpeg-codecs vivaldi-widevine qbittorrent thunar-archive-plugin thunar-volman gufw lm_sensors meld catfish okular calc tor torsocks psensor xarchiver feh jre-openjdk java-openjfx menulibre zip p7zip phonon-qt5-vlc ttf-ms-fonts ttf-opensans ttf-ubuntu-font-family pkgfile
+	pacman -Rscn alacritty arcolinux-alacritty-git
+	yay -S rar posix-manpages
+	pacman -Scc
+	yay -Sc
+	reboot
+******  Samba  *********************************************************************************
+terminal:
+	pacman -S samba
+	mkdir ~/Filmovi
+	sudo smbpasswd -a korsic
+	sudo ufw enable
+	sudo ufw allow CIFS
+thunar:
+	dodaj u ~/.bashrc-personal:
+		alias f='sudo mount -t tmpfs -o size=3072m tmpfs /home/korsic/Filmovi; sudo systemctl restart smb nmb'
+		alias uf='sudo umount Filmovi'
+	iskopiraj smb.conf u /etc/samba/
+******  Thunar  ********************************************************************************
+thunar(i root):
+	Edit -> Preferences -> Display:
+		View new folders using: Last Active View
+		Date: Format: Custom: %a, %_d. %b, %Y, %H:%M:%S
+	Edit -> Configure custom actions...:
+		obrisi:
+			Check sha1sum
+			Check sha256sum
+			Check md5sum
+			Run
+			Convert png to jpg
+			Conkyzen
+			Open with gitahead
+		menjaj:
+			Open Terminal Here:
+				xfce4-terminal --default-working-directory=%f
+			Create symlink:
+				ln -s %f %n_link
+			Open folder as root:
+				gksu --disable-grab dbus-run-session thunar %f
+			Ownership to root:
+				gnome-keyring-daemon -r -d;gksu --disable-grab "chown -R root:root %F"
+			Ownership to user:
+				gnome-keyring-daemon -r -d;gksu --disable-grab "chown -R $USER:$USER %F"
+	iskopiraj accels.scm u ~/.config/Thunar/
+******  Geany  *********************************************************************************
+geany(i root):
+	Edit -> Preferences:
+		in Keybindings:	Switch to Editor = <Alt>1
+						Switch to VTE    = <Alt>2
+		in Terminal: mark Follow path of the current file
+		(optional) in General -> Miscellaneous: unmark Beep on errors
+		(optional) in General -> Startup: unmark Load files from the last session
+		(optional) in Editor -> Features: change Comment toggle marker to an empty string or a single space
+		(optional) in Editor -> Features: mark Newline strips trailing spaces
+		(optional) in Editor -> Display: unmark Long line marker > Enabled
+		(optional) in Editor -> Display: unmark Stop scrolling at last line
+		(optional) in Files: mark Strip trailing spaces and tabs
+		in Tools, set:
+			Terminal: alacritty -e /bin/sh %c
+			Browser: chromium
+	View:
+		unmark Show Sidebar
+		unmark Show Toolbar
+	Open any .cpp file, go to Build -> Set Build Commands and set:
+		[common]:		g++ "%f" -o "%e" -pipe -fwrapv -fno-plt -fno-semantic-interposition -std=c++20 -mcmodel=large -march=x86-64 -mtune=generic -Wshadow -Wno-unused-result -Wall -L /usr/lib -lm -lz -lcrypt -lutil -ldl -lpthread -lrt
+		Compile:		-O3
+		Build:			-g -fsanitize=address -fsanitize=undefined -D_GLIBCXX_DEBUG
+		[python]:		-I /usr/include/python3.10 -lpython3.10
+	Open any .java file, go to Build -> Set Build Commands and set:
+		Compile (F8): javac "%f" -d .
+	Tools -> Plugin Manager: select Auto-close; Preferences: unmark "Parenthesis" and "Double quotes"
+	exit geany
+	iskopiraj sve iz foldera "colorschemes" u ~/.config/geany/colorschemes/
+******  Vivaldi  *******************************************************************************
+vivaldi:
+	classic,
+	import nothing,
+	block trackers,
+	theme = vivaldi, DON'T use OS theme
+	bookmarks: obrisi sve,
+	Settings:
+		Sync:
+			username: donaastor
+			password: ***************
+	restart
+	Settings:
+		General:
+			Set as Default
+			Close and Exit: NE, NE
+		Themes:
+			Themes: Dark
+			Background: AuroraDark
+			Color: Opacity 100%, Enable Blur = OFF
+			Scheduled Themes: 6:00, 20:00
+		Start Page: Speed dial:
+			max columns: 8
+			thumbnail size: small
+		Search: DuckDuckGo, search field display: disable
+	levi Panel: translate.google.com, separate width
+******  gimp  **********************************************************************************
+gimp:
+	Preferences -> Interface -> Icon Theme -> Custom icon size: large
+iskopiraj folder Dark iz /usr/share/gimp/2.0/themes u ~/.config/GIMP/2.10/themes/ i preimenuj ga u DarkHighDPI
+u DarkHighDPI/gtkrc otkomentiraj linije:
+	gtk-font-name = "Sans 20"
+	  font_name = "Sans 20"
+gimp:
+	Preferences > Interface > Theme: DarkHighDPI
+******  guvcview  ******************************************************************************
+guvcview: Photo/File=~/trenut, Video/File=~/trenut
+******  printer  *******************************************************************************
+terminal:
+	pacman -S cups libcups system-config-printer hplip
+	yay -S hplip-plugin
+	sudo systemctl start cups.service
+	hp-setup -i "printer-ip" (umesto "printer-ip" stavis ip printera, trebalo bi 192.168.1.105)
+	sudo systemctl disable cups.service
+	sudo systemctl enable cups.socket
+system-config-printer:
+	odaberem printer
+	Printer Options -> Media Size = A4
+******  Minecraft  *****************************************************************************
+minecraft:
+
+skini verziju za linux sa https://tlauncher.org/en/ u ~/trenut
+	sve verzije imaju link oblika:
+		http://repo.tlauncher.org/update/lch/TLauncher-VER.jar
+thunar:
+	otpakuj to sto si skinuo
+	kopiraj TLauncher-VER.jar u ~/.tlauncher/ i preimenuj u TLauncher.jar
+	desni klik na TLauncher.jar -> Properties -> Permissions -> Allow this file to run as a program
+	kopiraj minecraft.desktop u /usr/share/applications
+tlauncher:
+	settings:
+		resolution:	1920x1080
+		version list: samo "Show modified"
+		Memory allocation: 12288 MB
+	Accounts/Configure Accounts:
+		TLauncher Account:
+			username: donaastor
+			password: ***************
+
+hamachi:
+
+terminal:
+	yay logmein-hamachi
+	yay -Sc
+	sudo systemctl start logmein-hamachi
+	sudo systemctl stop logmein-hamachi
+thunar(root):
+	iskopiraj h2-engine-override.cfg u /var/lib/logmein-hamachi/
+terminal:
+	sudo ufw allow 25565
+******  SageMath  ******************************************************************************
+terminal:
+	pacman -S sagemath sagemath-doc
+	echo "%colors NoColor" >> ~/.sage/init.sage
+******  LaTeX  *********************************************************************************
+terminal:
+	pacman -S --needed lyx texlive-fontsextra texlive-formatsextra texlive-langcyrillic texlive-latexextra texlive-science
+	yay -S tikzit
+************************************************************************************************
