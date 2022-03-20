@@ -9,7 +9,7 @@
 	ili jednostavno posle dosta vremena...
 	mozes i enablovati timer koji to obavlja nedeljno:
 		sudo systemd enable fstrim.timer
-------------    SETUP    ------------
+--------------- SETUP ---------------
 pikaur -S corectrl
 sudo pacman -S vulkan-tools mesa-utils
 cp /usr/share/applications/org.corectrl.corectrl.desktop ~/.config/autostart/org.corectrl.corectrl.desktop
@@ -99,6 +99,13 @@ mkdir /home/korsic/trenut
 nano /etc/fstab: (dodaj na kraj)
 	tmpfs /home/korsic/trenut tmpfs defaults,size=2048M 0 0
 (?) sudo mount -t tmpfs tmpfs -o defaults,size=2048M /home/korsic/trenut
+
+
+
+
+------------   PROGRAMS   ------------
+
+******  Chromium  ******************************************************************************
 curl -s 'https://download.opensuse.org/repositories/home:/ungoogled_chromium/Arch/x86_64/home_ungoogled_chromium_Arch.key' | sudo pacman-key -a -
 echo '
 [home_ungoogled_chromium_Arch]
@@ -106,8 +113,6 @@ SigLevel = Required TrustAll
 Server = https://download.opensuse.org/repositories/home:/ungoogled_chromium/Arch/$arch' | sudo tee --append /etc/pacman.conf
 pacman -Sy
 pacman -S ungoogled-chromium
-pikaur -Scc
-pacman -Rs clang nodejs gn ninja lld
 pacman -Scc
 mkdir /home/korsic/chromium
 mkdir /home/korsic/chromium/cache
@@ -183,115 +188,6 @@ chromium:
 	...
 	..bookmarks
 	...
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Taraba (#) je komentar.
-
-za ArcoLinuxD 21.09.11:
-	Kernel: Linux kernel, Amd-ucode
-	Drivers: xf86-video-amdgpu ili xf86-video-ati
-	Services: Network Discovery, Printing Support, Samba, Sound
-	Login: Login Manager: Sddm
-	Desktop: Desktop: Xfce4
-	Partitions: Erase disk, no swap
-	Users:	Full name: Korsic
-			Login: korsic
-			Computer name: korsic-pc
-			Password: *****
-			YES - autologin
-			YES - same password
-posle instalacije: stisni Done (reboot), pa izvuci USB
-******  Sistem  ********************************************************************************
-Ctrl+Alt+M (Settings):
-	Appearance:
-		Settings: Window Scaling: 2x
-	Window Manager:
-		Style: Theme: Default-xhdpi
-Log Out
-Log In
-terminal:
-	mirror
-	sudo pacman-key --init
-	sudo pacman-key --populate
-	sudo pacman -Syu
-	skel
-	upall
-	pacman -S thunar
-	pacman -S geany
-	yay -S corectrl
-[sad otvori ovaj fajl]
-
-Ctrl+Alt+M (Settings):
-	Power Manager:
-		System:		Suspend, 15 minutes, Lock screen when going to sleep
-		Display:	OFF, Blank after: Never
-	Workspaces: 1
-	Mouse and Touchpad: Acceleration: 2.0
-	Keyboard:
-		Application Shortcuts:
-			Ctrl+Alt+M -> xfce4-popup-whiskermenu
-			Ctrl+Alt+V -> vivaldi-stable
-			Ctrl+Alt+G -> geany
-			Ctrl+Alt+F -> thunar
-			Ctrl+Alt+R -> gksu --disable-grab dbus-run-session thunar
-			Ctrl+Alt+T -> xfce4-terminal
-			Ctrl+Alt+H -> gksu --disable-grab systemctl start logmein-hamachi
-			Super+L -> systemctl suspend --now
-			Print (Prt Scr) -> flameshot gui
-		Layout:
-			Use system defaults: OFF
-			Change Layout Options: Alt+Shift
-			Add: Russian (legacy), Serbian (Cyrillic, ZE and ZHE swapped), Serbian (Latin, QWERTY)
-desni klik na taskbar -> Panel:
-	Add New Items: Keyboard Layouts
-	Panel Preferences: Items: "Keyboard Layouts" up x2
-Taskbar -> Clock -> Properties: Format = Custom: %a, %_d. %b, %Y, %H:%M:%S
-thunar(root):
-	View -> List View
-	iskopiraj 90-corectrl.rules u /etc/polkit-1/rules.d/
-	iskopiraj sve iz foldera "desktop" u /usr/share/applications/
-	iskopiraj accels.scm u ~/.config/Thunar/
-	dodaj u /etc/fstab: none /home/korsic/trenut tmpfs defaults,size=2048M 0 0
-	dodaj u /etc/environment: QT_SCALE_FACTOR=1.5
-thunar:
-	View -> List View
-	u ~/.bashrc zakomentiraj neofetch
-	napravi fajl ~/.bashrc-personal:
-		alias q='exit'
-terminal:
-	cp /usr/share/applications/org.corectrl.corectrl.desktop ~/.config/autostart/org.corectrl.corectrl.desktop
-	mkdir ~/trenut
-	export QT_SCALE_FACTOR=1.5
-	sudo timedatectl set-ntp true
-	# sudo systemctl enable ntpd
-	# sudo ntpd -u ntp:ntp
-	# sudo ntpd -qg
-	# ntpq -p
-	pacman -S --needed discord telegram-desktop whatsapp-nativefier geany-plugins libreoffice-fresh guvcview simplescreenrecorder vlc gimp flameshot vivaldi vivaldi-ffmpeg-codecs vivaldi-widevine qbittorrent thunar-archive-plugin thunar-volman gufw lm_sensors meld catfish okular calc tor torsocks psensor xarchiver feh jre-openjdk java-openjfx menulibre zip p7zip phonon-qt5-vlc ttf-ms-fonts ttf-opensans ttf-ubuntu-font-family pkgfile
-	pacman -Rscn alacritty arcolinux-alacritty-git
-	yay -S rar posix-manpages
-	pacman -Scc
-	yay -Sc
-	reboot
 ******  Samba  *********************************************************************************
 terminal:
 	pacman -S samba
@@ -445,6 +341,6 @@ terminal:
 	echo "%colors NoColor" >> ~/.sage/init.sage
 ******  LaTeX  *********************************************************************************
 terminal:
-	pacman -S --needed lyx texlive-fontsextra texlive-formatsextra texlive-langcyrillic texlive-latexextra texlive-science
+	pacman -S --needed lyx texlive-formatsextra texlive-langcyrillic texlive-latexextra texlive-science texlive-fontsextra
 	yay -S tikzit
 ************************************************************************************************
