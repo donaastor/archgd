@@ -14,18 +14,16 @@ pikaur -S corectrl
 sudo pacman -S vulkan-tools mesa-utils
 cp /usr/share/applications/org.corectrl.corectrl.desktop ~/.config/autostart/org.corectrl.corectrl.desktop
 sudo nano /etc/polkit-1/rules.d/90-corectrl.rules:
-
-polkit.addRule(function(action, subject) {
-	if (	(action.id == "org.corectrl.helper.init" ||
-		action.id == "org.corectrl.helperkiller.init") &&
-		subject.local == true &&
-		subject.active == true &&
-		subject.isInGroup("wheel")
-	) {
-		return polkit.Result.YES;
-	}
-});
-
+	polkit.addRule(function(action, subject) {
+		if (	(action.id == "org.corectrl.helper.init" ||
+			action.id == "org.corectrl.helperkiller.init") &&
+			subject.local == true &&
+			subject.active == true &&
+			subject.isInGroup("wheel")
+		) {
+			return polkit.Result.YES;
+		}
+	});
 sudo nano /etc/default/grub:
 	(dodaj parametar na liniju)
 	GRUB_CMDLINE_LINUX_DEFAULT="<other_params>... amdgpu.ppfeaturemask=0xffffffff"
@@ -54,7 +52,7 @@ sudo cat /sys/power/mem_sleep
 		(dodaj parametar na liniju)
 		GRUB_CMDLINE_LINUX_DEFAULT="<other_params>... mem_sleep_default"
 	sudo grub-mkconfig -o /boot/grub/grub.cfg
-reboot
+(reboot)
 ako samo ti koristis komp:
 	sudo nano /etc/default/grub:
 		(dodaj parametar na liniju)
@@ -99,7 +97,20 @@ mkdir /home/korsic/trenut
 nano /etc/fstab: (dodaj na kraj)
 	tmpfs /home/korsic/trenut tmpfs defaults,size=2048M 0 0
 (?) sudo mount -t tmpfs tmpfs -o defaults,size=2048M /home/korsic/trenut
-
+sudo nano /etc/fonts/local.conf:
+	<?xml version="1.0"?>
+	<!DOCTYPE fontconfig SYSTEM "urn:fontconfig:fonts.dtd">
+	<fontconfig>
+		<match target="pattern">
+		<test name="family" qual="any">
+			<string>monospace</string>
+		</test>
+		<edit binding="strong" mode="prepend" name="family">
+			<string>LiberationMono</string>
+		</edit>
+		</match>
+	</fontconfig>
+reboot
 
 
 
