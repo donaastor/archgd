@@ -81,6 +81,7 @@ sudo nano /etc/systemd/system/numlock.service:
 	[Install]
 	WantedBy=multi-user.target
 sudo systemctl enable numlock
+localectl --no-convert set-x11-keymap us,ru,rs,rs pc105 ,,latin,yz
 mkdir /tmp/i3git
 cd /tmp/i3git
 git clone --depth=1 https://github.com/donaastor/i3-config.git
