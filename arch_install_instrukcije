@@ -133,6 +133,7 @@ nano .xinitrc:
 	xset 0 180 0
 	numlockx &
 	xset r rate 250 30
+	setxkbmap -model pc105 -layout us,ru,rs,rs -variant ,,latin,yz
 	xbindkeys &
 	if ! pgrep -f xidlehook; then
 	  xidlehook --timer 600 'systemctl suspend -i' '' &
