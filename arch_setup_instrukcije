@@ -20,6 +20,7 @@
 	.xinitrc: "export GDK_SCALE=2" ili da namestis alias
 	u /etc/bash.bashrc ili ~/.xinitrc:
 	"alias geany='GDK_SCALE=2 geany'"
+	alternativno, idi na  wiki.archlinux.org/title/HiDPI
 --------------- SETUP ---------------
 pikaur -S corectrl
 sudo pacman -S vulkan-tools mesa-utils
