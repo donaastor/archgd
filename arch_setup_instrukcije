@@ -128,6 +128,10 @@ reboot
 
 
 
+
+
+
+
 ------------   PROGRAMS   ------------
 
 ******  Chromium  ******************************************************************************
@@ -157,6 +161,9 @@ nano /etc/chromium-flags.conf:
 # da bi video da li treba ove flagove da probas, otvori u chromiumu URL "chrome://gpu" i procitaj je li pise "Hardware accelerated"
 sudo pacman -S profile-sync-daemon
 psd
+nano ~/.config/psd/psd.conf:
+	(odkomentiraj liniju "USE_BACKUPS="yes"", i promeni u:)
+	"USE_BACKUPS"="no"
 systemctl --user enable psd
 systemctl --user start psd
 chromium:
