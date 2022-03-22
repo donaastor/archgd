@@ -138,8 +138,6 @@ nano .xinitrc:
 	  xidlehook --timer 600 'systemctl suspend -i' '' &
 	fi
 	picom --experimental-backends &
-	export QT_SCREEN_SCALE_FACTORS=2
-	export GDK_DPI_SCALE=1.5
 	corectrl &
 	nitrogen --restore &
 	exec i3
