@@ -71,6 +71,8 @@ nano /etc/pacman.conf: (odkomentiraj liniju)
 nano /etc/bash.bashrc: (dodaj na kraj)
 	alias ls='ls --color=tty'
 	alias q='exit'
+	alias stfu='shutdown now'
+	slias sus='systemctl suspend'
 pacman -S xorg-sever xorg-xinit
 cd /etc/systemd/system
 mkdir getty@tty1.service.d
@@ -101,8 +103,10 @@ sudo nano /korsic/home/.config/pikaur.conf:
 sudo nano /etc/fstab: (dodaj na kraj)
 	tmpfs /home/korsic/.cache/pikaur tmpfs defaults 0 0
 	tmpfs /home/korsic/.local/share/pikaur/aur_repos tmpfs defaults,size=2048M 0 0
-(?) sudo mount -t tmpfs tmpfs -o defaults /home/korsic/.cache/pikaur
-(?) sudo mount -t tmpfs tmpfs -o defaults,size=2048M /home/korsic/.local/share/pikaur/aur_repos
+	tmpfs /var/lib/systemd/coredumps tmpfs defaults,size=512M 0 0
+sudo mount -t tmpfs tmpfs -o defaults /home/korsic/.cache/pikaur
+sudo mount -t tmpfs tmpfs -o defaults,size=2048M /home/korsic/.local/share/pikaur/aur_repos
+sudo mount -t tmpfs tmpfs -o defaults,size=512M /var/lib/systemd/coredumps
 pikaur -S xidlehook numlockx xbindkeys
 ---
 	instaliraj window manager, terminal emulator, file manager (po zelji)
