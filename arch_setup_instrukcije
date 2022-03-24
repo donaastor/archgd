@@ -110,7 +110,7 @@ vainfo
 mkdir /home/korsic/trenut
 nano /etc/fstab: (dodaj na kraj)
 	tmpfs /home/korsic/trenut tmpfs defaults,size=2048M 0 0
-(?) sudo mount -t tmpfs tmpfs -o defaults,size=2048M /home/korsic/trenut
+sudo mount -t tmpfs tmpfs -o defaults,size=2048M /home/korsic/trenut
 sudo nano /etc/fonts/local.conf:
 	<?xml version="1.0"?>
 	<!DOCTYPE fontconfig SYSTEM "urn:fontconfig:fonts.dtd">
