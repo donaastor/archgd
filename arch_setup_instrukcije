@@ -93,6 +93,10 @@ sudo nano /etc/systemd/system/numlock.service:
 	[Install]
 	WantedBy=multi-user.target
 sudo systemctl enable numlock
+cd /usr/share/icons/default
+sudo mkdir cursors
+cd cursors
+sudo ln -s /usr/share/icons/Adwaita/cursors/left_ptr watch
 localectl --no-convert set-x11-keymap us,ru,rs,rs pc105 ,,latin,yz
 pikaur -S xkb-switch xkblayout-state-git
 mkdir /tmp/i3git
