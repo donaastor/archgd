@@ -37,7 +37,7 @@ nakon sto bootujemo u arch live, radimo:
 	systemctl enable NetworkManager
 11. namestamo grub:
 	pacman -S grub efibootmgr amd-ucode
-	grub-install --target=x86_64-efi --efi-sirectory=/efi --bootloader-id=GRUB
+	grub-install --target=x86_64-efi --efi-directory=/efi --bootloader-id=GRUB
 	nano /etc/default/grub:
 		(promeni "GRUB_TIMEOUT")
 	grub-mkconfig -o /boot/grub/grub.cfg
