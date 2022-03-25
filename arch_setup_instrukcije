@@ -104,17 +104,20 @@ cd /tmp/i3git
 git clone --depth=1 https://github.com/donaastor/i3-config.git
 cd i3-config
 rmdir .git
-mv .xbindkeys ~/
+mv .xbindkeysrc ~/
 mv . ~/.config/i3
-xbindkeys
+cd ~/.config/i3
+chmod 755 status_script.sh
+(?) xbindkeys
 sudo pacman -S man-db man-pages
 sudo mandb
 sudo pacman -S libva-mesa-driver libva-utils
 vainfo
 mkdir /home/korsic/trenut
-nano /etc/fstab: (dodaj na kraj)
+sudo nano /etc/fstab: (dodaj na kraj)
 	tmpfs /home/korsic/trenut tmpfs defaults,size=2048M 0 0
 sudo mount -t tmpfs tmpfs -o defaults,size=2048M /home/korsic/trenut
+pacman -S ttf-liberation
 sudo nano /etc/fonts/local.conf:
 	<?xml version="1.0"?>
 	<!DOCTYPE fontconfig SYSTEM "urn:fontconfig:fonts.dtd">
@@ -128,7 +131,7 @@ sudo nano /etc/fonts/local.conf:
 		</edit>
 		</match>
 	</fontconfig>
-sudo pacman -S feh zathura zathura-djvu zathura-pdf-poppler
+sudo pacman -S feh zathura zathura-djvu zathura-pdf-poppler xdg-utils
 xdg-mime default feh.desktop image/png image/jpeg
 xdg-mime default org.pwmt.zathura.desktop application/pdf application/djvu
 reboot
