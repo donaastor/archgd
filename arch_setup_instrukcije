@@ -21,6 +21,16 @@
 	u /etc/bash.bashrc ili ~/.xinitrc:
 	"alias geany='GDK_SCALE=2 geany'"
 	alternativno, idi na  wiki.archlinux.org/title/HiDPI
+3. Baterija
+	pacman -S acpi
+	path = /sys/class/power_supply/BAT1/...
+	fajl moze biti npr uevent ili capacity
+	za i3status (tu mora uevent):
+		battery 1 {
+			format = "%percentage"
+			low_threshold = 15
+			path = "/sys/class/power_supply/BAT1/uevent"
+		}
 --------------- SETUP ---------------
 pikaur -S corectrl
 sudo pacman -S vulkan-tools mesa-utils
@@ -152,6 +162,7 @@ SigLevel = Required TrustAll
 Server = https://download.opensuse.org/repositories/home:/ungoogled_chromium/Arch/$arch' | sudo tee --append /etc/pacman.conf
 pacman -Sy
 pacman -S ungoogled-chromium
+	[pipewire-jack]
 pacman -Scc
 mkdir /home/korsic/chromium
 mkdir /home/korsic/chromium/cache
@@ -198,7 +209,7 @@ chromium:
 			ISKLJUCI Spell check
 	promeni flag:
 		chrome://flags/#extension-mime-request-handling
-	na	"Always prompt for install"
+	na	"Download as regular file"
 	otvori URL:
 		https://chrome.google.com/webstore/category/extensions
 	ukljuci JavaScript
@@ -214,6 +225,7 @@ chromium:
 	pastuj kopirani URL u polje gde pise "URL from Chrome WebStore"
 	stisni Download i cd-uj se u folder gde si skinuo fajl
 		(recimo da se fajl zove extension.crx)
+	iskljuci JavaScript
 	mkdir /home/korsic/chromium/extensions
 	mkdir /home/korsic/chromium/extensions/uBlock
 	pacman -S unzip
@@ -273,6 +285,7 @@ geany(i root):
 	Edit -> Preferences:
 		in Keybindings:	Switch to Editor = <Alt>1
 						Switch to VTE    = <Alt>2
+						Toggle Messages Window = <Alt>a
 		in Terminal: mark Follow path of the current file
 		(optional) in General -> Miscellaneous: unmark Beep on errors
 		(optional) in General -> Startup: unmark Load files from the last session

@@ -8,6 +8,11 @@
 	nano /etc/resolv.conf:
 		(dodaj na kraj)
 		nameserver 8.8.8.8
+	iwctl:
+		device list
+		station _device_ scan
+		station _device_ get-networks
+		station _device_ connect _SSID_
 	systemctl stop NetworkManager iwd
 	systemctl start NetworkManager iwd
 -------------- INSTALL --------------
