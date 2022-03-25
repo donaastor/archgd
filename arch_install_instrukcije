@@ -169,9 +169,10 @@ nano .bashrc:
 		then
 		  startx
 		fi
-# u slucaju da koristis awesome
 nano .Xresources:
 	Xft.dpi: 192
+
+# u slucaju da koristis awesome
 mkdir .config/awesome
 cd .config/awesome
 cp /etc/xdg/awesome/rc.lua rc.lua
