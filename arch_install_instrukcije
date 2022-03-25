@@ -60,7 +60,7 @@ nakon sto bootujemo u arch live, radimo:
 useradd -mg wheel korsic
 passwd korsic
 pacman -S --needed sudo
-	u fajlu /etc/sudoers odkomentiraj liniju "%sudo ALL=(ALL) ALL"
+	u fajlu /etc/sudoers odkomentiraj liniju "%sudo ALL=(ALL:ALL) ALL"
 groupadd sudo
 gpasswd -a korsic sudo
 nano /etc/nanorc:
@@ -72,7 +72,7 @@ nano /etc/bash.bashrc: (dodaj na kraj)
 	alias q='exit'
 	alias stfu='shutdown now'
 	slias sus='systemctl suspend'
-pacman -S xorg-sever xorg-xinit
+pacman -S xorg-server xorg-xinit
 cd /etc/systemd/system
 mkdir getty@tty1.service.d
 cd getty@tty1.service.d
