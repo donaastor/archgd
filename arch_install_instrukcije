@@ -9,7 +9,7 @@ nakon sto bootujemo u arch live, radimo:
 	3.2. sada biramo disk za instalaciju, na primer /dev/nvme0n1, i otvaramo ga:
 		fdisk /dev/nvme0n1
 	3.3. sada pravimo partition table:
-		fdisk o
+		o
 	3.4. pravimo particije:
 		n
 		od 0x800 do 0x80800 (256MiB za boot)
