@@ -113,20 +113,20 @@ mkdir /tmp/i3git
 cd /tmp/i3git
 git clone --depth=1 https://github.com/donaastor/i3-config.git
 cd i3-config
-rmdir .git
+rm -r .git
 mv .xbindkeysrc ~/
-mv . ~/.config/i3
+cd ..
+mv i3-config ~/.config/i3
 cd ~/.config/i3
 chmod 755 status_script.sh
-(?) xbindkeys
 sudo pacman -S man-db man-pages
 sudo mandb
 sudo pacman -S libva-mesa-driver libva-utils
 vainfo
-mkdir /home/korsic/trenut
+mkdir /home/korsic/tren
 sudo nano /etc/fstab: (dodaj na kraj)
-	tmpfs /home/korsic/trenut tmpfs defaults,size=2048M 0 0
-sudo mount -t tmpfs tmpfs -o defaults,size=2048M /home/korsic/trenut
+	tmpfs /home/korsic/tren tmpfs defaults,size=2048M 0 0
+sudo mount -t tmpfs tmpfs -o defaults,size=2048M /home/korsic/tren
 pacman -S ttf-liberation
 sudo nano /etc/fonts/local.conf:
 	<?xml version="1.0"?>
