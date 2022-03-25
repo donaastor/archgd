@@ -1,3 +1,16 @@
+------------ CHEAT SHEET ------------
+1. Wi-Fi:
+	(package iwd)
+	nano /etc/iwd/main.conf:
+		(dodaj na kraj)
+		[General]
+		EnableNetworkConfiguration=true
+	nano /etc/resolv.conf:
+		(dodaj na kraj)
+		nameserver 8.8.8.8
+	systemctl stop NetworkManager iwd
+	systemctl start NetworkManager iwd
+-------------- INSTALL --------------
 nakon sto bootujemo u arch live, radimo:
 1. proveravamo imamo li internet:
 	ping archlinux.org
