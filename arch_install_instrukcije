@@ -59,7 +59,7 @@ nakon sto bootujemo u arch live, radimo:
 
 useradd -mg wheel korsic
 passwd korsic
-pacman -S sudo
+pacman -S --needed sudo
 	u fajlu /etc/sudoers odkomentiraj liniju "%sudo ALL=(ALL) ALL"
 groupadd sudo
 gpasswd -a korsic sudo
