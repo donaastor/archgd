@@ -123,6 +123,9 @@ pikaur -S xidlehook numlockx xbindkeys
 pacman -S i3 rofi nitrogen picom xorg-xrdb pipewire pipewire-pulse wireplumber rtkit
 	## ovi paketi instaliraju 3 user servisa i 2 user socketa.
 	   2 servisa treba da su disablovana, a ostalo da je enablovano
+sudo nano /etc/xdg/picom.conf (pod "Fading"):
+	(zakomentiraj sve, a liniju "fading = true;" promeni u:)
+	fading = false;
 proveri:
 	systemctl --user status pipewire.* pipwire-pulse.*
 ako radi:
