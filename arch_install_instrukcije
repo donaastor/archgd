@@ -36,7 +36,7 @@ nakon sto bootujemo u arch live, radimo:
 	pacman -S networkmanager
 	systemctl enable NetworkManager
 11. namestamo grub:
-	pacman -S grub efibootmgr amd-ucode
+	pacman -S grub efibootmgr amd-ucode nano
 	grub-install --target=x86_64-efi --efi-directory=/efi --bootloader-id=GRUB
 	nano /etc/default/grub:
 		(promeni "GRUB_TIMEOUT")
@@ -44,7 +44,6 @@ nakon sto bootujemo u arch live, radimo:
 12. namestamo password:
 	passwd
 13. namestamo jezik:
-	pacman -S nano
 	nano /etc/locale.gen
 	(odkomentiramo en_US, ima ih dva: jedan za utf8 i jedan za iso)
 	locale-gen
