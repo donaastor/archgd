@@ -29,7 +29,9 @@
 		battery 1 {
 			format = "%percentage"
 			low_threshold = 15
+			threshold_type = "percentage"
 			path = "/sys/class/power_supply/BAT1/uevent"
+			format_percentage: "%.01f%s"
 		}
 --------------- SETUP ---------------
 pikaur -S corectrl
