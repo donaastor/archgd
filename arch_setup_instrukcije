@@ -146,7 +146,7 @@ sudo nano /etc/fonts/local.conf:
 sudo pacman -S feh zathura zathura-djvu zathura-pdf-poppler xdg-utils
 xdg-mime default feh.desktop image/png image/jpeg
 xdg-mime default org.pwmt.zathura.desktop application/pdf application/djvu
-	sudo pacman -S calc alacritty pcmanfm htop
+	sudo pacman -S calc alacritty pcmanfm nnn htop
 reboot
 
 
