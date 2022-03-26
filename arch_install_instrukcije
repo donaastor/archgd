@@ -15,6 +15,31 @@
 		station _device_ connect _SSID_
 	systemctl stop NetworkManager iwd
 	systemctl start NetworkManager iwd
+	u .bashrc:
+		wifi() {
+		  local boi=0
+		  if [ "$1" = "tata" ]; then
+		    boi=1
+		    local ssid="Galaxy A1227EC"
+		  elif [ "$1" = "moj" ]; then
+		    boi=1
+		    local ssid="Dona_Astor"
+		  fi
+		  if [ $boi = 1 ]; then
+		    iwctl station wlan0 connect "$ssid"
+		  else
+		    iwctl station wlan0 connect "$1"
+		  fi
+		}
+	u i3status:
+		wireless wlan0 {
+ 		       format_up = "W: %ip (%essid, %quality)"
+        		format_down = "W"
+		}
+		ethernet enp2s0 {
+        		format_up = "E: %ip (%speed)"
+        		format_down = "E"
+		}
 -------------- INSTALL --------------
 nakon sto bootujemo u arch live, radimo:
 1. proveravamo imamo li internet:
