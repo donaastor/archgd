@@ -40,6 +40,13 @@
         		format_up = "E: %ip (%speed)"
         		format_down = "E"
 		}
+2. Brightness
+	kao root:
+	cd /sys/class/backlight/???/
+		(jedini folder ce biti tu, umesto ovog ???,
+		nesto kao "amdgpu_bl0")
+	cat brightness
+	echo 31 > brightness
 -------------- INSTALL --------------
 nakon sto bootujemo u arch live, radimo:
 1. proveravamo imamo li internet:
