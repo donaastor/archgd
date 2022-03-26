@@ -120,6 +120,7 @@ nano /etc/pacman.conf: (odkomentiraj liniju)
 nano /etc/bash.bashrc: (dodaj na kraj)
 	alias ls='ls --color=tty'
 	alias q='exit'
+	alias cl='clear'
 	alias stfu='shutdown now'
 	slias sus='systemctl suspend'
 pacman -S xorg-server xorg-xinit
