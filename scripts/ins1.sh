@@ -125,6 +125,7 @@ else
 fi
 
 #			fstab
+
 printf "\ntmpfs /root/tren tmpfs defaults,size=2048M 0 0\ntmpfs /home/$username/tren tmpfs defaults,size=2048M 0 0\ntmpfs /home/$username/.cache/pikaur tmpfs default 0 0\ntmpfs /home/$username/.local/share/pikaur/aur_repos tmpfs defaults,size=2048M 0 0\ntmpfs /var/lib/systemd/coredumps tmpfs defaults,size=512M 0 0\ntmpfs /home/$username/.cargo tmpfs defaults,size=640M 0 0\ntmpfs /home/$username/chromium/cache tmpfs noatime,nodev,nosuid,size=1152M 0 0" >> "/root/tren/fstab_radni"
 cp "/root/tren/fstab_radni" > /etc/fstab
 cd "/home/$username"
@@ -194,15 +195,6 @@ if [ WIFI = 1 ]; then
 else
   printf "/bin/bash \"/home/$username/scripts/$next_script\" $username \"$params\"" >> "/home/$username/.bashrc"
 fi
-
-
-#			fali:
-
-#	...
-#	od nano /etc/nanorc
-#	do pacman -S xorg...
-#	posle login se kao korsic
-#	...
 
 #			reboot
 
