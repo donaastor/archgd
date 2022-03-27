@@ -29,6 +29,11 @@ if [ "${params:3:1}" = "1" ]; then
 else
   local HIDPI=0
 fi
+if [ "${params:4:1}" = "1" ]; then
+  local BATT=1
+else
+  local BATT=0
+fi
 
 
 
@@ -92,6 +97,11 @@ sudo -u "$username" cp "/tmp/pikaur_radni.conf" "/home/$username/.config/pikaur.
 while ! pacman -S --noconfirm --needed nano xorg-server xorg-xinit xorg-xrdb numlockx xbindkeys i3 rofi nitrogen picom pipewire pipewire-pulse pipewire-jack wireplumber rtkit alacritty pcmanfm-gtk3 feh zathura zathura-djvu zathura-pdf-poppler xdg-utils ttf-liberation man-db man-pages nnn htop calc geany geany-plugins lyx texlive-formatsextra texlive-langcyrillic texlive-latexextra texlive-science; do
   reconnect
 done
+if [ BATT = 1 ]; then
+  while ! pacman -S --noconfirm --needed acpi; do
+    reconnect
+  done
+fi
 while ! pikaur -S --noconfirm xidlehook xkb-switch xkblayout-state-git; do
   reconnect
 done
@@ -177,9 +187,17 @@ sudo -u "$username" mv .xbindkeysrc "/home/$username/.xbindkeysrc"
 sudo -u "$username" mkdir "/home/$username/.config/i3"
 sudo -u "$username" mv config status_script.sh "/home/$username/.config/i3/"
 if [ WIFI = 0 ]; then
-  sudo -u "$username" mv i3status-eth "/home/$username/.config/i3/i3status"
+  if [ BATT = 0 ]; then
+    sudo -u "$username" mv i3status "/home/$username/.config/i3/i3status"
+  else
+    sudo -u "$username" mv i3status-bat "/home/$username/.config/i3/i3status"
+  fi
 else
-  sudo -u "$username" mv i3status-wifi "/home/$username/.config/i3/i3status"
+  if [ BATT = 0 ]; then
+    sudo -u "$username" mv i3status-wifi "/home/$username/.config/i3/i3status"
+  else
+    sudo -u "$username" mv i3status-wifi-bat "/home/$username/.config/i3/i3status"
+  fi
 fi
 cd "/home/$username/.config/i3"
 chmod 755 status_script.sh
