@@ -157,6 +157,8 @@ else
 fi
 if [ AMD_CPU = 1 ]; then
   pacman -S --noconfirm amd-ucode
+else
+  pacman -S --noconfirm intel-ucode
 fi
 cp grub /etc/default/grub
 grub-mkconfig -o /boot/grub/grub.cfg
