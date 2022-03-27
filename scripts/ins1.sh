@@ -94,10 +94,10 @@ pacstrap /mnt base base-devel linux linux-firmware grub networkmanager git
 if [ WIFI = 1 ]; then
   cp -r /var/lib/iwd /mnt/var/lib/iwd
 fi
-mkdir "/mnt/home/$username"
-mkdir "/mnt/home/$username/tren"
-mount -t tmpfs tmpfs -o defaults,size=128M "/mnt/home/$username/tren"
-genfstab -U /mnt >> "/mnt/home/$username/tren/fstab_radni"
+mkdir "/mnt/root"
+mkdir "/mnt/root/tren"
+mount -t tmpfs tmpfs -o defaults,size=128M "/mnt/root/tren"
+genfstab -U /mnt >> "/mnt/root/tren/fstab_radni"
 arch-chroot /mnt /bin/bash
 passwd
 
@@ -125,17 +125,17 @@ else
 fi
 
 #			fstab
-printf "\ntmpfs /home/$username/tren tmpfs defaults,size=2048M 0 0\ntmpfs /home/$username/.cache/pikaur tmpfs default 0 0\ntmpfs /home/$username/.local/share/pikaur/aur_repos tmpfs defaults,size=2048M 0 0\ntmpfs /var/lib/systemd/coredumps tmpfs defaults,size=512M 0 0\ntmpfs /home/$username/.cargo tmpfs defaults,size=640M 0 0\ntmpfs /home/$username/chromium/cache tmpfs noatime,nodev,nosuid,size=1152M 0 0" >> "/home/$username/tren/fstab_radni"
-cp "/home/$username/tren/fstab_radni" > /etc/fstab
+printf "\ntmpfs /root/tren tmpfs defaults,size=2048M 0 0\ntmpfs /home/$username/tren tmpfs defaults,size=2048M 0 0\ntmpfs /home/$username/.cache/pikaur tmpfs default 0 0\ntmpfs /home/$username/.local/share/pikaur/aur_repos tmpfs defaults,size=2048M 0 0\ntmpfs /var/lib/systemd/coredumps tmpfs defaults,size=512M 0 0\ntmpfs /home/$username/.cargo tmpfs defaults,size=640M 0 0\ntmpfs /home/$username/chromium/cache tmpfs noatime,nodev,nosuid,size=1152M 0 0" >> "/root/tren/fstab_radni"
+cp "/root/tren/fstab_radni" > /etc/fstab
 cd "/home/$username"
-mkdir .cache
-mkdir .cache/pikaur
-mkdir .local
-mkdir .local/share
-mkdir .local/share/pikaur
-mkdir .local/share/pikaur/aur_repos
-mkdir /var/lib/systemd/coredumps
-mkdir .cargo
+sudo -u "$username" mkdir .cache
+sudo -u "$username" mkdir .cache/pikaur
+sudo -u "$username" mkdir .local
+sudo -u "$username" mkdir .local/share
+sudo -u "$username" mkdir .local/share/pikaur
+sudo -u "$username" mkdir .local/share/pikaur/aur_repos
+sudo -u "$username" mkdir /var/lib/systemd/coredumps
+sudo -u "$username" mkdir .cargo
 
 #			grub
 
@@ -172,14 +172,16 @@ ln -sf /usr/share/zoneinfo/Europe/Belgrade /etc/localtime
 #			skripte
 
 cd /tmp
-mkdir git_scripts
+sudo -u "$username" mkdir git_scripts
 cd git_scripts
-git clone https://github.com/donaastor/archgd.git
+sudo -u "$username" git clone https://github.com/donaastor/archgd.git
 cd archgd
 rm -rf .git
-mv scripts "/home/$username/scripts"
-mkdir "/home/$username/Pictures"
-mv poz.jpg poz_r.jpg "/home/$username/Pictures/"
+sudo -u "$username" mv scripts "/home/$username/scripts"
+sudo -u "$username" mkdir "/home/$username/Pictures"
+sudo -u "$username" mv poz.jpg poz_r.jpg "/home/$username/Pictures/"
+sudo -u "$username" mkdir "/home/$username/.config"
+sudo -u "$username" mv "geany" "/home/$username/.config/geany"
 
 #			getty
 
