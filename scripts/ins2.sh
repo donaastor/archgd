@@ -168,12 +168,19 @@ ln -s /usr/share/icons/Adwaita/cursors/left_ptr watch
 localectl --no-convert set-x11-keymap us,ru,rs,rs pc105 ,,latin,yz
 sudo -u "$username" mkdir /tmp/i3git
 cd /tmp/i3git
-sudo -u "$username" git clone --depth=1 https://github.com/donaastor/i3-config.git
+while ! sudo -u "$username" git clone --depth=1 https://github.com/donaastor/i3-config.git; do
+  reconnect
+done
 cd i3-config
 rm -r .git
 sudo -u "$username" mv .xbindkeysrc "/home/$username/.xbindkeysrc"
-cd ..
-sudo -u "$username" mv i3-config "/home/$username/.config/i3"
+sudo -u "$username" mkdir "/home/$username/.config/i3"
+sudo -u "$username" mv config status_script.sh "/home/$username/.config/i3/"
+if [ WIFI = 0 ]; then
+  sudo -u "$username" mv i3status-eth "/home/$username/.config/i3/i3status"
+else
+  sudo -u "$username" mv i3status-wifi "/home/$username/.config/i3/i3status"
+fi
 cd "/home/$username/.config/i3"
 chmod 755 status_script.sh
 mandb
@@ -183,9 +190,13 @@ sudo -u "$username" xdg-mime default org.pwmt.zathura.desktop application/pdf ap
 
 #			ungoogled-chromium
 
-curl -s 'https://download.opensuse.org/repositories/home:/ungoogled_chromium/Arch/x86_64/home_ungoogled_chromium_Arch.key' | pacman-key -a -
+while ! curl -s 'https://download.opensuse.org/repositories/home:/ungoogled_chromium/Arch/x86_64/home_ungoogled_chromium_Arch.key' | pacman-key -a -; do
+  reconnect
+done
 printf "[home_ungoogled_chromium_Arch]\nSigLevel = Required TrustAll\nServer = https://download.opensuse.org/repositories/home:/ungoogled_chromium/Arch/\$arch\n" | tee --append /etc/pacman.conf
-pacman -Sy --noconfirm pipewire-jack profile-sync-daemon ungoogled-chromium
+while ! pacman -Sy --noconfirm pipewire-jack profile-sync-daemon ungoogled-chromium; do
+  reconnect
+done
 if [ AMD_GPU = 1 ]; then
   sudo -u "$username" printf "--disk-cache-dir=/home/$username/chromium/cache\n--disk-cache-size=1073741824\n--ignore-gpu-blocklist\n--enable-gpu-rasterization\n--enable-zero-copy\n--enable-features=VaapiVideoDecoder\n--use-gl=egl\n" > /etc/chromium-flags.conf
 else
