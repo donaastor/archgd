@@ -34,18 +34,31 @@ fi
 
 
 
-
-
-
-# za svaku komandu stavi:
-#
-# if ! command; then
-#   echo "\nError, exiting...\n"
-#   exit 2
-# fi
-
-
-
+reconnect() {
+  local JOS=1
+  local WWAIT = 0
+  printf "Connecting...\n"
+  while [ JOS = 1 ]; do
+    if [ WWAIT = 1 ]; then
+      sleep 1
+    fi
+    if [ WIFI = 1 ]; then
+      if iwctl station wlan0 connect "$ssid_dft"; then
+        JOS = 0
+      else
+        printf "\n"
+      fi
+    else
+      if getent hosts archlinux.org; then
+        JOS = 0
+      else
+        printf "."
+      fi
+    fi
+    WWAIT = 1
+  done
+  printf "\n:)\n"
+}
 
 
 
@@ -53,7 +66,8 @@ fi
 
 #			internet
 
-iwctl station wlan0 connect "$ssid_dft"
+sleep 2
+reconnect
 
 #			getty
 
@@ -64,7 +78,9 @@ printf "[Service]\nExecStart=\nExecStart=-/sbin/agetty -o \'-p -f -- \\u\' --noc
 
 mkdir /tmp/pikaur_git
 cd /tmp/pikaur_git
-git clone https://aur.archlinux.org/pikaur.git
+while ! git clone https://aur.archlinux.org/pikaur.git; do
+  reconnect
+done
 cd pikaur
 makepkg -si
 sudo -u "$username" pikaur -Sy
@@ -73,22 +89,36 @@ sed -i 's/keepbuilddeps = no/keepbuilddeps = yes/' "/tmp/pikaur_radni.conf"
 sed -i 's/noedit = no/noedit = yes/' "/tmp/pikaur_radni.conf"
 sed -i 's/donteditbydefault = no/donteditbydefault = yes/' "/tmp/pikaur_radni.conf"
 sudo -u "$username" cp "/tmp/pikaur_radni.conf" "/home/$username/.config/pikaur.conf"
-pacman -S --noconfirm nano xorg-server xorg-xinit xorg-xrdb numlockx xbindkeys i3 rofi nitrogen picom pipewire pipewire-pulse pipewire-jack wireplumber rtkit alacritty pcmanfm-gtk3 feh zathura zathura-djvu zathura-pdf-poppler xdg-utils ttf-liberation man-db man-pages nnn htop calc geany geany-plugins lyx texlive-formatsextra texlive-langcyrillic texlive-latexextra texlive-science
-pikaur -S --noconfirm xidlehook xkb-switch xkblayout-state-git
+while ! pacman -S --noconfirm --needed nano xorg-server xorg-xinit xorg-xrdb numlockx xbindkeys i3 rofi nitrogen picom pipewire pipewire-pulse pipewire-jack wireplumber rtkit alacritty pcmanfm-gtk3 feh zathura zathura-djvu zathura-pdf-poppler xdg-utils ttf-liberation man-db man-pages nnn htop calc geany geany-plugins lyx texlive-formatsextra texlive-langcyrillic texlive-latexextra texlive-science; do
+  reconnect
+done
+while ! pikaur -S --noconfirm xidlehook xkb-switch xkblayout-state-git; do
+  reconnect
+done
 if [ AMD_GPU = 1 ]; then
   if [ GPU_NEW = 1 ]; then
-    pacman -S --noconfirm xf86-video-amdgpu libva-mesa-driver vulkan-tools mesa-utils libva-utils
+    while ! pacman -S --noconfirm xf86-video-amdgpu libva-mesa-driver vulkan-tools mesa-utils libva-utils; do
+      reconnect
+    done
   else
-    pacman -S --noconfirm xf86-video-ati libva-mesa-driver vulkan-tools mesa-utils libva-utils
+    while ! pacman -S --noconfirm xf86-video-ati libva-mesa-driver vulkan-tools mesa-utils libva-utils; do
+      reconnect
+    done
   fi
-  pikaur -S --noconfirm corectrl
+  while ! pikaur -S --noconfirm corectrl; do
+    reconnect
+  done
   sudo -u "$username" cp /usr/share/applications/org.corectrl.corectrl.desktop "/home/$username/.config/autostart/org.corectrl.corectrl.desktop"
   printf "polkit.addRule(function(action, subject){\n	if ((\n		action.id == \"org.corectrl.helper.init\" ||\n		action.id == \"org.corectrl.helperkiller.init\") &&\n		subject.local == true &&\n		subject.active == true &&\n		subject.isInGroup(\"wheel\")\n	){\n		return polkit.Result.YES;\n	}\n});" >> "/etc/polkit-1/rules.d/90-corectrl.rules"
   sudo -u "$username" printf "[General]\nstartOnSysTray=true\n" > "/home/$username/.config/corectrl/corectrl.ini"
 fi
 if [ AMD_CPU = 1 ]; then
-  pacman -S --noconfirm linux-headers dkms
-  pikaur -S --noconfirm zenpower3-dkms zenmonitor3-git
+  while ! pacman -S --noconfirm linux-headers dkms; do
+    reconnect
+  done
+  while ! pikaur -S --noconfirm zenpower3-dkms zenmonitor3-git; do
+    reconnect
+  done
   modprobe zenpower
 fi
 
