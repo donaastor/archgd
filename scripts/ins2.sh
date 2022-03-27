@@ -143,6 +143,8 @@ sed -i 's/^fade-in-step/#fade-in-step/' /tmp/picom_radni.conf
 sed -i 's/^fade-out-step/#fade-out-step/' /tmp/picom_radni.conf
 sed -i 's/^no-fading-openclose/#no-fading-openclose/' /tmp/picom_radni.conf
 sed -i 's/^fading = true\;/fading = false\;/' /tmp/picom_radni.conf
+esd -i 's/^\(.*popup_menu =.*opaciti =\)\( 0\.[0-9]\{1,2\}\)\(.*\)$/\1 0.93\3/' /tmp/picom_radni.conf
+esd -i 's/^\(.*dropdown_menu =.*opaciti =\)\( 0\.[0-9]\{1,2\}\)\(.*\)$/\1 0.93\3/' /tmp/picom_radni.conf
 sudo -u "$username" cp /tmp/picom_radni.conf /etc/xdg/picom.conf
 pactl set-sink-volume @DEFAULT_SINK@ 100%
 cd "/home/$username"
