@@ -136,7 +136,7 @@ fi
 
 sensors-detect --auto
 sed -i 's/^# set zap/set zap/' /etc/nanorc
-printf "\nalias ls=\'ls --color=tty\'\nalias q=\'exit\'\nalias cl=\'clear\'\nalias mount-u=\'sudo mount -o gid=users,fmask=113,dmask=002\'\nalias stfu=\'shutdown now\'\nslias sus=\'systemctl suspend\'\n" >> /etc/bash.bashrc
+printf "\nalias ls=\'ls --color=tty\'\nalias q=\'exit\'\nalias cl=\'clear\'\nalias mountu=\'sudo mount -o gid=users,fmask=113,dmask=002\'\nalias stfu=\'shutdown now\'\nslias sus=\'systemctl suspend\'\n" >> /etc/bash.bashrc
 sudo -u "$username" systemctl --user start pipewire-pulse
 sudo -u "$username" cp /etc/xdg/picom.conf /tmp/picom_radni.conf
 sed -i 's/^fade-in-step/#fade-in-step/' /tmp/picom_radni.conf
