@@ -60,17 +60,32 @@ fi
 
 
 
-# za svaku komandu stavi:
-#
-# if ! command; then
-#   echo "\nError, exiting...\n"
-#   exit 2
-# fi
 
-
-
-
-
+reconnect() {
+  local JOS=1
+  local WWAIT = 0
+  printf "Connecting..."
+  while [ JOS = 1 ]; do
+    if [ WWAIT = 1 ]; then
+      sleep 1
+    fi
+    if [ WIFI = 1 ]; then
+      if iwctl station wlan0 connect "$ssid_dft"; then
+        JOS = 0
+      else
+        printf "."
+      fi
+    else
+      if getent hosts archlinux.org; then
+        JOS = 0
+      else
+        printf "."
+      fi
+    fi
+    WWAIT = 1
+  done
+  printf ":)\n"
+}
 
 
 
@@ -90,7 +105,9 @@ fi
 #			linux
 
 mkdir /mnt/tmp
-pacstrap /mnt base base-devel linux linux-firmware grub networkmanager git
+while ! pacstrap /mnt base base-devel linux linux-firmware grub networkmanager git; do
+  reconnect
+done
 if [ WIFI = 1 ]; then
   cp -r /var/lib/iwd /mnt/var/lib/iwd
 fi
@@ -118,7 +135,9 @@ sed -i 's/^#Color/Color/' /etc/pacman.conf
 if [ WIFI = 0 ]; then
   systemctl enable NetworkManager
 else
-  pacman -S --noconfirm iwd
+  while ! pacman -S --noconfirm --needed iwd; do
+    reconnect
+  done
   printf "\n\n[General]\nEnableNetworkConfiguration=true" >> /etc/iwd/main.conf
   printf "\n\nnameserver 8.8.8.8" >> /etc/resolv.conf
   systemctl enable NetworkManager iwd
@@ -141,7 +160,9 @@ sudo -u "$username" mkdir .cargo
 #			grub
 
 if [ EFI = 1 ]; then
-  pacman -S --noconfirm efibootmgr
+  while ! pacman -S --noconfirm --needed efibootmgr; do
+    reconnect
+  done
   grub-install --target=x86_64-efi --efi-directory=/efi --bootloader-id=GRUB
 else
   grub-install $drive_name
@@ -156,9 +177,13 @@ else
   sed -i 's/\(^GRUB_CMDLINE_LINUX_DEFAULT.*\)\"/\1 mitigations=off\"/' grub
 fi
 if [ AMD_CPU = 1 ]; then
-  pacman -S --noconfirm amd-ucode
+  while ! pacman -S --noconfirm --needed amd-ucode; do
+    reconnect
+  done
 else
-  pacman -S --noconfirm intel-ucode
+  while ! pacman -S --noconfirm --needed intel-ucode; do
+    reconnect
+  done
 fi
 cp grub /etc/default/grub
 grub-mkconfig -o /boot/grub/grub.cfg
