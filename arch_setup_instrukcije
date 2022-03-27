@@ -34,6 +34,7 @@
 			format_percentage: "%.01f%s"
 		}
 --------------- SETUP ---------------
+sudo pacman -S xf86-video-amdgpu
 pikaur -S corectrl
 sudo pacman -S vulkan-tools mesa-utils
 cp /usr/share/applications/org.corectrl.corectrl.desktop ~/.config/autostart/org.corectrl.corectrl.desktop
