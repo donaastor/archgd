@@ -64,7 +64,7 @@ fi
 reconnect() {
   local JOS=1
   local WWAIT = 0
-  printf "Connecting..."
+  printf "Connecting...\n"
   while [ JOS = 1 ]; do
     if [ WWAIT = 1 ]; then
       sleep 1
@@ -73,7 +73,7 @@ reconnect() {
       if iwctl station wlan0 connect "$ssid_dft"; then
         JOS = 0
       else
-        printf "."
+        printf "\n"
       fi
     else
       if getent hosts archlinux.org; then
@@ -84,7 +84,7 @@ reconnect() {
     fi
     WWAIT = 1
   done
-  printf ":)\n"
+  printf "\n:)\n"
 }
 
 
