@@ -164,6 +164,7 @@ echo '
 SigLevel = Required TrustAll
 Server = https://download.opensuse.org/repositories/home:/ungoogled_chromium/Arch/$arch' | sudo tee --append /etc/pacman.conf
 pacman -Sy
+(uradi samo pacman -S pipewire-jack ungoogled-chromium, ili:)
 pacman -S ungoogled-chromium
 	[pipewire-jack]
 pacman -Scc
