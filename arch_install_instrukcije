@@ -32,7 +32,7 @@
 		  fi
 		  if [ $boi = 1 ]; then
 		    iwctl station wlan0 connect "$ssid"
-		  elif [ boi = 0 ]; then
+		  elif [ $boi = 0 ]; then
 		    iwctl station wlan0 connect "$1"
 		  fi
 		}
