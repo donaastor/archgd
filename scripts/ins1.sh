@@ -1,56 +1,56 @@
 #!/bin/bash
 
-local num_od_args=$#
+num_od_args=$#
 if [ "num_of_args" -lt "6" ]; then
   printf "At least 6 arguments expected:\n1. Next script\n2. BIOS type: BIOS or EFI\n3. Boot partition\n4. Root partition\n5. (optional, only if BIOS selected) name of the whole drive\n6. username\n7. parameters... a string of 0's and 1's\n    first bit: set iff you have an AMD processor\n    second bit: set iff you have an AMD GPU, specifically set 2 if it's GCN 3 or newer\n    third bit: set iff wifi available and ethernet not available, additional argument: SSID\n    fourth bit: set iff you want to set up for HiDPI\n    fifth bit: set iff you have a battery\n"
 fi
 if [ "$2" = "EFI" ]; then
-  local EFI=1
-  local username="$5"
-  local params="$6"
+  EFI=1
+  username="$5"
+  params="$6"
 elif [ "$2" = "BIOS" ]; then
-  local EFI=0
+  EFI=0
   if [ -z "$7" ]; then
     echo "Missing arguments"
     exit 1
   fi
-  local drive_name="$5"
-  local username="$6"
-  local params="$7"
+  drive_name="$5"
+  username="$6"
+  params="$7"
 else
   printf "Can't recognize the BIOS type,\nset either EFI or BIOS.\n"
   exit 1
 fi
-local next_script="$1"
-local prt1="$3"
-local prt2="$4"
+next_script="$1"
+prt1="$3"
+prt2="$4"
 if [ "${params:0:1}" = "1" ]; then
-  local AMD_GPU=1
+  AMD_GPU=1
 else
-  local AMD_GPU=0
+  AMD_GPU=0
 fi
 if [ "${params:1:1}" = "1" ]; then
-  local AMD_CPU=1
+  AMD_CPU=1
 else
-  local AMD_CPU=0
+  AMD_CPU=0
 fi
 if [ "${params:2:1}" = "1" ]; then
-  local WIFI=1
-  if [ EFI = 1 ]; then
+  WIFI=1
+  if [ $EFI = 1 ]; then
     if [ -z "$7" ]; then
       echo "Missing arguments"
       exit 1
     fi
-    local ssid_dft="$7"
+    ssid_dft="$7"
   elif
     if [ -z "$8" ]; then
       echo "Missing arguments"
       exit 1
     fi
-    local ssid_dft="$8"
+    ssid_dft="$8"
   fi
 else
-  local WIFI=0
+  WIFI=0
 fi
 
 
@@ -63,26 +63,26 @@ fi
 
 reconnect() {
   local JOS=1
-  local WWAIT = 0
+  local WWAIT=0
   printf "Connecting...\n"
-  while [ JOS = 1 ]; do
-    if [ WWAIT = 1 ]; then
+  while [ $JOS = 1 ]; do
+    if [ $WWAIT = 1 ]; then
       sleep 1
     fi
-    if [ WIFI = 1 ]; then
+    if [ $WIFI = 1 ]; then
       if iwctl station wlan0 connect "$ssid_dft"; then
-        JOS = 0
+        JOS=0
       else
         printf "\n"
       fi
     else
       if getent hosts archlinux.org; then
-        JOS = 0
+        JOS=0
       else
         printf "."
       fi
     fi
-    WWAIT = 1
+    WWAIT=1
   done
   printf "\n:)\n"
 }
@@ -94,7 +94,7 @@ reconnect() {
 mkfs.fat -F 32 "$prt1"
 mkfs.ext4 "$prt2"
 mount "$prt2" /mnt
-if [ EFI = 1 ]; then
+if [ $EFI = 1 ]; then
   mkdir /mnt/efi
   mount "$prt1" /mnt/efi
 else
@@ -108,7 +108,7 @@ mkdir /mnt/tmp
 while ! pacstrap /mnt base base-devel linux linux-firmware grub networkmanager git; do
   reconnect
 done
-if [ WIFI = 1 ]; then
+if [ $WIFI = 1 ]; then
   cp -r /var/lib/iwd /mnt/var/lib/iwd
 fi
 mkdir "/mnt/root"
@@ -132,7 +132,7 @@ sed -i 's/^#Color/Color/' /etc/pacman.conf
 
 #			internet
 
-if [ WIFI = 0 ]; then
+if [ $WIFI = 0 ]; then
   systemctl enable NetworkManager
 else
   while ! pacman -S --noconfirm --needed iwd; do
@@ -159,7 +159,7 @@ sudo -u "$username" mkdir .cargo
 
 #			grub
 
-if [ EFI = 1 ]; then
+if [ $EFI = 1 ]; then
   while ! pacman -S --noconfirm --needed efibootmgr; do
     reconnect
   done
@@ -171,12 +171,12 @@ mkdir /tmp/grub_radni
 cd /tmp/grub_radni
 cp /etc/default/grub grub
 sed -i 's/#GRUB_TIMEOUT=5/GRUB_TIMEOUT=1/' grub
-if [ AMD_GPU = 1 ]; then
+if [ $AMD_GPU = 1 ]; then
   sed -i 's/\(^GRUB_CMDLINE_LINUX_DEFAULT.*\)\"/\1 amdgpu.ppfeaturemask=0xffffffff mitigations=off\"/' grub
 else
   sed -i 's/\(^GRUB_CMDLINE_LINUX_DEFAULT.*\)\"/\1 mitigations=off\"/' grub
 fi
-if [ AMD_CPU = 1 ]; then
+if [ $AMD_CPU = 1 ]; then
   while ! pacman -S --noconfirm --needed amd-ucode; do
     reconnect
   done
@@ -217,7 +217,7 @@ cd /etc/systemd/system
 mkdir "getty@tty1.service.d"
 cd "getty@tty1.service.d"
 printf "[Service]\nExecStart=\nExecStart=-/sbin/agetty -o \'-p -f -- \\u\' --noclear --autologin root - $TERM\nType=simple\n" > autologin.conf
-if [ WIFI = 1 ]; then
+if [ $WIFI = 1 ]; then
   printf "/bin/bash \"/home/$username/scripts/$next_script\" $username \"$params\" \"$ssid_dft\"" >> "/home/$username/.bashrc"
 else
   printf "/bin/bash \"/home/$username/scripts/$next_script\" $username \"$params\"" >> "/home/$username/.bashrc"
