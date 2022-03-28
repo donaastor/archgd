@@ -94,7 +94,7 @@ sed -i 's/keepbuilddeps = no/keepbuilddeps = yes/' "/tmp/pikaur_radni.conf"
 sed -i 's/noedit = no/noedit = yes/' "/tmp/pikaur_radni.conf"
 sed -i 's/donteditbydefault = no/donteditbydefault = yes/' "/tmp/pikaur_radni.conf"
 sudo -u "$username" cp "/tmp/pikaur_radni.conf" "/home/$username/.config/pikaur.conf"
-while ! pacman -S --noconfirm --needed nano xorg-server xorg-xinit xorg-xrdb numlockx xbindkeys i3 rofi nitrogen picom pipewire pipewire-pulse pipewire-jack wireplumber rtkit alacritty pcmanfm-gtk3 feh zathura zathura-djvu zathura-pdf-poppler xdg-utils ttf-liberation man-db man-pages nnn htop calc geany geany-plugins lyx texlive-formatsextra texlive-langcyrillic texlive-latexextra texlive-science flameshot zip unzip p7zip; do
+while ! pacman -S --noconfirm --needed nano xorg-server xorg-xinit xorg-xrdb numlockx xbindkeys i3 rofi nitrogen picom pipewire pipewire-pulse pipewire-jack wireplumber rtkit alacritty pcmanfm-gtk3 feh zathura zathura-djvu zathura-pdf-poppler xdg-utils ttf-liberation man-db man-pages nnn htop calc geany geany-plugins lyx texlive-formatsextra texlive-langcyrillic texlive-latexextra texlive-science flameshot zip unzip p7zip openssh ufw tmux vlc; do
   reconnect
 done
 if [ $BATT = 1 ]; then
@@ -205,6 +205,11 @@ cd "/home/$username/.config/i3"
 chmod 755 status_script.sh
 mandb
 printf "<?xml version=\"1.0\"?>\n<!DOCTYPE fontconfig SYSTEM \"urn:fontconfig:fonts.dtd\">\n<fontconfig>\n	<match target=\"pattern\">\n	<test name=\"family\" qual=\"any\">\n		<string>monospace</string>\n	</test>\n	<edit binding=\"strong\" mode=\"prepend\" name=\"family\">\n		<string>LiberationMono</string>\n	</edit>\n	</match>\n</fontconfig>" > /etc/fonts/local.conf
+systemctl start ufw
+systemctl enable ufw
+ufw default allow outgoing
+ufw default deny incoming
+ufw enable
 sudo -u "$username" xdg-mime default feh.desktop image/png image/jpeg
 sudo -u "$username" xdg-mime default org.pwmt.zathura.desktop application/pdf image/vnd.djvu
 sudo -u "$username" xdg-mime default lyx.desktop text/x-tex
