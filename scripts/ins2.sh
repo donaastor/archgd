@@ -1,38 +1,38 @@
 #!/bin/bash
 
-local username="$1"
-local params="$2"
+username="$1"
+params="$2"
 
 if [ "${params:0:1}" = "0" ]; then
-  local AMD_GPU=0
+  AMD_GPU=0
 else
-  local AMD_GPU=1
+  AMD_GPU=1
   if [ "${params:0:1}" = "2" ]; then
-    local GPU_NEW=1
+    GPU_NEW=1
   else
-    local AMD_NEW=0
+    AMD_NEW=0
   fi
 fi
 if [ "${params:1:1}" = "1" ]; then
-  local AMD_CPU=1
+  AMD_CPU=1
 else
-  local AMD_CPU=0
+  AMD_CPU=0
 fi
 if [ "${params:2:1}" = "1" ]; then
-  local WIFI=1
-  local ssid_dft="$3"
+  WIFI=1
+  ssid_dft="$3"
 else
-  local WIFI=0
+  WIFI=0
 fi
 if [ "${params:3:1}" = "1" ]; then
-  local HIDPI=1
+  HIDPI=1
 else
-  local HIDPI=0
+  HIDPI=0
 fi
 if [ "${params:4:1}" = "1" ]; then
-  local BATT=1
+  BATT=1
 else
-  local BATT=0
+  BATT=0
 fi
 
 
@@ -41,26 +41,26 @@ fi
 
 reconnect() {
   local JOS=1
-  local WWAIT = 0
+  local WWAIT=0
   printf "Connecting...\n"
-  while [ JOS = 1 ]; do
-    if [ WWAIT = 1 ]; then
+  while [ $JOS = 1 ]; do
+    if [ $WWAIT = 1 ]; then
       sleep 1
     fi
-    if [ WIFI = 1 ]; then
+    if [ $WIFI = 1 ]; then
       if iwctl station wlan0 connect "$ssid_dft"; then
-        JOS = 0
+        JOS=0
       else
         printf "\n"
       fi
     else
       if getent hosts archlinux.org; then
-        JOS = 0
+        JOS=0
       else
         printf "."
       fi
     fi
-    WWAIT = 1
+    WWAIT=1
   done
   printf "\n:)\n"
 }
@@ -97,7 +97,7 @@ sudo -u "$username" cp "/tmp/pikaur_radni.conf" "/home/$username/.config/pikaur.
 while ! pacman -S --noconfirm --needed nano xorg-server xorg-xinit xorg-xrdb numlockx xbindkeys i3 rofi nitrogen picom pipewire pipewire-pulse pipewire-jack wireplumber rtkit alacritty pcmanfm-gtk3 feh zathura zathura-djvu zathura-pdf-poppler xdg-utils ttf-liberation man-db man-pages nnn htop calc geany geany-plugins lyx texlive-formatsextra texlive-langcyrillic texlive-latexextra texlive-science flameshot; do
   reconnect
 done
-if [ BATT = 1 ]; then
+if [ $BATT = 1 ]; then
   while ! pacman -S --noconfirm --needed acpi; do
     reconnect
   done
@@ -105,8 +105,8 @@ fi
 while ! pikaur -S --noconfirm xidlehook xkb-switch xkblayout-state-git; do
   reconnect
 done
-if [ AMD_GPU = 1 ]; then
-  if [ GPU_NEW = 1 ]; then
+if [ $AMD_GPU = 1 ]; then
+  if [ $GPU_NEW = 1 ]; then
     while ! pacman -S --noconfirm xf86-video-amdgpu libva-mesa-driver vulkan-tools mesa-utils libva-utils; do
       reconnect
     done
@@ -122,7 +122,7 @@ if [ AMD_GPU = 1 ]; then
   printf "polkit.addRule(function(action, subject){\n	if ((\n		action.id == \"org.corectrl.helper.init\" ||\n		action.id == \"org.corectrl.helperkiller.init\") &&\n		subject.local == true &&\n		subject.active == true &&\n		subject.isInGroup(\"wheel\")\n	){\n		return polkit.Result.YES;\n	}\n});" >> "/etc/polkit-1/rules.d/90-corectrl.rules"
   sudo -u "$username" printf "[General]\nstartOnSysTray=true\n" > "/home/$username/.config/corectrl/corectrl.ini"
 fi
-if [ AMD_CPU = 1 ]; then
+if [ $AMD_CPU = 1 ]; then
   while ! pacman -S --noconfirm linux-headers dkms; do
     reconnect
   done
@@ -148,18 +148,18 @@ sed -i 's/^\(.*dropdown_menu =.*opacity =\)\( 0\.[0-9]\{1,2\}\)\(.*\)$/\1 0.93\3
 sudo -u "$username" cp /tmp/picom_radni.conf /etc/xdg/picom.conf
 pactl set-sink-volume @DEFAULT_SINK@ 100%
 cd "/home/$username"
-if [ HIDPI = 1 ]; then
+if [ $HIDPI = 1 ]; then
   sudo -u "$username" printf "Xft.dpi: 192\n" > .Xresources
 fi
 nitrogen --set-zoom-fill "/home/$username/Pictures/poz.jpg"
-if [ AMD_GPU = 1 ]; then
-  if [ HIDPI = 1 ]; then
+if [ $AMD_GPU = 1 ]; then
+  if [ $HIDPI = 1 ]; then
     sudo -u "$username" printf "[[ -f ~/.Xresources ]] && xrdb -merge -I$HOME ~/.Xresources\nxset s noblank\nxset s noexpose\nxset s 0 0\nxset +dpms\nxset 0 180 0\nnumlockx &\nxset r rate 250 30\nxbindkeys &\nif ! pgrep -f xidlehook; then\n  xidlehook --timer 600 \'systemctl suspend -i\' \'\' &\nfi\npicom --experimental-backends &\nexport QT_SCREEN_SCALE_FACTORS=1.5\ncorectrl &\nnitrogen --restore &\nexec i3" > .xinitrc
   else
     sudo -u "$username" printf "[[ -f ~/.Xresources ]] && xrdb -merge -I$HOME ~/.Xresources\nxset s noblank\nxset s noexpose\nxset s 0 0\nxset +dpms\nxset 0 180 0\nnumlockx &\nxset r rate 250 30\nxbindkeys &\nif ! pgrep -f xidlehook; then\n  xidlehook --timer 600 \'systemctl suspend -i\' \'\' &\nfi\npicom --experimental-backends &\ncorectrl &\nnitrogen --restore &\nexec i3" > .xinitrc
   fi
 else
-  if [ HIDPI = 1 ]; then
+  if [ $HIDPI = 1 ]; then
     sudo -u "$username" printf "[[ -f ~/.Xresources ]] && xrdb -merge -I$HOME ~/.Xresources\nxset s noblank\nxset s noexpose\nxset s 0 0\nxset +dpms\nxset 0 180 0\nnumlockx &\nxset r rate 250 30\nxbindkeys &\nif ! pgrep -f xidlehook; then\n  xidlehook --timer 600 \'systemctl suspend -i\' \'\' &\nfi\npicom --experimental-backends &\nexport QT_SCREEN_SCALE_FACTORS=1.5\nnitrogen --restore &\nexec i3" > .xinitrc
   else
     sudo -u "$username" printf "[[ -f ~/.Xresources ]] && xrdb -merge -I$HOME ~/.Xresources\nxset s noblank\nxset s noexpose\nxset s 0 0\nxset +dpms\nxset 0 180 0\nnumlockx &\nxset r rate 250 30\nxbindkeys &\nif ! pgrep -f xidlehook; then\n  xidlehook --timer 600 \'systemctl suspend -i\' \'\' &\nfi\npicom --experimental-backends &\nnitrogen --restore &\nexec i3" > .xinitrc
@@ -188,14 +188,14 @@ rm -r .git
 sudo -u "$username" mv .xbindkeysrc "/home/$username/.xbindkeysrc"
 sudo -u "$username" mkdir "/home/$username/.config/i3"
 sudo -u "$username" mv config status_script.sh "/home/$username/.config/i3/"
-if [ WIFI = 0 ]; then
-  if [ BATT = 0 ]; then
+if [ $WIFI = 0 ]; then
+  if [ $BATT = 0 ]; then
     sudo -u "$username" mv i3status "/home/$username/.config/i3/i3status"
   else
     sudo -u "$username" mv i3status-bat "/home/$username/.config/i3/i3status"
   fi
 else
-  if [ BATT = 0 ]; then
+  if [ $BATT = 0 ]; then
     sudo -u "$username" mv i3status-wifi "/home/$username/.config/i3/i3status"
   else
     sudo -u "$username" mv i3status-wifi-bat "/home/$username/.config/i3/i3status"
@@ -218,7 +218,7 @@ printf "[home_ungoogled_chromium_Arch]\nSigLevel = Required TrustAll\nServer = h
 while ! pacman -Sy --noconfirm pipewire-jack profile-sync-daemon ungoogled-chromium; do
   reconnect
 done
-if [ AMD_GPU = 1 ]; then
+if [ $AMD_GPU = 1 ]; then
   sudo -u "$username" printf "--disk-cache-dir=/home/$username/chromium/cache\n--disk-cache-size=1073741824\n--ignore-gpu-blocklist\n--enable-gpu-rasterization\n--enable-zero-copy\n--enable-features=VaapiVideoDecoder\n--use-gl=egl\n" > /etc/chromium-flags.conf
 else
   sudo -u "$username" printf "--disk-cache-dir=/home/$username/chromium/cache\n--disk-cache-size=1073741824\n" > /etc/chromium-flags.conf
