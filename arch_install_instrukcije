@@ -33,7 +33,7 @@
 		}
 	u i3status:
 		wireless wlan0 {
- 		       format_up = "W: %ip (%essid, %quality)"
+ 		        format_up = "W: %ip (%essid, %quality)"
         		format_down = "W"
 		}
 		ethernet enp2s0 {
