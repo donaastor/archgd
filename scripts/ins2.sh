@@ -206,7 +206,8 @@ chmod 755 status_script.sh
 mandb
 printf "<?xml version=\"1.0\"?>\n<!DOCTYPE fontconfig SYSTEM \"urn:fontconfig:fonts.dtd\">\n<fontconfig>\n	<match target=\"pattern\">\n	<test name=\"family\" qual=\"any\">\n		<string>monospace</string>\n	</test>\n	<edit binding=\"strong\" mode=\"prepend\" name=\"family\">\n		<string>LiberationMono</string>\n	</edit>\n	</match>\n</fontconfig>" > /etc/fonts/local.conf
 sudo -u "$username" xdg-mime default feh.desktop image/png image/jpeg
-sudo -u "$username" xdg-mime default org.pwmt.zathura.desktop application/pdf application/djvu
+sudo -u "$username" xdg-mime default org.pwmt.zathura.desktop application/pdf image/vnd.djvu
+sudo -u "$username" xdg-mime default lyx.desktop text/x-tex
 
 #			ungoogled-chromium
 
