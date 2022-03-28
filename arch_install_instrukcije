@@ -17,17 +17,22 @@
 	systemctl start NetworkManager iwd
 	u .bashrc:
 		wifi() {
-		  local boi=0
-		  if [ "$1" = "tata" ]; then
-		    boi=1
+		  local boi=1
+		  if [ "$1" = "off" ]; then
+		    iwctl station wlan0 disconnect
+		    boi=2
+		  elif [ "$1" = "tata" ]; then
 		    local ssid="Galaxy A1227EC"
 		  elif [ "$1" = "moj" ]; then
-		    boi=1
 		    local ssid="Dona_Astor"
+		  elif [ "$1" = "sony" ]; then
+		    local ssid="12RVWOvref62cyg9"
+		  else
+		    boi=0
 		  fi
 		  if [ $boi = 1 ]; then
 		    iwctl station wlan0 connect "$ssid"
-		  else
+		  elif [ boi = 0 ]; then
 		    iwctl station wlan0 connect "$1"
 		  fi
 		}
@@ -36,7 +41,7 @@
  		        format_up = "W: %ip (%essid, %quality)"
         		format_down = "W"
 		}
-		ethernet enp2s0 {
+		ethernet _first_ {
         		format_up = "E: %ip (%speed)"
         		format_down = "E"
 		}
