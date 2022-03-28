@@ -207,7 +207,7 @@ cd archgd
 rm -rf .git
 sudo -u "$username" mv scripts "/home/$username/scripts"
 sudo -u "$username" mkdir "/home/$username/Pictures"
-sudo -u "$username" mv poz.jpg poz_r.jpg "/home/$username/Pictures/"
+sudo -u "$username" mv poz_r.jpg "/home/$username/Pictures/poz.jpg"
 sudo -u "$username" mkdir "/home/$username/.config"
 sudo -u "$username" mv "geany" "/home/$username/.config/geany"
 
