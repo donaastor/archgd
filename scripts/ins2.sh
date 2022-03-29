@@ -102,7 +102,7 @@ if [ $BATT = 1 ]; then
     reconnect
   done
 fi
-while ! pikaur -S --noconfirm xidlehook xkb-switch xkblayout-state-git; do
+while ! pikaur -S --noconfirm xidlehook xkb-switch-i3 xkblayout-state-git; do
   reconnect
 done
 if [ $AMD_GPU = 1 ]; then
@@ -213,6 +213,7 @@ ufw enable
 sudo -u "$username" xdg-mime default feh.desktop image/png image/jpeg
 sudo -u "$username" xdg-mime default org.pwmt.zathura.desktop application/pdf image/vnd.djvu
 sudo -u "$username" xdg-mime default lyx.desktop text/x-tex
+sudo -u "$username" xdg-mime default geany.desktop text/x-c++
 
 #			ungoogled-chromium
 
