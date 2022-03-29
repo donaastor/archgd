@@ -94,7 +94,7 @@ sed -i 's/keepbuilddeps = no/keepbuilddeps = yes/' "/tmp/pikaur_radni.conf"
 sed -i 's/noedit = no/noedit = yes/' "/tmp/pikaur_radni.conf"
 sed -i 's/donteditbydefault = no/donteditbydefault = yes/' "/tmp/pikaur_radni.conf"
 sudo -u "$username" cp "/tmp/pikaur_radni.conf" "/home/$username/.config/pikaur.conf"
-while ! pacman -S --noconfirm --needed nano xorg-server xorg-xinit xorg-xrdb numlockx xbindkeys i3 rofi nitrogen picom pipewire pipewire-pulse pipewire-jack wireplumber rtkit alacritty pcmanfm-gtk3 feh zathura zathura-djvu zathura-pdf-poppler xdg-utils ttf-liberation man-db man-pages nnn htop calc geany geany-plugins lyx texlive-formatsextra texlive-langcyrillic texlive-latexextra texlive-science flameshot zip unzip p7zip openssh ufw tmux vlc; do
+while ! pacman -S --noconfirm --needed nano xorg-server xorg-xinit xorg-xrdb numlockx xbindkeys i3 rofi nitrogen picom pipewire pipewire-pulse pipewire-jack wireplumber rtkit alacritty pcmanfm-gtk3 feh zathura zathura-djvu zathura-pdf-poppler xdg-utils ttf-liberation man-db man-pages nnn htop calc geany geany-plugins lyx texlive-formatsextra texlive-langcyrillic texlive-latexextra texlive-science flameshot zip unzip p7zip openssh ufw tmux vlc perl-file-mimeinfo; do
   reconnect
 done
 if [ $BATT = 1 ]; then
@@ -213,7 +213,7 @@ ufw enable
 sudo -u "$username" xdg-mime default feh.desktop image/png image/jpeg
 sudo -u "$username" xdg-mime default org.pwmt.zathura.desktop application/pdf image/vnd.djvu
 sudo -u "$username" xdg-mime default lyx.desktop text/x-tex
-sudo -u "$username" xdg-mime default geany.desktop text/x-c++
+sudo -u "$username" xdg-mime default geany.desktop text/plain text/html text/x-c text/x-c++ text/x-java-source text/x-script text/x-script.python
 
 #			ungoogled-chromium
 
