@@ -184,7 +184,7 @@ while ! sudo -u "$username" git clone --depth=1 https://github.com/donaastor/i3-
   reconnect
 done
 cd i3-config
-rm -r .git
+rm -rf .git
 sudo -u "$username" mv .xbindkeysrc "/home/$username/.xbindkeysrc"
 sudo -u "$username" mkdir "/home/$username/.config/i3"
 sudo -u "$username" mv config status_script.sh "/home/$username/.config/i3/"
@@ -201,6 +201,8 @@ else
     sudo -u "$username" mv i3status-wifi-bat "/home/$username/.config/i3/i3status"
   fi
 fi
+g++ kbswtb.cpp -o kbswtb -pipe -fwrapv -fno-plt -fno-semantic-interposition -std=c++20 -mcmodel=large -march=x86-64 -mtune=generic -Wshadow -Wno-unused-result -Wall -L /usr/lib -lm -lz -lcrypt -lutil -ldl -lpthread -lrt -O3 -lX11 -lxkbfile
+mv kbswtb /opt/kbswtb
 cd "/home/$username/.config/i3"
 chmod 755 status_script.sh
 mandb
