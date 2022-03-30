@@ -202,7 +202,9 @@ ln -sf /usr/share/zoneinfo/Europe/Belgrade /etc/localtime
 cd /tmp
 sudo -u "$username" mkdir git_scripts
 cd git_scripts
-sudo -u "$username" git clone https://github.com/donaastor/archgd.git
+while ! sudo -u "$username" git clone https://github.com/donaastor/archgd.git; do
+  reconnect
+done
 cd archgd
 rm -rf .git
 sudo -u "$username" mv scripts "/home/$username/scripts"
