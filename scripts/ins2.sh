@@ -34,7 +34,7 @@ if [ "${params:4:1}" = "1" ]; then
 else
   BATT=0
 fi
-if [ "${params:4:1}" = "1" ]; then
+if [ "${params:5:1}" = "1" ]; then
   MORE_PROGS=1
 else
   MORE_PROGS=0
