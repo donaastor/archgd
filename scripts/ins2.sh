@@ -34,6 +34,11 @@ if [ "${params:4:1}" = "1" ]; then
 else
   BATT=0
 fi
+if [ "${params:4:1}" = "1" ]; then
+  MORE_PROGS=1
+else
+  MORE_PROGS=0
+fi
 
 
 
@@ -94,7 +99,12 @@ sed -i 's/keepbuilddeps = no/keepbuilddeps = yes/' "/tmp/pikaur_radni.conf"
 sed -i 's/noedit = no/noedit = yes/' "/tmp/pikaur_radni.conf"
 sed -i 's/donteditbydefault = no/donteditbydefault = yes/' "/tmp/pikaur_radni.conf"
 sudo -u "$username" cp "/tmp/pikaur_radni.conf" "/home/$username/.config/pikaur.conf"
-while ! pacman -S --noconfirm --needed nano xorg-server xorg-xinit xorg-xrdb numlockx xbindkeys i3 rofi nitrogen picom pipewire pipewire-pulse pipewire-jack wireplumber rtkit alacritty pcmanfm-gtk3 feh zathura zathura-djvu zathura-pdf-poppler xdg-utils ttf-liberation man-db man-pages nnn htop calc geany geany-plugins lyx texlive-formatsextra texlive-langcyrillic texlive-latexextra texlive-science flameshot zip unzip p7zip openssh ufw tmux vlc perl-file-mimeinfo; do
+if [ $MORE_PROGS = 1 ]; then
+  ad_progs="lyx texlive-formatsextra texlive-langcyrillic texlive-latexextra texlive-science openssh tmux vlc feh zathura zathura-djvu zathura-pdf-poppler flameshot calc geany geany-plugins pcmanfm-gtk3"
+else
+  ad_progs=""
+fi
+while ! pacman -S --noconfirm --needed nano xorg-server xorg-xinit xorg-xrdb numlockx xbindkeys i3 rofi nitrogen picom pipewire pipewire-pulse pipewire-jack wireplumber rtkit alacritty xdg-utils ttf-liberation man-db man-pages nnn htop perl-file-mimeinfo zip unzip p7zip ufw $ad_progs; do
   reconnect
 done
 if [ $BATT = 1 ]; then
@@ -212,10 +222,12 @@ systemctl enable ufw
 ufw default allow outgoing
 ufw default deny incoming
 ufw enable
-sudo -u "$username" xdg-mime default feh.desktop image/png image/jpeg
-sudo -u "$username" xdg-mime default org.pwmt.zathura.desktop application/pdf image/vnd.djvu
-sudo -u "$username" xdg-mime default lyx.desktop text/x-tex
-sudo -u "$username" xdg-mime default geany.desktop text/plain text/html text/x-c text/x-c++ text/x-java-source text/x-script text/x-script.python
+if [ $MORE_PROGS = 1 ]; then
+  sudo -u "$username" xdg-mime default feh.desktop image/png image/jpeg
+  sudo -u "$username" xdg-mime default org.pwmt.zathura.desktop application/pdf image/vnd.djvu
+  sudo -u "$username" xdg-mime default lyx.desktop text/x-tex
+  sudo -u "$username" xdg-mime default geany.desktop text/plain text/html text/x-c text/x-c++ text/x-java-source text/x-script text/x-script.python
+fi
 
 #			ungoogled-chromium
 
