@@ -2,7 +2,7 @@
 
 num_od_args=$#
 if [ "num_of_args" -lt "6" ]; then
-  printf "At least 6 arguments expected:\n1. Next script\n2. BIOS type: BIOS or EFI\n3. Boot partition\n4. Root partition\n5. (optional, only if BIOS selected) name of the whole drive\n6. username\n7. parameters... a string of 0's and 1's\n    first bit: set iff you have an AMD processor\n    second bit: set iff you have an AMD GPU, specifically set 2 if it's GCN 3 or newer\n    third bit: set iff wifi available and ethernet not available, additional argument: SSID\n    fourth bit: set iff you want to set up for HiDPI\n    fifth bit: set iff you have a battery\n"
+  printf "At least 6 arguments expected:\n1. Next script\n2. BIOS type: BIOS or EFI\n3. Boot partition\n4. Root partition\n5. (optional, only if BIOS selected) name of the whole drive\n6. username\n7. parameters... a string of 0's and 1's\n    first bit: set iff you have an AMD processor\n    second bit: set iff you have an AMD GPU, specifically set 2 if it's GCN 3 or newer\n    third bit: set iff wifi available and ethernet not available, additional argument: SSID\n    fourth bit: set iff you want to set up for HiDPI\n    fifth bit: set iff you have a battery\n    sixth bit: set iff you want more programs installed\n"
 fi
 if [ "$2" = "EFI" ]; then
   EFI=1
@@ -52,8 +52,11 @@ if [ "${params:2:1}" = "1" ]; then
 else
   WIFI=0
 fi
-
-
+if [ "${params:5:1}" = "1" ]; then
+  MORE_PROGS=1
+else
+  MORE_PROGS=0
+fi
 
 
 
@@ -211,7 +214,9 @@ sudo -u "$username" mv scripts "/home/$username/scripts"
 sudo -u "$username" mkdir "/home/$username/Pictures"
 sudo -u "$username" mv poz_r.jpg "/home/$username/Pictures/poz.jpg"
 sudo -u "$username" mkdir "/home/$username/.config"
-sudo -u "$username" mv "geany" "/home/$username/.config/geany"
+if [ $MORE_PROGS = 1 ]; then
+  sudo -u "$username" mv "geany" "/home/$username/.config/geany"
+fi
 
 #			getty
 
