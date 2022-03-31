@@ -227,6 +227,7 @@ if [ $MORE_PROGS = 1 ]; then
   sudo -u "$username" xdg-mime default org.pwmt.zathura.desktop application/pdf image/vnd.djvu
   sudo -u "$username" xdg-mime default lyx.desktop text/x-tex
   sudo -u "$username" xdg-mime default geany.desktop text/plain text/html text/x-c text/x-c++ text/x-java-source text/x-script text/x-script.python
+  sudo -u "$username" xdg-mime default pcmanfm.desktop inode/mount-point inode/directory
 fi
 
 #			ungoogled-chromium
