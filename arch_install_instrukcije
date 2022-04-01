@@ -57,7 +57,7 @@
 -------------- INSTALL --------------
 nakon sto bootujemo u arch live, radimo:
 1. proveravamo imamo li internet:
-	pacman -Sy
+	ping archlinux.org
 1.1 ako nemamo, namestamo Wi-Fi:
 	iwctl
 	device list
@@ -85,7 +85,6 @@ nakon sto bootujemo u arch live, radimo:
 	fdisk -l
 5. pokreni skriptu:
 	cd /tmp
-	pacman -Sy
 	curl https://raw.githubusercontent.com/donaastor/archgd/main/scripts/ins.sh > ins.sh
 	bash ins.sh
 	(i sad prati sta ti pise)
