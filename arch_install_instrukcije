@@ -86,6 +86,6 @@ nakon sto bootujemo u arch live, radimo:
 5. pokreni skriptu:
 	cd /tmp
 	pacman -Sy
-	curl https://raw.githubusercontent.com/donaastor/archgd/main/scripts/ins1.sh > ins1.sh
-	bash ins1.sh
+	curl https://raw.githubusercontent.com/donaastor/archgd/main/scripts/ins.sh > ins.sh
+	bash ins.sh
 	(i sad prati sta ti pise)
