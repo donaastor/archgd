@@ -114,57 +114,57 @@ reconnect() {
 
 #			formatiranje
 
-echo "Press enter"; read line
+echo "Press enter [fat32]"; read line
 mkfs.fat -F 32 "$prt1"
-echo "Press enter"; read line
+echo "Press enter [ext4]"; read line
 mkfs.ext4 "$prt2"
-echo "Press enter"; read line
+echo "Press enter [mount root]"; read line
 mount "$prt2" /mnt
 if [ $EFI = 1 ]; then
-  echo "Press enter"; read line
+  echo "Press enter [efi]"; read line
   mkdir /mnt/efi
-  echo "Press enter"; read line
+  echo "Press enter [mount efi]"; read line
   mount "$prt1" /mnt/efi
 else
-  echo "Press enter"; read line
+  echo "Press enter [boot]"; read line
   mkdir /mnt/boot
-  echo "Press enter"; read line
+  echo "Press enter [mount boot]"; read line
   mount "$prt1" /mnt/boot
 fi
 
 #			linux
 
-echo "Press enter"; read line
-mkdir /mnt/tmp
-echo "Press enter"; read line
-while ! pacstrap /mnt base base-devel linux linux-firmware grub networkmanager git; do
+echo "Press enter [pacstrap]"; read line
+while ! pacstrap /mnt base base-devel linux linux-firmware grub networkmanager; do
   reconnect
 done
 if [ $WIFI = 1 ]; then
-  echo "Press enter"; read line
+  echo "Press enter [WiFi]"; read line
   cp -r /var/lib/iwd /mnt/var/lib/iwd
 fi
-echo "Press enter"; read line
+echo "Press enter [root/tren]"; read line
 mkdir "/mnt/root/tren"
-echo "Press enter"; read line
+echo "Press enter [mount tren]"; read line
 mount -t tmpfs tmpfs -o defaults,size=128M "/mnt/root/tren"
-echo "Press enter"; read line
+echo "Press enter [genfstab]"; read line
 genfstab -U /mnt >> "/mnt/root/tren/fstab_radni"
-echo "Press enter"; read line
-cd /tmp
-echo "Press enter"; read line
-curl https://raw.githubusercontent.com/donaastor/archgd/main/scripts/ins-chroot.sh > ins-chroot.sh
-echo "Press enter"; read line
+echo "Press enter [cd tren]"; read line
+cd /mnt/root/tren
+echo "Press enter [ins-chroot]"; read line
+while ! curl https://raw.githubusercontent.com/donaastor/archgd/main/scripts/ins-chroot.sh > ins-chroot.sh; do
+  reconnect
+done
+echo "Press enter [args]"; read line
 args_array=("$@")
 ELEMENTS=${#args_array[@]}
 argx=""
 for (( i=0;i<$ELEMENTS;i++)); do
   argx+="\"${args_array[${i}]}\" "
 done
-echo "Press enter"; read line
+echo "Press enter [print args]"; read line
 echo $argx
-echo "Press enter"; read line
-arch-chroot /mnt /bin/bash /tmp/ins-chroot.sh $argx
+echo "Press enter [arch-chroot]"; read line
+arch-chroot /mnt /bin/bash /root/tren/ins-chroot.sh $argx
 
 #			reboot
 
