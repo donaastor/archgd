@@ -116,17 +116,13 @@ reconnect() {
 #			user
 
 echo "Press enter [passwd root]"; read line
+echo "For root!"
 passwd
 echo "Press enter [useradd]"; read line
 useradd -mg wheel $username
 echo "Press enter [passwd user]"; read line
+echo "For user!"
 passwd $username
-echo "Press enter [sed sudoers]"; read line
-sed -i 's/^# %sudo/%sudo/' /etc/sudoers
-echo "Press enter [groupadd sudo]"; read line
-groupadd sudo
-echo "Press enter [gpasswd]"; read line
-gpasswd -a $username sudo
 
 #			pacman
 
@@ -154,6 +150,15 @@ echo "Press enter [pacman more tools]"; read line
 while ! pacman -S --noconfirm --needed networkmanager grub git base-devel; do
   reconnect
 done
+
+#			sudo
+
+echo "Press enter [sed sudoers]"; read line
+sed -i 's/^# %sudo/%sudo/' /etc/sudoers
+echo "Press enter [groupadd sudo]"; read line
+groupadd sudo
+echo "Press enter [gpasswd]"; read line
+gpasswd -a $username sudo
 
 #			internet
 
