@@ -174,6 +174,8 @@ else
   while ! pacman -S --noconfirm --needed iwd; do
     reconnect
   done
+  echo "Press enter [mkdir /etc/iwd]"; read line
+  mkdir /etc/iwd
   echo "Press enter [wifi dns]"; read line
   printf "\n\n[General]\nEnableNetworkConfiguration=true\n" > /etc/iwd/main.conf
   echo "Press enter [wifi resolv]"; read line
