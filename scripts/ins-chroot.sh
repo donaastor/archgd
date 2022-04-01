@@ -175,7 +175,7 @@ else
     reconnect
   done
   echo "Press enter [wifi dns]"; read line
-  printf "\n\n[General]\nEnableNetworkConfiguration=true" >> /etc/iwd/main.conf
+  printf "\n\n[General]\nEnableNetworkConfiguration=true\n" > /etc/iwd/main.conf
   echo "Press enter [wifi resolv]"; read line
   printf "\n\nnameserver 8.8.8.8" >> /etc/resolv.conf
   echo "Press enter [network manager, iwd]"; read line
