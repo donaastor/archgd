@@ -154,17 +154,14 @@ echo "Press enter [ins-chroot]"; read line
 while ! curl https://raw.githubusercontent.com/donaastor/archgd/main/scripts/ins-chroot.sh > ins-chroot.sh; do
   reconnect
 done
-echo "Press enter [args]"; read line
-args_array=("$@")
-ELEMENTS=${#args_array[@]}
-argx=""
-for (( i=0;i<$ELEMENTS;i++)); do
-  argx+="\"${args_array[${i}]}\" "
-done
-echo "Press enter [print args]"; read line
-echo $argx
 echo "Press enter [arch-chroot]"; read line
-arch-chroot /mnt /bin/bash /root/tren/ins-chroot.sh $argx
+if [ $num_of_args = 5 ]; then
+  arch-chroot /mnt /bin/bash /root/tren/ins-chroot.sh "$1" "$2" "$3" "$4" "$5"
+elif [ $num_of_args = 6 ]; then
+  arch-chroot /mnt /bin/bash /root/tren/ins-chroot.sh "$1" "$2" "$3" "$4" "$5" "$6"
+elif [ $num_of_args = 7 ]; then
+  arch-chroot /mnt /bin/bash /root/tren/ins-chroot.sh "$1" "$2" "$3" "$4" "$5" "$6" "$7"
+fi
 
 #			reboot
 
