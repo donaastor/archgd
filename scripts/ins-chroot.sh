@@ -117,12 +117,16 @@ reconnect() {
 
 echo "Press enter [passwd root]"; read line
 echo "For root!"
-passwd
+while ! passwd; do
+  echo "Please try again"
+done
 echo "Press enter [useradd]"; read line
 useradd -mg wheel $username
 echo "Press enter [passwd user]"; read line
 echo "For user!"
-passwd $username
+while ! passwd $username; do
+  echo "Please try again"
+done
 
 #			pacman
 
