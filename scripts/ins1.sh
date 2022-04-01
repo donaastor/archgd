@@ -43,7 +43,7 @@ if [ "${params:2:1}" = "1" ]; then
       exit 1
     fi
     ssid_dft="$7"
-  elif
+  else
     if [ -z "$8" ]; then
       echo "Missing arguments"
       exit 1
