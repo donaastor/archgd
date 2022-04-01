@@ -239,10 +239,10 @@ read line
 printf "[Service]\nExecStart=\nExecStart=-/sbin/agetty -o \'-p -f -- \\u\' --noclear --autologin root - $TERM\nType=simple\n" > autologin.conf
 if [ $WIFI = 1 ]; then
   read line
-  printf "/bin/bash \"/home/$username/scripts/$next_script\" $username \"$params\" \"$ssid_dft\"" >> "/home/$username/.bashrc"
+  printf "/bin/bash \"/home/$username/scripts/ins-2.sh\" $username \"$params\" \"$ssid_dft\"" >> "/home/$username/.bashrc"
 else
   read line
-  printf "/bin/bash \"/home/$username/scripts/$next_script\" $username \"$params\"" >> "/home/$username/.bashrc"
+  printf "/bin/bash \"/home/$username/scripts/ins-2.sh\" $username \"$params\"" >> "/home/$username/.bashrc"
 fi
 
 #			exit
