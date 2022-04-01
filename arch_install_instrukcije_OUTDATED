@@ -27,6 +27,8 @@
 		    local ssid="Dona_Astor"
 		  elif [ "$1" = "sony" ]; then
 		    local ssid="12RVWOvref62cyg9"
+		  elif [ "$1" = "ajla" ]; then
+		    local ssid="ZTE_4A8889"
 		  else
 		    boi=0
 		  fi
@@ -38,12 +40,12 @@
 		}
 	u i3status:
 		wireless wlan0 {
- 		        format_up = "W: %ip (%essid, %quality)"
-        		format_down = "W"
+			format_up = "W: %ip (%essid, %quality)"
+			format_down = "W"
 		}
 		ethernet _first_ {
-        		format_up = "E: %ip (%speed)"
-        		format_down = "E"
+			format_up = "E: %ip (%speed)"
+			format_down = "E"
 		}
 2. Brightness
 	kao root:
@@ -56,6 +58,13 @@
 nakon sto bootujemo u arch live, radimo:
 1. proveravamo imamo li internet:
 	ping archlinux.org
+1.1 ako nemamo, namestamo Wi-Fi:
+	iwctl
+	device list
+	station _device_ scan
+	station _device_ get-networks
+	station _device_ connect _SSID_
+	quit
 2. namestamo sat:
 	timedatectl set-ntp true
 3. pravimo particije na disku:
@@ -76,7 +85,8 @@ nakon sto bootujemo u arch live, radimo:
 	fdisk -l
 5. pokreni skriptu:
 	cd /tmp
-	git clone https://github.com/donaastor/archgd.git
-	cd archgd/scripts
-	/bin/bash ins1.sh ins2.sh
+	pacman -Sy
+	pacman -S wget
+	wget https://raw.githubusercontent.com/donaastor/archgd/main/scripts/ins1.sh
+	bash ins1.sh
 	(i sad prati sta ti pise)
