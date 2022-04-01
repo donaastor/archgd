@@ -135,7 +135,7 @@ fi
 #			linux
 
 echo "Press enter [pacstrap]"; read line
-while ! pacstrap /mnt base base-devel linux linux-firmware grub networkmanager; do
+while ! pacstrap /mnt base linux linux-firmware; do
   reconnect
 done
 if [ $WIFI = 1 ]; then
