@@ -163,7 +163,7 @@ if [ $AMD_GPU = 1 ]; then
   sudo -u "$username" printf "[General]\nstartOnSysTray=true\n" > "/home/$username/.config/corectrl/corectrl.ini"
   read line
 fi
-if [ $AMD_CPU = 1 ]; then
+if [ $CPU_NEW = 1 ]; then
   read line
   while ! pacman -S --noconfirm linux-headers dkms; do
     reconnect
