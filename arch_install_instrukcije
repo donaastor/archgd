@@ -57,7 +57,7 @@
 -------------- INSTALL --------------
 nakon sto bootujemo u arch live, radimo:
 1. proveravamo imamo li internet:
-	ping archlinux.org
+	pacman -Sy
 1.1 ako nemamo, namestamo Wi-Fi:
 	iwctl
 	device list
@@ -86,7 +86,6 @@ nakon sto bootujemo u arch live, radimo:
 5. pokreni skriptu:
 	cd /tmp
 	pacman -Sy
-	pacman -S wget
-	wget https://raw.githubusercontent.com/donaastor/archgd/main/scripts/ins1.sh
+	curl https://raw.githubusercontent.com/donaastor/archgd/main/scripts/ins1.sh > ins1.sh
 	bash ins1.sh
 	(i sad prati sta ti pise)
