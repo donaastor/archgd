@@ -2,21 +2,25 @@
 
 username="$1"
 params="$2"
-
 if [ "${params:0:1}" = "0" ]; then
+  AMD_CPU=0
+else
+  AMD_CPU=1
+  if [ "${params:0:1}" = "2" ]; then
+    CPU_NEW=1
+  else
+    CPU_NEW=0
+  fi
+fi
+if [ "${params:1:1}" = "0" ]; then
   AMD_GPU=0
 else
   AMD_GPU=1
-  if [ "${params:0:1}" = "2" ]; then
+  if [ "${params:1:1}" = "2" ]; then
     GPU_NEW=1
   else
-    AMD_NEW=0
+    GPU_NEW=0
   fi
-fi
-if [ "${params:1:1}" = "1" ]; then
-  AMD_CPU=1
-else
-  AMD_CPU=0
 fi
 if [ "${params:2:1}" = "1" ]; then
   WIFI=1
@@ -39,6 +43,8 @@ if [ "${params:5:1}" = "1" ]; then
 else
   MORE_PROGS=0
 fi
+
+
 
 
 
