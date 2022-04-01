@@ -205,7 +205,7 @@ sudo -u "$username" mkdir .local/share/pikaur
 echo "Press enter [mkdir .local/share/pikaur/aur_repos]"; read line
 sudo -u "$username" mkdir .local/share/pikaur/aur_repos
 echo "Press enter [mkdir /var/lib/systemd/coredumps]"; read line
-sudo -u "$username" mkdir /var/lib/systemd/coredumps
+mkdir /var/lib/systemd/coredumps
 echo "Press enter [mkdir .cargo]"; read line
 sudo -u "$username" mkdir .cargo
 
@@ -291,7 +291,7 @@ mkdir "getty@tty1.service.d"
 echo "Press enter [cd getty_tty_service_d]"; read line
 cd "getty@tty1.service.d"
 echo "Press enter [autologin.conf]"; read line
-printf "[Service]\nExecStart=\nExecStart=-/sbin/agetty -o \'-p -f -- \\u\' --noclear --autologin root - $TERM\nType=simple\n" > autologin.conf
+printf "[Service]\nExecStart=\nExecStart=-/sbin/agetty -o \'-p -f -- \\\\\\\\u\' --noclear --autologin root - \$TERM\nType=simple\n" > autologin.conf
 if [ $WIFI = 1 ]; then
   echo "Press enter [prep ins-2, wifi]"; read line
   printf "\n/bin/bash \"/home/$username/scripts/ins-2.sh\" $username \"$params\" \"$ssid_dft\"" >> "/home/$username/.bashrc"
