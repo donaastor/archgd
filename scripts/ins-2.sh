@@ -231,6 +231,8 @@ sudo -u "$username" cp "/home/$username/.bashrc" /tmp/bashrc_radni
 echo "Press enter"; read line
 sed -i 's/^alias ls.*$//' /tmp/bashrc_radni
 echo "Press enter"; read line
+sed -i 's/^\/bin\/bash .*$//' /tmp/bashrc_radni
+echo "Press enter"; read line
 printf "if [ -z \"\${DISPLAY}\" ] && [ \"\${XDG_VTNR}\" -eq 1 ]; then\n  startx\nfi\n" >> /tmp/bashrc_radni
 echo "Press enter"; read line
 sudo -u "$username" cp /tmp/bashrc_radni "/home/$username/.bashrc"
