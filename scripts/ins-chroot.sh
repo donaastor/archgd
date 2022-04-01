@@ -133,6 +133,28 @@ gpasswd -a $username sudo
 echo "Press enter [sed pacman]"; read line
 sed -i 's/^#Color/Color/' /etc/pacman.conf
 
+#			jezik i vreme
+
+echo "Press enter [cd /etc]"; read line
+cd /etc
+echo "Press enter [sed locale.gen]"; read line
+sed -i 's/#en_US/en_US/g' locale.gen
+echo "Press enter [locale-gen]"; read line
+locale-gen
+echo "Press enter [locale.conf]"; read line
+echo "LANG=en_US.UTF-8" >> locale.conf
+echo "Press enter [hostname]"; read line
+echo arch >> hostname
+echo "Press enter [localtime]"; read line
+ln -sf /usr/share/zoneinfo/Europe/Belgrade /etc/localtime
+
+#			more tools
+
+echo "Press enter [pacman more tools]"; read line
+while ! pacman -S --noconfirm --needed networkmanager grub git base-devel; do
+  reconnect
+done
+
 #			internet
 
 if [ $WIFI = 0 ]; then
@@ -219,28 +241,6 @@ echo "Press enter [cp grub /etc/default/grub]"; read line
 cp grub /etc/default/grub
 echo "Press enter [grub-mkconfig]"; read line
 grub-mkconfig -o /boot/grub/grub.cfg
-
-#			jezik i vreme
-
-echo "Press enter [cd /etc]"; read line
-cd /etc
-echo "Press enter [sed locale.gen]"; read line
-sed -i 's/#en_US/en_US/g' locale.gen
-echo "Press enter [locale-gen]"; read line
-locale-gen
-echo "Press enter [locale.conf]"; read line
-echo "LANG=en_US.UTF-8" >> locale.conf
-echo "Press enter [hostname]"; read line
-echo arch >> hostname
-echo "Press enter [localtime]"; read line
-ln -sf /usr/share/zoneinfo/Europe/Belgrade /etc/localtime
-
-#			git
-
-echo "Press enter [pacman git]"; read line
-while ! pacman -S --noconfirm --needed git; do
-  reconnect
-done
 
 #			skripte
 
