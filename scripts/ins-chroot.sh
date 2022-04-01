@@ -206,14 +206,14 @@ else
   read line
   sed -i 's/\(^GRUB_CMDLINE_LINUX_DEFAULT.*\)\"/\1 mitigations=off\"/' grub
 fi
-if [ $AMD_CPU = 1 ]; then
+if [ $AMD_CPU = 0 ]; then
   read line
-  while ! pacman -S --noconfirm --needed amd-ucode; do
+  while ! pacman -S --noconfirm --needed intel-ucode; do
     reconnect
   done
 else
   read line
-  while ! pacman -S --noconfirm --needed intel-ucode; do
+  while ! pacman -S --noconfirm --needed amd-ucode; do
     reconnect
   done
 fi
@@ -286,4 +286,4 @@ fi
 
 #			exit
 
-exit
+exit 0
