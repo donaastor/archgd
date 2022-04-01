@@ -168,5 +168,7 @@ arch-chroot /mnt /bin/bash /root/tren/ins-chroot.sh $argx
 
 #			reboot
 
+echo "Press enter [umount]"; read line
 umount -R /mnt
+echo "Press enter [reboot]"; read line
 reboot
