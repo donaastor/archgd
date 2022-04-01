@@ -114,56 +114,56 @@ reconnect() {
 
 #			formatiranje
 
-read line
+echo "Press enter"; read line
 mkfs.fat -F 32 "$prt1"
-read line
+echo "Press enter"; read line
 mkfs.ext4 "$prt2"
-read line
+echo "Press enter"; read line
 mount "$prt2" /mnt
 if [ $EFI = 1 ]; then
-  read line
+  echo "Press enter"; read line
   mkdir /mnt/efi
-  read line
+  echo "Press enter"; read line
   mount "$prt1" /mnt/efi
 else
-  read line
+  echo "Press enter"; read line
   mkdir /mnt/boot
-  read line
+  echo "Press enter"; read line
   mount "$prt1" /mnt/boot
 fi
 
 #			linux
 
-read line
+echo "Press enter"; read line
 mkdir /mnt/tmp
-read line
+echo "Press enter"; read line
 while ! pacstrap /mnt base base-devel linux linux-firmware grub networkmanager git; do
   reconnect
 done
 if [ $WIFI = 1 ]; then
-  read line
+  echo "Press enter"; read line
   cp -r /var/lib/iwd /mnt/var/lib/iwd
 fi
-read line
+echo "Press enter"; read line
 mkdir "/mnt/root/tren"
-read line
+echo "Press enter"; read line
 mount -t tmpfs tmpfs -o defaults,size=128M "/mnt/root/tren"
-read line
+echo "Press enter"; read line
 genfstab -U /mnt >> "/mnt/root/tren/fstab_radni"
-read line
+echo "Press enter"; read line
 cd /tmp
-read line
+echo "Press enter"; read line
 curl https://raw.githubusercontent.com/donaastor/archgd/main/scripts/ins-chroot.sh > ins-chroot.sh
-read line
+echo "Press enter"; read line
 args_array=("$@")
 ELEMENTS=${#args_array[@]}
 argx=""
 for (( i=0;i<$ELEMENTS;i++)); do
   argx+="\"${args_array[${i}]}\" "
 done
-read line
+echo "Press enter"; read line
 echo $argx
-read line
+echo "Press enter"; read line
 arch-chroot /mnt /bin/bash /tmp/ins-chroot.sh $argx
 
 #			reboot
