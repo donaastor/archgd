@@ -166,6 +166,9 @@ fi
 #			reboot
 
 # echo "Press enter [umount]"; read line
-umount -R /mnt
+sleep 1
+while ! umount -R /mnt; do
+  sleep 1
+done
 echo "Press enter [reboot]"; read line
 reboot
