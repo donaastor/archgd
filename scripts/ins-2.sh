@@ -96,11 +96,11 @@ printf "[Service]\nExecStart=\nExecStart=-/sbin/agetty -o \'-p -f -- \\\\\\\\u\'
 #			programi
 
 echo "Press enter [mkdir /tmp/pikaur_git]"; read line
-mkdir /tmp/pikaur_git
+sudo -u "$username" mkdir /tmp/pikaur_git
 echo "Press enter [cd /tmp/pikaur_git]"; read line
 cd /tmp/pikaur_git
 echo "Press enter [git clone pikaur]"; read line
-while ! git clone https://aur.archlinux.org/pikaur.git; do
+while ! sudo -u "$username" git clone https://aur.archlinux.org/pikaur.git; do
   reconnect
 done
 echo "Press enter [cd pikaur]"; read line
