@@ -298,13 +298,6 @@ else
   printf "\n/bin/bash \"/home/$username/scripts/ins-2.sh\" $username \"$params\"\n" >> "/root/.bash_profile"
 fi
 
-#			resolv.conf
-
-if [ $WIFI = 1 ]; then
-#   echo "Press enter [wifi resolv]"; read line
-  printf "\n\nnameserver 8.8.8.8" >> /etc/resolv.conf
-fi
-
 #			exit
 
 # echo "Press enter [exit chroot]"; read line
