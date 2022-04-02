@@ -176,8 +176,8 @@ fi
 
 #			konfiguracije
 
-echo "Press enter [fix /root/.bashrc]"; read line
-sed -i 's/^\/bin\/bash .*$//' /root/.bashrc
+echo "Press enter [rm /root/.bash_profile]"; read line
+rm /root/.bash_profile
 
 echo "Press enter [sensors-detect --auto]"; read line
 sensors-detect --auto
