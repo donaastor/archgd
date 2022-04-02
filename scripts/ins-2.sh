@@ -89,7 +89,7 @@ reconnect
 #			getty
 
 echo "Press enter [cd getty]"; read line
-cd "/etc/systemd/system/getty@tty1.sevice.d"
+cd "/etc/systemd/system/getty@tty1.service.d"
 echo "Press enter [fix getty]"; read line
 printf "[Service]\nExecStart=\nExecStart=-/sbin/agetty -o \'-p -f -- \\\\\\\\u\' --noclear --autologin $username - \$TERM\nType=simple\nEnvironment=XDG_SESSION_TYPE=x11\n" > autologin.conf
 
