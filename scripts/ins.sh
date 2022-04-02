@@ -166,7 +166,6 @@ fi
 #			reboot
 
 # echo "Press enter [umount]"; read line
-sleep 1
 while ! umount -R /mnt; do
   sleep 1
 done
