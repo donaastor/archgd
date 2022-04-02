@@ -80,6 +80,43 @@ reconnect() {
 
 
 
+aur_get_one() {
+  echo "Press enter to start building from AUR: $1"; read line
+  cd /tmp/aur_repos
+  while ! sudo -u "$username" git clone https://aur.archlinux.org/$1.git; do
+    reconnect
+  done
+  cd $1
+  
+  sed -n '/^.*depends = .*$/p' .SRCINFO > tren1
+  sed '/^.*optdepends = .*$/d' tren1 > tren2
+  sed 's/^.*depends = \(.*\)$/\1/' tren2 > tren3
+  local dpd_list="$(tr '\n' ' ' < tren3)"
+  rm tren1 tren2 tren3
+  while ! pacman -S --noconfirm --needed $dpd_list; do
+    reconnect
+  done
+  sudo -u "$username" makepkg
+  find . -maxdepth 1 -type f -iregex "^\./$1.*\.pkg\.tar\.zst$" > tren5
+  local pkg_name="$(sed -n '1p' tren5)"
+  rm tren5
+  while ! pacman -U --noconfirm "${pkg_name}"; do
+    reconnect
+  done
+  echo "Press enter to continue..."; read line
+}
+
+aur_get() {
+  while (( "$#" )); do
+    aur_get_one $1
+    shift
+  done
+}
+
+
+
+
+
 #			internet
 
 sleep 2
@@ -95,38 +132,13 @@ printf "[Service]\nExecStart=\nExecStart=-/sbin/agetty -o \'-p -f -- \\\\\\\\u\'
 
 #			programi
 
-echo "Press enter [mkdir /tmp/pikaur_git]"; read line
-sudo -u "$username" mkdir /tmp/pikaur_git
-echo "Press enter [cd /tmp/pikaur_git]"; read line
-cd /tmp/pikaur_git
-echo "Press enter [git clone pikaur]"; read line
-while ! sudo -u "$username" git clone https://aur.archlinux.org/pikaur.git; do
-  reconnect
-done
-echo "Press enter [cd pikaur]"; read line
-cd pikaur
+echo "Press enter [mkdir /tmp/aur_repos]"; read line
+sudo -u "$username" mkdir /tmp/aur_repos
 
-echo "Press enter [extract dependencies]"; read line
-sed -n '/^.*depends = .*$/p' .SRCINFO > tren1
-sed '/^.*optdepends = .*$/d' tren1 > tren2
-sed 's/^.*depends = \(.*\)$/\1/' tren2 > tren3
-tren4="$(tr '\n' ' ' < tren3)"
-rm tren1 tren2 tren3
-echo "Press enter [pacman depend's]"; read line
-while ! pacman -S --noconfirm --needed $tren4; do
-  reconnect
-done
+echo "Press enter [aur_get pikaur]"; read line
+aur_get pikaur
 
-echo "Press enter [makepkg]"; read line
-sudo -u "$username" makepkg
-
-echo "Press enter [extracting pkg name]"; read line
-find . -maxdepth 1 -type f -name '*.pkg.tar.zst' > tren5
-pikaur_pkg_name="$(sed -n '1p' tren5)"
-echo "Press enter [installing pikaur]"; read line
-pacman -U --noconfirm "$pikaur_pkg_name"
-
-echo "Press enter [pikaur -Sy]"; read line
+echo "Press enter [pikaur (create conf)]"; read line
 sudo -u "$username" pikaur
 echo "Press enter [cp pikaur.conf]"; read line
 sudo -u "$username" cp "/home/$username/.config/pikaur.conf" "/tmp/pikaur_radni.conf"
@@ -156,10 +168,8 @@ if [ $BATT = 1 ]; then
     reconnect
   done
 fi
-echo "Press enter [pikaur ...!!!]"; read line
-while ! pikaur -S --noconfirm xidlehook xkb-switch-i3 xkblayout-state-git $aur_progs; do
-  reconnect
-done
+echo "Press enter [aur_get ...!!!]"; read line
+aur_get xidlehook xkb-switch-i3 xkblayout-state-git $aur_progs
 if [ $AMD_GPU = 1 ]; then
   echo "Press enter [pacman vulkan...]"; read line
   if [ $GPU_NEW = 1 ]; then
@@ -171,10 +181,8 @@ if [ $AMD_GPU = 1 ]; then
       reconnect
     done
   fi
-  echo "Press enter [pikaur corectrl]"; read line
-  while ! pikaur -S --noconfirm corectrl; do
-    reconnect
-  done
+  echo "Press enter [aur_get corectrl]"; read line
+  aur_get corectrl
   echo "Press enter [cp corectrl.desktop]"; read line
   sudo -u "$username" cp /usr/share/applications/org.corectrl.corectrl.desktop "/home/$username/.config/autostart/org.corectrl.corectrl.desktop"
   echo "Press enter [printf polkit rule]"; read line
@@ -187,10 +195,8 @@ if [ $CPU_NEW = 1 ]; then
   while ! pacman -S --noconfirm linux-headers dkms; do
     reconnect
   done
-  echo "Press enter [pikaur zen3]"; read line
-  while ! pikaur -S --noconfirm zenpower3-dkms zenmonitor3-git; do
-    reconnect
-  done
+  echo "Press enter [aur_get zen3]"; read line
+  aur_get zenpower3-dkms zenmonitor3-git
   echo "Press enter [modprobe zenpower]"; read line
   modprobe zenpower
 fi
@@ -369,6 +375,8 @@ sudo -u "$username" systemctl --user start psd
 
 #			cleaning
 
+echo "Press enter [cleaning rust]"; read line
+pacman -Rsn rust
 echo "Press enter [cleaning pacman]"; read line
 rm -rf /var/cache/pacman/pkg
 
