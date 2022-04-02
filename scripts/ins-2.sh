@@ -105,8 +105,23 @@ while ! sudo -u "$username" git clone https://aur.archlinux.org/pikaur.git; do
 done
 echo "Press enter [cd pikaur]"; read line
 cd pikaur
-echo "Press enter [makepkg -si]"; read line
-sudo -u "$username" makepkg -si
+
+sed -n '/^.*depends = .*$/p' .SRCINFO > tren1
+sed '/^.*optdepends = .*$/d' tren1 > tren2
+sed 's/^.*depends = \(.*\)$/\1/' tren2 > tren3
+tren4="$(tr '\n' ' ' < tren3)"
+rm tren1 tren2 tren3
+while ! pacman -S --noconfirm --needed $tren4; do
+  reconnect
+done
+
+echo "Press enter [makepkg]"; read line
+sudo -u "$username" makepkg
+
+find . -maxdepth 1 -type f -name '*.pkg.tar.zst' > tren5
+pikaur_pkg_name="$(sed -n '1p' tren5)"
+pacman -U --noconfirm "$pikaur_pkg_name"
+
 echo "Press enter [pikaur -Sy]"; read line
 sudo -u "$username" pikaur -Sy
 echo "Press enter [cd pikaur.conf]"; read line
