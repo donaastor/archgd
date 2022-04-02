@@ -323,33 +323,35 @@ fi
 
 #			ungoogled-chromium
 
-echo "Press enter"; read line
+echo "Press enter [add ug-ch to pacman-key]"; read line
 while ! curl -s 'https://download.opensuse.org/repositories/home:/ungoogled_chromium/Arch/x86_64/home_ungoogled_chromium_Arch.key' | pacman-key -a -; do
   reconnect
 done
-echo "Press enter"; read line
+echo "Press enter [add ug-ch to /etc/pacman.conf]"; read line
 printf "[home_ungoogled_chromium_Arch]\nSigLevel = Required TrustAll\nServer = https://download.opensuse.org/repositories/home:/ungoogled_chromium/Arch/\$arch\n" | tee --append /etc/pacman.conf
-echo "Press enter"; read line
+echo "Press enter [pacman ungoogled-chromium]"; read line
 while ! pacman -Sy --noconfirm pipewire-jack profile-sync-daemon ungoogled-chromium; do
   reconnect
 done
-echo "Press enter"; read line
+echo "Press enter [printf /etc/chromium-flags.conf]"; read line
 if [ $AMD_GPU = 1 ]; then
-  sudo -u "$username" printf "--disk-cache-dir=/home/$username/chromium/cache\n--disk-cache-size=1073741824\n--ignore-gpu-blocklist\n--enable-gpu-rasterization\n--enable-zero-copy\n--enable-features=VaapiVideoDecoder\n--use-gl=egl\n" > /etc/chromium-flags.conf
+  sudo -u "$username" printf -- "--disk-cache-dir=/home/$username/chromium/cache\n--disk-cache-size=1073741824\n--ignore-gpu-blocklist\n--enable-gpu-rasterization\n--enable-zero-copy\n--enable-features=VaapiVideoDecoder\n--use-gl=egl\n" > /etc/chromium-flags.conf
 else
-  sudo -u "$username" printf "--disk-cache-dir=/home/$username/chromium/cache\n--disk-cache-size=1073741824\n" > /etc/chromium-flags.conf
+  sudo -u "$username" printf -- "--disk-cache-dir=/home/$username/chromium/cache\n--disk-cache-size=1073741824\n" > /etc/chromium-flags.conf
 fi
-echo "Press enter"; read line
+echo "Press enter [sed psd.conf]"; read line
 sudo -u "$username" sed -i 's/^.*\"USE_BACKUPS\"=\"yes\".*$/\"USE_BACKUPS\"=\"no\"/' "/home/$username/.config/psd/psd.conf"
-echo "Press enter"; read line
+echo "Press enter [enable psd]"; read line
 sudo -u "$username" systemctl --user enable psd
-echo "Press enter"; read line
+echo "Press enter [start psd]"; read line
 sudo -u "$username" systemctl --user start psd
 
 #			cleaning
 
+echo "Press enter [cleaning pacman]"; read line
 rm -rf /var/cache/pacman/pkg
 
 #			reboot
 
+echo "Press enter [reboot]"; read line
 reboot
