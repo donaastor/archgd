@@ -106,7 +106,7 @@ done
 echo "Press enter [cd pikaur]"; read line
 cd pikaur
 echo "Press enter [makepkg -si]"; read line
-makepkg -si
+sudo -u "$username" makepkg -si
 echo "Press enter [pikaur -Sy]"; read line
 sudo -u "$username" pikaur -Sy
 echo "Press enter [cd pikaur.conf]"; read line
