@@ -124,7 +124,7 @@ pacman -U --noconfirm "$pikaur_pkg_name"
 
 echo "Press enter [pikaur -Sy]"; read line
 sudo -u "$username" pikaur -Sy
-echo "Press enter [cd pikaur.conf]"; read line
+echo "Press enter [cp pikaur.conf]"; read line
 sudo -u "$username" cp "/home/$username/.config/pikaur.conf" "/tmp/pikaur_radni.conf"
 echo "Press enter [sed pikaur.conf keepbuilddeps]"; read line
 sed -i 's/keepbuilddeps = no/keepbuilddeps = yes/' "/tmp/pikaur_radni.conf"
