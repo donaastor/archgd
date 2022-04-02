@@ -176,101 +176,103 @@ fi
 
 #			konfiguracije
 
+echo "Press enter [fix /root/.bashrc]"; read line
+sed -i 's/^\/bin\/bash .*$//' /root/.bashrc
+
 echo "Press enter [sensors-detect --auto]"; read line
 sensors-detect --auto
 echo "Press enter [sed nanorc]"; read line
 sed -i 's/^# set zap/set zap/' /etc/nanorc
-echo "Press enter [printf .bashrc (aliases)]"; read line
+echo "Press enter [printf bash.bashrc (aliases)]"; read line
 printf "\nalias ls=\'ls --color=tty\'\nalias q=\'exit\'\nalias cl=\'clear\'\nalias mountu=\'sudo mount -o gid=users,fmask=113,dmask=002\'\nalias stfu=\'shutdown now\'\nalias sus=\'systemctl suspend\'\n" >> /etc/bash.bashrc
-echo "Press enter"; read line
+
+echo "Press enter [start pipewire-pulse]"; read line
 sudo -u "$username" systemctl --user start pipewire-pulse
-echo "Press enter"; read line
-sudo -u "$username" cp /etc/xdg/picom.conf /tmp/picom_radni.conf
-echo "Press enter"; read line
+echo "Press enter [cp picom.conf]"; read line
+cp /etc/xdg/picom.conf /tmp/picom_radni.conf
+echo "Press enter [sed fade-in-step]"; read line
 sed -i 's/^fade-in-step/#fade-in-step/' /tmp/picom_radni.conf
-echo "Press enter"; read line
+echo "Press enter [sed fade-out-step]"; read line
 sed -i 's/^fade-out-step/#fade-out-step/' /tmp/picom_radni.conf
-echo "Press enter"; read line
+echo "Press enter [sed no-fading-openclose]"; read line
 sed -i 's/^no-fading-openclose/#no-fading-openclose/' /tmp/picom_radni.conf
-echo "Press enter"; read line
+echo "Press enter [sed fading = true -> false]"; read line
 sed -i 's/^fading = true\;/fading = false\;/' /tmp/picom_radni.conf
-echo "Press enter"; read line
+echo "Press enter [sed popup_menu opacity]"; read line
 sed -i 's/^\(.*popup_menu =.*opacity =\)\( 0\.[0-9]\{1,2\}\)\(.*\)$/\1 0.93\3/' /tmp/picom_radni.conf
-echo "Press enter"; read line
+echo "Press enter [sed dropdown_menu opacity]"; read line
 sed -i 's/^\(.*dropdown_menu =.*opacity =\)\( 0\.[0-9]\{1,2\}\)\(.*\)$/\1 0.93\3/' /tmp/picom_radni.conf
-echo "Press enter"; read line
-sudo -u "$username" cp /tmp/picom_radni.conf /etc/xdg/picom.conf
-echo "Press enter"; read line
+echo "Press enter [cp picom.conf]"; read line
+cp /tmp/picom_radni.conf /etc/xdg/picom.conf
+echo "Press enter [set volume to 100%]"; read line
 pactl set-sink-volume @DEFAULT_SINK@ 100%
-echo "Press enter"; read line
+echo "Press enter [cd home]"; read line
 cd "/home/$username"
-echo "Press enter"; read line
 if [ $HIDPI = 1 ]; then
+  echo "Press enter [HiDPI .Xresources]"; read line
   sudo -u "$username" printf "Xft.dpi: 192\n" > .Xresources
 fi
-echo "Press enter"; read line
+echo "Press enter [nitrogen setup]"; read line
 nitrogen --set-zoom-fill "/home/$username/Pictures/poz.jpg"
-echo "Press enter"; read line
+echo "Press enter [printf .xinitrc]"; read line
 if [ $AMD_GPU = 1 ]; then
   if [ $HIDPI = 1 ]; then
-    sudo -u "$username" printf "[[ -f ~/.Xresources ]] && xrdb -merge -I$HOME ~/.Xresources\nxset s noblank\nxset s noexpose\nxset s 0 0\nxset +dpms\nxset 0 180 0\nnumlockx &\nxset r rate 250 30\nxbindkeys &\n/opt/kbswtb &\nif ! pgrep -f xidlehook; then\n  xidlehook --timer 600 \'systemctl suspend -i\' \'\' &\nfi\npicom --experimental-backends &\nexport QT_SCREEN_SCALE_FACTORS=1.5\ncorectrl &\nnitrogen --restore &\nexec i3" > .xinitrc
+    sudo -u "$username" printf "[[ -f ~/.Xresources ]] && xrdb -merge -I$HOME ~/.Xresources\nxset s noblank\nxset s noexpose\nxset s 0 0\nxset +dpms\nxset 0 180 0\nnumlockx &\nxset r rate 250 30\nxbindkeys &\n/opt/kbswtb &\nif ! pgrep -f xidlehook; then\n  xidlehook --timer 600 \'systemctl suspend -i\' \'\' &\nfi\npicom --experimental-backends &\nexport QT_SCREEN_SCALE_FACTORS=1.5\ncorectrl &\nnitrogen --restore &\nexec i3\n" > .xinitrc
   else
-    sudo -u "$username" printf "[[ -f ~/.Xresources ]] && xrdb -merge -I$HOME ~/.Xresources\nxset s noblank\nxset s noexpose\nxset s 0 0\nxset +dpms\nxset 0 180 0\nnumlockx &\nxset r rate 250 30\nxbindkeys &\n/opt/kbswtb &\nif ! pgrep -f xidlehook; then\n  xidlehook --timer 600 \'systemctl suspend -i\' \'\' &\nfi\npicom --experimental-backends &\ncorectrl &\nnitrogen --restore &\nexec i3" > .xinitrc
+    sudo -u "$username" printf "[[ -f ~/.Xresources ]] && xrdb -merge -I$HOME ~/.Xresources\nxset s noblank\nxset s noexpose\nxset s 0 0\nxset +dpms\nxset 0 180 0\nnumlockx &\nxset r rate 250 30\nxbindkeys &\n/opt/kbswtb &\nif ! pgrep -f xidlehook; then\n  xidlehook --timer 600 \'systemctl suspend -i\' \'\' &\nfi\npicom --experimental-backends &\ncorectrl &\nnitrogen --restore &\nexec i3\n" > .xinitrc
   fi
 else
   if [ $HIDPI = 1 ]; then
-    sudo -u "$username" printf "[[ -f ~/.Xresources ]] && xrdb -merge -I$HOME ~/.Xresources\nxset s noblank\nxset s noexpose\nxset s 0 0\nxset +dpms\nxset 0 180 0\nnumlockx &\nxset r rate 250 30\nxbindkeys &\n/opt/kbswtb &\nif ! pgrep -f xidlehook; then\n  xidlehook --timer 600 \'systemctl suspend -i\' \'\' &\nfi\npicom --experimental-backends &\nexport QT_SCREEN_SCALE_FACTORS=1.5\nnitrogen --restore &\nexec i3" > .xinitrc
+    sudo -u "$username" printf "[[ -f ~/.Xresources ]] && xrdb -merge -I$HOME ~/.Xresources\nxset s noblank\nxset s noexpose\nxset s 0 0\nxset +dpms\nxset 0 180 0\nnumlockx &\nxset r rate 250 30\nxbindkeys &\n/opt/kbswtb &\nif ! pgrep -f xidlehook; then\n  xidlehook --timer 600 \'systemctl suspend -i\' \'\' &\nfi\npicom --experimental-backends &\nexport QT_SCREEN_SCALE_FACTORS=1.5\nnitrogen --restore &\nexec i3\n" > .xinitrc
   else
-    sudo -u "$username" printf "[[ -f ~/.Xresources ]] && xrdb -merge -I$HOME ~/.Xresources\nxset s noblank\nxset s noexpose\nxset s 0 0\nxset +dpms\nxset 0 180 0\nnumlockx &\nxset r rate 250 30\nxbindkeys &\n/opt/kbswtb &\nif ! pgrep -f xidlehook; then\n  xidlehook --timer 600 \'systemctl suspend -i\' \'\' &\nfi\npicom --experimental-backends &\nnitrogen --restore &\nexec i3" > .xinitrc
+    sudo -u "$username" printf "[[ -f ~/.Xresources ]] && xrdb -merge -I$HOME ~/.Xresources\nxset s noblank\nxset s noexpose\nxset s 0 0\nxset +dpms\nxset 0 180 0\nnumlockx &\nxset r rate 250 30\nxbindkeys &\n/opt/kbswtb &\nif ! pgrep -f xidlehook; then\n  xidlehook --timer 600 \'systemctl suspend -i\' \'\' &\nfi\npicom --experimental-backends &\nnitrogen --restore &\nexec i3\n" > .xinitrc
   fi
 fi
-echo "Press enter"; read line
+echo "Press enter [cp .bashrc]"; read line
 sudo -u "$username" cp "/home/$username/.bashrc" /tmp/bashrc_radni
-echo "Press enter"; read line
+echo "Press enter [sed remove \'alias ls\']"; read line
 sed -i 's/^alias ls.*$//' /tmp/bashrc_radni
-echo "Press enter"; read line
-sed -i 's/^\/bin\/bash .*$//' /tmp/bashrc_radni
-echo "Press enter"; read line
+echo "Press enter [printf startx > bashrc_radni]"; read line
 printf "if [ -z \"\${DISPLAY}\" ] && [ \"\${XDG_VTNR}\" -eq 1 ]; then\n  startx\nfi\n" >> /tmp/bashrc_radni
-echo "Press enter"; read line
+echo "Press enter [cp .bashrc]"; read line
 sudo -u "$username" cp /tmp/bashrc_radni "/home/$username/.bashrc"
-echo "Press enter"; read line
-printf "#!/bin/bash\n\nfor tty in /dev/tty\{1..6\}\ndo\n  /usr/bin/setleds -D +num < \"\$tty\";\ndone\n" > /usr/local/bin/numlock
-echo "Press enter"; read line
+echo "Press enter [printf numlock]"; read line
+printf '#!/bin/bash\n\nfor tty in /dev/tty{1..6}\ndo\n  /usr/bin/setleds -D +num < \"$tty\";\ndone\n' > /usr/local/bin/numlock
+echo "Press enter [chmod numlock]"; read line
 chmod 755 /usr/local/bin/numlock
-echo "Press enter"; read line
+echo "Press enter [printf numlock.service]"; read line
 printf "[Unit]\nDescription=numlock\n\n[Service]\nExecStart=/usr/local/bin/numlock\nStandardInput=tty\nRemainAfterExit=yes\n\n[Install]\nWantedBy=multi-user.target" > /etc/systemd/system/numlock.service
-echo "Press enter"; read line
+echo "Press enter [systemctl enable numlock]"; read line
 systemctl enable numlock
-echo "Press enter"; read line
+echo "Press enter [cd icons/default]"; read line
 cd /usr/share/icons/default
-echo "Press enter"; read line
+echo "Press enter [mkdir cursors]"; read line
 mkdir cursors
-echo "Press enter"; read line
+echo "Press enter [cd cursors]"; read line
 cd cursors
-echo "Press enter"; read line
+echo "Press enter [link watch]"; read line
 ln -s /usr/share/icons/Adwaita/cursors/left_ptr watch
-echo "Press enter"; read line
+echo "Press enter [localectl set...]"; read line
 localectl --no-convert set-x11-keymap us,ru,rs,rs pc105 ,,latin,yz
-echo "Press enter"; read line
+echo "Press enter [mkdir /tmp/i3git]"; read line
 sudo -u "$username" mkdir /tmp/i3git
-echo "Press enter"; read line
+echo "Press enter [cd /tmp/i3git]"; read line
 cd /tmp/i3git
-echo "Press enter"; read line
+echo "Press enter [git clone i3-config]"; read line
 while ! sudo -u "$username" git clone --depth=1 https://github.com/donaastor/i3-config.git; do
   reconnect
 done
-echo "Press enter"; read line
+echo "Press enter [cd i3-config]"; read line
 cd i3-config
-echo "Press enter"; read line
+echo "Press enter [rm .git]"; read line
 rm -rf .git
-echo "Press enter"; read line
+echo "Press enter [mv .xbindkeysrc]"; read line
 sudo -u "$username" mv .xbindkeysrc "/home/$username/.xbindkeysrc"
-echo "Press enter"; read line
+echo "Press enter [mkdir .config/i3]"; read line
 sudo -u "$username" mkdir "/home/$username/.config/i3"
-echo "Press enter"; read line
+echo "Press enter [mv config, status_script.sh]"; read line
 sudo -u "$username" mv config status_script.sh "/home/$username/.config/i3/"
-echo "Press enter"; read line
+echo "Press enter [mv i3status-?]"; read line
 if [ $WIFI = 0 ]; then
   if [ $BATT = 0 ]; then
     sudo -u "$username" mv i3status "/home/$username/.config/i3/i3status"
@@ -284,38 +286,38 @@ else
     sudo -u "$username" mv i3status-wifi-bat "/home/$username/.config/i3/i3status"
   fi
 fi
-echo "Press enter"; read line
+echo "Press enter [g++ kbswtb.cpp]"; read line
 g++ kbswtb.cpp -o kbswtb -pipe -fwrapv -fno-plt -fno-semantic-interposition -std=c++20 -mcmodel=large -march=x86-64 -mtune=generic -Wshadow -Wno-unused-result -Wall -L /usr/lib -lm -lz -lcrypt -lutil -ldl -lpthread -lrt -O3 -lX11 -lxkbfile
-echo "Press enter"; read line
+echo "Press enter [mv kbswtb]"; read line
 mv kbswtb /opt/kbswtb
-echo "Press enter"; read line
+echo "Press enter [cd cd /home/$username/.config/i3]"; read line
 cd "/home/$username/.config/i3"
-echo "Press enter"; read line
+echo "Press enter [chmod status_script.sh]"; read line
 chmod 755 status_script.sh
-echo "Press enter"; read line
+echo "Press enter [mandb]"; read line
 mandb
-echo "Press enter"; read line
-printf "<?xml version=\"1.0\"?>\n<!DOCTYPE fontconfig SYSTEM \"urn:fontconfig:fonts.dtd\">\n<fontconfig>\n	<match target=\"pattern\">\n	<test name=\"family\" qual=\"any\">\n		<string>monospace</string>\n	</test>\n	<edit binding=\"strong\" mode=\"prepend\" name=\"family\">\n		<string>LiberationMono</string>\n	</edit>\n	</match>\n</fontconfig>" > /etc/fonts/local.conf
-echo "Press enter"; read line
+echo "Press enter [printf /etc/fonts/local.conf]"; read line
+printf '<?xml version=\"1.0\"?>\n<!DOCTYPE fontconfig SYSTEM \"urn:fontconfig:fonts.dtd\">\n<fontconfig>\n	<match target=\"pattern\">\n	<test name=\"family\" qual=\"any\">\n		<string>monospace</string>\n	</test>\n	<edit binding=\"strong\" mode=\"prepend\" name=\"family\">\n		<string>LiberationMono</string>\n	</edit>\n	</match>\n</fontconfig>\n' > /etc/fonts/local.conf
+echo "Press enter [systemctl start ufw]"; read line
 systemctl start ufw
-echo "Press enter"; read line
+echo "Press enter [systemctl enable ufw]"; read line
 systemctl enable ufw
-echo "Press enter"; read line
+echo "Press enter [ufw default allow outgoing]"; read line
 ufw default allow outgoing
-echo "Press enter"; read line
+echo "Press enter [ufw default deny incoming]"; read line
 ufw default deny incoming
-echo "Press enter"; read line
+echo "Press enter [ufw enable]"; read line
 ufw enable
 if [ $MORE_PROGS = 1 ]; then
-  echo "Press enter"; read line
+  echo "Press enter [xdg-mime feh]"; read line
   sudo -u "$username" xdg-mime default feh.desktop image/png image/jpeg
-  echo "Press enter"; read line
+  echo "Press enter [xdg-mime zathura]"; read line
   sudo -u "$username" xdg-mime default org.pwmt.zathura.desktop application/pdf image/vnd.djvu
-  echo "Press enter"; read line
+  echo "Press enter [xdg-mime lyx]"; read line
   sudo -u "$username" xdg-mime default lyx.desktop text/x-tex
-  echo "Press enter"; read line
+  echo "Press enter [xdg-mime geany]"; read line
   sudo -u "$username" xdg-mime default geany.desktop text/plain text/html text/x-c text/x-c++ text/x-java-source text/x-script text/x-script.python
-  echo "Press enter"; read line
+  echo "Press enter [xdg-mime pcmanfm]"; read line
   sudo -u "$username" xdg-mime default pcmanfm.desktop inode/mount-point inode/directory
 fi
 
