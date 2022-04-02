@@ -215,7 +215,7 @@ echo "Press enter [printf bash.bashrc (aliases)]"; read line
 printf "\nalias ls=\'ls --color=tty\'\nalias q=\'exit\'\nalias cl=\'clear\'\nalias mountu=\'sudo mount -o gid=users,fmask=113,dmask=002\'\nalias stfu=\'shutdown now\'\nalias sus=\'systemctl suspend\'\n" >> /etc/bash.bashrc
 
 echo "Press enter [start pipewire-pulse]"; read line
-sudo -u "$username" systemctl --user start pipewire-pulse
+# sudo -u "$username" systemctl --user start pipewire-pulse
 echo "Press enter [cp picom.conf]"; read line
 cp /etc/xdg/picom.conf /tmp/picom_radni.conf
 echo "Press enter [sed fade-in-step]"; read line
@@ -233,7 +233,7 @@ sed -i 's/^\(.*dropdown_menu =.*opacity =\)\( 0\.[0-9]\{1,2\}\)\(.*\)$/\1 0.93\3
 echo "Press enter [cp picom.conf]"; read line
 cp /tmp/picom_radni.conf /etc/xdg/picom.conf
 echo "Press enter [set volume to 100%]"; read line
-pactl set-sink-volume @DEFAULT_SINK@ 100%
+# pactl set-sink-volume @DEFAULT_SINK@ 100%
 echo "Press enter [cd home]"; read line
 cd "/home/$username"
 if [ $HIDPI = 1 ]; then
@@ -241,7 +241,7 @@ if [ $HIDPI = 1 ]; then
   sudo -u "$username" printf "Xft.dpi: 192\n" > .Xresources
 fi
 echo "Press enter [nitrogen setup]"; read line
-nitrogen --set-zoom-fill "/home/$username/Pictures/poz.jpg"
+# nitrogen --set-zoom-fill "/home/$username/Pictures/poz.jpg"
 echo "Press enter [printf .xinitrc]"; read line
 if [ $AMD_GPU = 1 ]; then
   if [ $HIDPI = 1 ]; then
@@ -258,7 +258,9 @@ else
 fi
 echo "Press enter [cp .bashrc]"; read line
 sudo -u "$username" cp "/home/$username/.bashrc" /tmp/bashrc_radni
-echo "Press enter [sed remove \'alias ls\']"; read line
+echo "Press enter [chmod bashrc_radni]"; read line
+chmod 777 /tmp/bashrc_radni
+echo "Press enter [sed remove 'alias ls']"; read line
 sed -i 's/^alias ls.*$//' /tmp/bashrc_radni
 echo "Press enter [printf startx > bashrc_radni]"; read line
 printf "if [ -z \"\${DISPLAY}\" ] && [ \"\${XDG_VTNR}\" -eq 1 ]; then\n  startx\nfi\n" >> /tmp/bashrc_radni
