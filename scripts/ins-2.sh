@@ -106,11 +106,13 @@ done
 echo "Press enter [cd pikaur]"; read line
 cd pikaur
 
+echo "Press enter [extract dependencies]"; read line
 sed -n '/^.*depends = .*$/p' .SRCINFO > tren1
 sed '/^.*optdepends = .*$/d' tren1 > tren2
 sed 's/^.*depends = \(.*\)$/\1/' tren2 > tren3
 tren4="$(tr '\n' ' ' < tren3)"
 rm tren1 tren2 tren3
+echo "Press enter [pacman depend's]"; read line
 while ! pacman -S --noconfirm --needed $tren4; do
   reconnect
 done
@@ -118,8 +120,10 @@ done
 echo "Press enter [makepkg]"; read line
 sudo -u "$username" makepkg
 
+echo "Press enter [extracting pkg name]"; read line
 find . -maxdepth 1 -type f -name '*.pkg.tar.zst' > tren5
 pikaur_pkg_name="$(sed -n '1p' tren5)"
+echo "Press enter [installing pikaur]"; read line
 pacman -U --noconfirm "$pikaur_pkg_name"
 
 echo "Press enter [pikaur -Sy]"; read line
