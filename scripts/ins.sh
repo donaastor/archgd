@@ -149,9 +149,9 @@ mount -t tmpfs tmpfs -o defaults,size=128M "/mnt/root/tren"
 # echo "Press enter [genfstab]"; read line
 genfstab -U /mnt >> "/mnt/root/tren/fstab_radni"
 # echo "Press enter [cd tren]"; read line
-cd /mnt/root/tren
+# cd /mnt/root/tren
 # echo "Press enter [ins-chroot]"; read line
-while ! curl https://raw.githubusercontent.com/donaastor/archgd/main/scripts/ins-chroot.sh > ins-chroot.sh; do
+while ! curl https://raw.githubusercontent.com/donaastor/archgd/main/scripts/ins-chroot.sh > /mnt/root/tren/ins-chroot.sh; do
   reconnect
 done
 # echo "Press enter [arch-chroot]"; read line
