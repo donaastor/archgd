@@ -257,7 +257,7 @@ else
   fi
 fi
 echo "Press enter [cp .bashrc]"; read line
-sudo -u "$username" cp "/home/$username/.bashrc" /tmp/bashrc_radni
+cp "/home/$username/.bashrc" /tmp/bashrc_radni
 echo "Press enter [chmod bashrc_radni]"; read line
 chmod 777 /tmp/bashrc_radni
 echo "Press enter [sed remove 'alias ls']"; read line
