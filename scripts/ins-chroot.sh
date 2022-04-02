@@ -187,7 +187,7 @@ fi
 #			fstab
 
 # echo "Press enter [fstab_radni]"; read line
-printf "\ntmpfs /root/tren tmpfs defaults,size=2048M 0 0\ntmpfs /home/$username/tren tmpfs defaults,size=2048M 0 0\ntmpfs /home/$username/.cache/pikaur tmpfs default 0 0\ntmpfs /home/$username/.local/share/pikaur/aur_repos tmpfs defaults,size=2048M 0 0\ntmpfs /var/lib/systemd/coredumps tmpfs defaults,size=512M 0 0\ntmpfs /home/$username/.cargo tmpfs defaults,size=640M 0 0\ntmpfs /home/$username/chromium/cache tmpfs noatime,nodev,nosuid,size=1152M 0 0" >> "/root/tren/fstab_radni"
+printf "\ntmpfs /root/tren tmpfs defaults,size=2048M 0 0\ntmpfs /home/$username/tren tmpfs defaults,size=2048M 0 0\ntmpfs /home/$username/.cache/pikaur tmpfs default 0 0\ntmpfs /home/$username/.local/share/pikaur/aur_repos tmpfs defaults,size=2048M 0 0\ntmpfs /var/lib/systemd/coredumps tmpfs defaults,size=512M 0 0\ntmpfs /home/$username/.cargo tmpfs defaults,size=640M 0 0\ntmpfs /home/$username/chromium/cache tmpfs noatime,nodev,nosuid,size=1152M 0 0\n" >> "/root/tren/fstab_radni"
 # echo "Press enter [fstab_radni > fstab]"; read line
 cp /root/tren/fstab_radni /etc/fstab
 # echo "Press enter [cd home]"; read line
@@ -229,7 +229,7 @@ cd /tmp/grub_radni
 # echo "Press enter [cp /etc/default/grub grub]"; read line
 cp /etc/default/grub grub
 # echo "Press enter [sed GRUB_TIMEOUT]"; read line
-sed -i 's/#GRUB_TIMEOUT=5/GRUB_TIMEOUT=1/' grub
+sed -i 's/^GRUB_TIMEOUT=.*$/GRUB_TIMEOUT=1/' grub
 if [ $AMD_GPU = 1 ]; then
 #   echo "Press enter [sed KERNEL, GPU]"; read line
   sed -i 's/\(^GRUB_CMDLINE_LINUX_DEFAULT.*\)\"/\1 amdgpu.ppfeaturemask=0xffffffff mitigations=off\"/' grub
