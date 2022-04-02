@@ -91,8 +91,9 @@ aur_get_one() {
   sed -n '/^.*depends = .*$/p' .SRCINFO > tren1
   sed '/^.*optdepends = .*$/d' tren1 > tren2
   sed 's/^.*depends = \(.*\)$/\1/' tren2 > tren3
-  local dpd_list="$(tr '\n' ' ' < tren3)"
-  rm tren1 tren2 tren3
+  sed '/^i3-wm$/d' tren3 > tren4
+  local dpd_list="$(tr '\n' ' ' < tren4)"
+  rm tren1 tren2 tren3 tren4
   while ! pacman -S --noconfirm --needed $dpd_list; do
     reconnect
   done
