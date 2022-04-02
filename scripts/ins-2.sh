@@ -82,66 +82,65 @@ reconnect() {
 
 #			internet
 
-echo "Press enter"; read line
 sleep 2
-echo "Press enter"; read line
+echo "Press enter [reconnect]"; read line
 reconnect
 
 #			getty
 
-echo "Press enter"; read line
+echo "Press enter [cd getty]"; read line
 cd "/etc/systemd/system/getty@tty1.sevice.d"
-echo "Press enter"; read line
+echo "Press enter [fix getty]"; read line
 printf "[Service]\nExecStart=\nExecStart=-/sbin/agetty -o \'-p -f -- \\\\\\\\u\' --noclear --autologin $username - \$TERM\nType=simple\nEnvironment=XDG_SESSION_TYPE=x11\n" > autologin.conf
 
 #			programi
 
-echo "Press enter"; read line
+echo "Press enter [mkdir /tmp/pikaur_git]"; read line
 mkdir /tmp/pikaur_git
-echo "Press enter"; read line
+echo "Press enter [cd /tmp/pikaur_git]"; read line
 cd /tmp/pikaur_git
-echo "Press enter"; read line
+echo "Press enter [git clone pikaur]"; read line
 while ! git clone https://aur.archlinux.org/pikaur.git; do
   reconnect
 done
-echo "Press enter"; read line
+echo "Press enter [cd pikaur]"; read line
 cd pikaur
-echo "Press enter"; read line
+echo "Press enter [makepkg -si]"; read line
 makepkg -si
-echo "Press enter"; read line
+echo "Press enter [pikaur -Sy]"; read line
 sudo -u "$username" pikaur -Sy
-echo "Press enter"; read line
+echo "Press enter [cd pikaur.conf]"; read line
 sudo -u "$username" cp "/home/$username/.config/pikaur.conf" "/tmp/pikaur_radni.conf"
-echo "Press enter"; read line
+echo "Press enter [sed pikaur.conf keepbuilddeps]"; read line
 sed -i 's/keepbuilddeps = no/keepbuilddeps = yes/' "/tmp/pikaur_radni.conf"
-echo "Press enter"; read line
+echo "Press enter [sed pikaur.conf noedit]"; read line
 sed -i 's/noedit = no/noedit = yes/' "/tmp/pikaur_radni.conf"
-echo "Press enter"; read line
+echo "Press enter [ [sed pikaur.conf donteditbydefault]"; read line
 sed -i 's/donteditbydefault = no/donteditbydefault = yes/' "/tmp/pikaur_radni.conf"
-echo "Press enter"; read line
+echo "Press enter [cp pikaur.conf]"; read line
 sudo -u "$username" cp "/tmp/pikaur_radni.conf" "/home/$username/.config/pikaur.conf"
-echo "Press enter"; read line
+echo "Press enter [build ad_progs]"; read line
 if [ $MORE_PROGS = 1 ]; then
   ad_progs="lyx texlive-formatsextra texlive-langcyrillic texlive-latexextra texlive-science openssh tmux vlc feh zathura zathura-djvu zathura-pdf-poppler flameshot calc geany geany-plugins pcmanfm-gtk3 simplescreenrecorder"
 else
   ad_progs=""
 fi
-echo "Press enter"; read line
+echo "Press enter [pacman ...!!!.....!!!!!!]"; read line
 while ! pacman -S --noconfirm --needed nano xorg-server xorg-xinit xorg-xrdb numlockx xbindkeys i3 rofi nitrogen picom pipewire pipewire-pulse pipewire-jack wireplumber rtkit alacritty xdg-utils ttf-liberation man-db man-pages nnn htop perl-file-mimeinfo zip unzip p7zip ufw $ad_progs; do
   reconnect
 done
-echo "Press enter"; read line
 if [ $BATT = 1 ]; then
+  echo "Press enter [pacman acpi]"; read line
   while ! pacman -S --noconfirm --needed acpi; do
     reconnect
   done
 fi
-echo "Press enter"; read line
+echo "Press enter [pikaur ...!!!]"; read line
 while ! pikaur -S --noconfirm xidlehook xkb-switch-i3 xkblayout-state-git; do
   reconnect
 done
 if [ $AMD_GPU = 1 ]; then
-  echo "Press enter"; read line
+  echo "Press enter [pacman vulkan...]"; read line
   if [ $GPU_NEW = 1 ]; then
     while ! pacman -S --noconfirm xf86-video-amdgpu libva-mesa-driver vulkan-tools mesa-utils libva-utils; do
       reconnect
@@ -151,39 +150,38 @@ if [ $AMD_GPU = 1 ]; then
       reconnect
     done
   fi
-  echo "Press enter"; read line
+  echo "Press enter [pikaur corectrl]"; read line
   while ! pikaur -S --noconfirm corectrl; do
     reconnect
   done
-  echo "Press enter"; read line
+  echo "Press enter [cp corectrl.desktop]"; read line
   sudo -u "$username" cp /usr/share/applications/org.corectrl.corectrl.desktop "/home/$username/.config/autostart/org.corectrl.corectrl.desktop"
-  echo "Press enter"; read line
-  printf "polkit.addRule(function(action, subject){\n	if ((\n		action.id == \"org.corectrl.helper.init\" ||\n		action.id == \"org.corectrl.helperkiller.init\") &&\n		subject.local == true &&\n		subject.active == true &&\n		subject.isInGroup(\"wheel\")\n	){\n		return polkit.Result.YES;\n	}\n});" >> "/etc/polkit-1/rules.d/90-corectrl.rules"
-  echo "Press enter"; read line
+  echo "Press enter [printf polkit rule]"; read line
+  printf "polkit.addRule(function(action, subject){\n	if ((\n		action.id == \"org.corectrl.helper.init\" ||\n		action.id == \"org.corectrl.helperkiller.init\") &&\n		subject.local == true &&\n		subject.active == true &&\n		subject.isInGroup(\"wheel\")\n	){\n		return polkit.Result.YES;\n	}\n});\n" >> "/etc/polkit-1/rules.d/90-corectrl.rules"
+  echo "Press enter [printf corectrl.ini]"; read line
   sudo -u "$username" printf "[General]\nstartOnSysTray=true\n" > "/home/$username/.config/corectrl/corectrl.ini"
-  echo "Press enter"; read line
 fi
 if [ $CPU_NEW = 1 ]; then
-  echo "Press enter"; read line
+  echo "Press enter [pacman linux-headers dkms]"; read line
   while ! pacman -S --noconfirm linux-headers dkms; do
     reconnect
   done
-  echo "Press enter"; read line
+  echo "Press enter [pikaur zen3]"; read line
   while ! pikaur -S --noconfirm zenpower3-dkms zenmonitor3-git; do
     reconnect
   done
-  echo "Press enter"; read line
+  echo "Press enter [modprobe zenpower]"; read line
   modprobe zenpower
 fi
 
 #			konfiguracije
 
-echo "Press enter"; read line
+echo "Press enter [sensors-detect --auto]"; read line
 sensors-detect --auto
-echo "Press enter"; read line
+echo "Press enter [sed nanorc]"; read line
 sed -i 's/^# set zap/set zap/' /etc/nanorc
-echo "Press enter"; read line
-printf "\nalias ls=\'ls --color=tty\'\nalias q=\'exit\'\nalias cl=\'clear\'\nalias mountu=\'sudo mount -o gid=users,fmask=113,dmask=002\'\nalias stfu=\'shutdown now\'\nslias sus=\'systemctl suspend\'\n" >> /etc/bash.bashrc
+echo "Press enter [printf .bashrc (aliases)]"; read line
+printf "\nalias ls=\'ls --color=tty\'\nalias q=\'exit\'\nalias cl=\'clear\'\nalias mountu=\'sudo mount -o gid=users,fmask=113,dmask=002\'\nalias stfu=\'shutdown now\'\nalias sus=\'systemctl suspend\'\n" >> /etc/bash.bashrc
 echo "Press enter"; read line
 sudo -u "$username" systemctl --user start pipewire-pulse
 echo "Press enter"; read line
