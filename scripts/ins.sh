@@ -163,6 +163,13 @@ elif [ $num_of_args = 7 ]; then
   arch-chroot /mnt /bin/bash /root/tren/ins-chroot.sh "$1" "$2" "$3" "$4" "$5" "$6" "$7"
 fi
 
+#			resolv.conf
+
+if [ $WIFI = 1 ]; then
+#   echo "Press enter [wifi resolv]"; read line
+  printf "\n\nnameserver 8.8.8.8" >> /mnt/etc/resolv.conf
+fi
+
 #			reboot
 
 # echo "Press enter [umount]"; read line
