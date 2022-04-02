@@ -123,7 +123,7 @@ pikaur_pkg_name="$(sed -n '1p' tren5)"
 pacman -U --noconfirm "$pikaur_pkg_name"
 
 echo "Press enter [pikaur -Sy]"; read line
-sudo -u "$username" pikaur -Sy
+sudo -u "$username" pikaur
 echo "Press enter [cp pikaur.conf]"; read line
 sudo -u "$username" cp "/home/$username/.config/pikaur.conf" "/tmp/pikaur_radni.conf"
 echo "Press enter [sed pikaur.conf keepbuilddeps]"; read line
@@ -136,9 +136,11 @@ echo "Press enter [cp pikaur.conf]"; read line
 sudo -u "$username" cp "/tmp/pikaur_radni.conf" "/home/$username/.config/pikaur.conf"
 echo "Press enter [build ad_progs]"; read line
 if [ $MORE_PROGS = 1 ]; then
-  ad_progs="lyx texlive-formatsextra texlive-langcyrillic texlive-latexextra texlive-science openssh tmux vlc feh zathura zathura-djvu zathura-pdf-poppler flameshot calc geany geany-plugins pcmanfm-gtk3 simplescreenrecorder"
+  ad_progs="texlive-formatsextra texlive-langcyrillic texlive-latexextra texlive-science openssh tmux vlc feh zathura zathura-djvu zathura-pdf-poppler flameshot calc geany geany-plugins pcmanfm-gtk3 simplescreenrecorder"
+  aur_progs="lyx"
 else
   ad_progs=""
+  aur_progs=""
 fi
 echo "Press enter [pacman ...!!!.....!!!!!!]"; read line
 while ! pacman -S --noconfirm --needed nano xorg-server xorg-xinit xorg-xrdb numlockx xbindkeys i3 rofi nitrogen picom pipewire pipewire-pulse pipewire-jack wireplumber rtkit alacritty xdg-utils ttf-liberation man-db man-pages nnn htop perl-file-mimeinfo zip unzip p7zip ufw $ad_progs; do
@@ -151,7 +153,7 @@ if [ $BATT = 1 ]; then
   done
 fi
 echo "Press enter [pikaur ...!!!]"; read line
-while ! pikaur -S --noconfirm xidlehook xkb-switch-i3 xkblayout-state-git; do
+while ! pikaur -S --noconfirm xidlehook xkb-switch-i3 xkblayout-state-git $aur_progs; do
   reconnect
 done
 if [ $AMD_GPU = 1 ]; then
