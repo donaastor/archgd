@@ -100,7 +100,7 @@ aur_get_one() {
   find . -maxdepth 1 -type f -iregex "^\./$1.*\.pkg\.tar\.zst$" > tren5
   local pkg_name="$(sed -n '1p' tren5)"
   rm tren5
-  while ! pacman -U --noconfirm "${pkg_name}"; do
+  while ! pacman -U --noconfirm --needed "${pkg_name}"; do
     reconnect
   done
   echo "Press enter to continue..."; read line
