@@ -320,7 +320,7 @@ echo "Press enter [g++ kbswtb.cpp]"; read line
 g++ kbswtb.cpp -o kbswtb -pipe -fwrapv -fno-plt -fno-semantic-interposition -std=c++20 -mcmodel=large -march=x86-64 -mtune=generic -Wshadow -Wno-unused-result -Wall -L /usr/lib -lm -lz -lcrypt -lutil -ldl -lpthread -lrt -O3 -lX11 -lxkbfile
 echo "Press enter [mv kbswtb]"; read line
 mv kbswtb /opt/kbswtb
-echo "Press enter [cd cd /home/$username/.config/i3]"; read line
+echo "Press enter [cd /home/$username/.config/i3]"; read line
 cd "/home/$username/.config/i3"
 echo "Press enter [chmod status_script.sh]"; read line
 chmod 755 status_script.sh
@@ -360,7 +360,7 @@ done
 echo "Press enter [add ug-ch to /etc/pacman.conf]"; read line
 printf "[home_ungoogled_chromium_Arch]\nSigLevel = Required TrustAll\nServer = https://download.opensuse.org/repositories/home:/ungoogled_chromium/Arch/\$arch\n" | tee --append /etc/pacman.conf
 echo "Press enter [pacman ungoogled-chromium]"; read line
-while ! pacman -Sy --noconfirm pipewire-jack profile-sync-daemon ungoogled-chromium; do
+while ! pacman -Sy --noconfirm --needed pipewire-jack profile-sync-daemon ungoogled-chromium; do
   reconnect
 done
 echo "Press enter [printf /etc/chromium-flags.conf]"; read line
@@ -370,11 +370,11 @@ else
   sudo -u "$username" printf -- "--disk-cache-dir=/home/$username/chromium/cache\n--disk-cache-size=1073741824\n" > /etc/chromium-flags.conf
 fi
 echo "Press enter [sed psd.conf]"; read line
-sudo -u "$username" sed -i 's/^.*\"USE_BACKUPS\"=\"yes\".*$/\"USE_BACKUPS\"=\"no\"/' "/home/$username/.config/psd/psd.conf"
+# sudo -u "$username" sed -i 's/^.*\"USE_BACKUPS\"=\"yes\".*$/\"USE_BACKUPS\"=\"no\"/' "/home/$username/.config/psd/psd.conf"
 echo "Press enter [enable psd]"; read line
-sudo -u "$username" systemctl --user enable psd
+# sudo -u "$username" systemctl --user enable psd
 echo "Press enter [start psd]"; read line
-sudo -u "$username" systemctl --user start psd
+# sudo -u "$username" systemctl --user start psd
 
 #			cleaning
 
