@@ -294,10 +294,10 @@ cd "getty@tty1.service.d"
 printf "[Service]\nExecStart=\nExecStart=-/sbin/agetty -o \'-p -f -- \\\\\\\\u\' --noclear --autologin root - \$TERM\nType=simple\n" > autologin.conf
 if [ $WIFI = 1 ]; then
 #   echo "Press enter [prep ins-2, wifi]"; read line
-  printf "\n/bin/bash \"/home/$username/scripts/ins-2.sh\" $username \"$params\" \"$ssid_dft\"" >> "/home/$username/.bashrc"
+  printf "\n/bin/bash \"/home/$username/scripts/ins-2.sh\" $username \"$params\" \"$ssid_dft\"" >> "/root/.bashrc"
 else
 #   echo "Press enter [prep ins-2, no wifi]"; read line
-  printf "\n/bin/bash \"/home/$username/scripts/ins-2.sh\" $username \"$params\"" >> "/home/$username/.bashrc"
+  printf "\n/bin/bash \"/home/$username/scripts/ins-2.sh\" $username \"$params\"" >> "/root/.bashrc"
 fi
 
 #			exit
