@@ -134,7 +134,7 @@ echo "Press enter [sed pikaur.conf keepbuilddeps]"; read line
 sed -i 's/keepbuilddeps = no/keepbuilddeps = yes/' "/tmp/pikaur_radni.conf"
 echo "Press enter [sed pikaur.conf noedit]"; read line
 sed -i 's/noedit = no/noedit = yes/' "/tmp/pikaur_radni.conf"
-echo "Press enter [ [sed pikaur.conf donteditbydefault]"; read line
+echo "Press enter [sed pikaur.conf donteditbydefault]"; read line
 sed -i 's/donteditbydefault = no/donteditbydefault = yes/' "/tmp/pikaur_radni.conf"
 echo "Press enter [cp pikaur.conf]"; read line
 sudo -u "$username" cp "/tmp/pikaur_radni.conf" "/home/$username/.config/pikaur.conf"
