@@ -50,7 +50,7 @@ printf '#!/bin/bash\n\nrm /home/korsic/xin-scp.sh\nexec /bin/sh /home/korsic/.xi
 exec /bin/bash /tmp/xin-scp-0.sh
 
 
-
+# koristi: exec bash -norc -c "rm THIS_SCRIPT"
 
 
 
