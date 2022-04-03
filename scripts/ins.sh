@@ -176,5 +176,5 @@ fi
 while ! umount -R /mnt; do
   sleep 1
 done
-echo "Press enter [reboot]"; read line
+# echo "Press enter [reboot]"; read line
 reboot
