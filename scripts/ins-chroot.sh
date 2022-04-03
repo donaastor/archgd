@@ -190,6 +190,8 @@ printf "\ntmpfs /root/tren tmpfs defaults,size=2048M 0 0\ntmpfs /home/$username/
 cp /root/tren/fstab_radni /etc/fstab
 # echo "Press enter [cd home]"; read line
 cd "/home/$username"
+# echo "Press enter [mkdir tren]"; read line
+sudo -u "$username" mkdir tren
 # echo "Press enter [mkdir .cache]"; read line
 sudo -u "$username" mkdir .cache
 # echo "Press enter [mkdir .cache/pikaur]"; read line
@@ -206,6 +208,10 @@ sudo -u "$username" mkdir .local/share/pikaur/aur_repos
 mkdir /var/lib/systemd/coredumps
 # echo "Press enter [mkdir .cargo]"; read line
 sudo -u "$username" mkdir .cargo
+# echo "Press enter [mkdir chromium]"; read line
+sudo -u "$username" mkdir chromium
+# echo "Press enter [mkdir chromium/cache]"; read line
+sudo -u "$username" mkdir chromium/cache
 
 #			grub
 
