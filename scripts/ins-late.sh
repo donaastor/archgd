@@ -97,7 +97,18 @@ aur_get_one() {
   while ! pacman -S --noconfirm --needed $dpd_list; do
     reconnect
   done
-  sudo -u "$username" makepkg
+  sed -n '/^.*validpgpkeys = .*$/p' .SRCINFO > tren1
+  sed 's/^.*validpgpkeys = \([[:alnum:]]\+\).*$/\1/' tren1 > tren2
+  sed 's/^.*\(................\)$/\1/' tren2 > tren3
+  while read ano_pgp; do
+    while ! gpg --recv-key $ano_pgp; do
+      reconnect
+    done
+  done < tren3
+  while ! sudo -u "$username" makepkg -do; do
+    reconnect
+  done
+  sudo -u "$username" makepkg -e
   find . -maxdepth 1 -type f -iregex "^\./$1.*\.pkg\.tar\.zst$" > tren5
   local pkg_name="$(sed -n '1p' tren5)"
   rm tren5
