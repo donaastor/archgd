@@ -266,7 +266,7 @@ sudo -u "$username" mkdir git_scripts
 # echo "Press enter [cd git_scripts]"; read line
 cd git_scripts
 # echo "Press enter [git archgd]"; read line
-while ! sudo -u "$username" git clone https://github.com/donaastor/archgd.git; do
+while ! sudo -u "$username" git clone --depth 1 https://github.com/donaastor/archgd.git; do
   reconnect
 done
 # echo "Press enter [cd archgd]"; read line
