@@ -100,6 +100,7 @@ aur_get_one() {
   sed -n '/^.*validpgpkeys = .*$/p' .SRCINFO > tren1
   sed 's/^.*validpgpkeys = \([[:alnum:]]\+\).*$/\1/' tren1 > tren2
   sed 's/^.*\(................\)$/\1/' tren2 > tren3
+  rm tren1 tren2 tren3
   while read ano_pgp; do
     while ! gpg --recv-key $ano_pgp; do
       reconnect
