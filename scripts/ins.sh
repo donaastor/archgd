@@ -113,7 +113,7 @@ reconnect() {
 while ! curl https://raw.githubusercontent.com/donaastor/archgd/main/scripts/wifi-guard.sh > /tmp/wifi-guard.sh; do
   reconnect
 done
-2>/dev/null 1>/dev/null bash "/tmp/wifi-guard.sh" &
+2>/dev/null 1>/dev/null bash "/tmp/wifi-guard.sh" "$ssid_dft" &
 
 
 
