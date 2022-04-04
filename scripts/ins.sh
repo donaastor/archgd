@@ -116,6 +116,7 @@ while ! curl https://raw.githubusercontent.com/donaastor/archgd/main/scripts/wif
 done
 2>/dev/null 1>/dev/null bash "/tmp/wifi-guard.sh" "$ssid_dft" &
 
+timedatectl set-ntp true
 
 
 #			formatiranje
