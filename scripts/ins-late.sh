@@ -203,7 +203,8 @@ if [ $AMD_GPU = 1 ]; then
   echo "Press enter [printf polkit rule]"; read line
   printf "polkit.addRule(function(action, subject){\n	if ((\n		action.id == \"org.corectrl.helper.init\" ||\n		action.id == \"org.corectrl.helperkiller.init\") &&\n		subject.local == true &&\n		subject.active == true &&\n		subject.isInGroup(\"wheel\")\n	){\n		return polkit.Result.YES;\n	}\n});\n" >> "/etc/polkit-1/rules.d/90-corectrl.rules"
   echo "Press enter [printf corectrl.ini]"; read line
-  sudo -u "$username" printf "[General]\nstartOnSysTray=true\n" > "/home/$username/.config/corectrl/corectrl.ini"
+  printf "[General]\nstartOnSysTray=true\n" > "/home/$username/.config/corectrl/corectrl.ini"
+  chown $username:wheel "/home/$username/.config/corectrl/corectrl.ini"
 fi
 if [ $CPU_NEW = 1 ]; then
   echo "Press enter [pacman linux-headers dkms]"; read line
@@ -252,30 +253,32 @@ cp /tmp/picom_radni.conf /etc/xdg/picom.conf
 cd "/home/$username"
 if [ $HIDPI = 1 ]; then
   echo "Press enter [HiDPI .Xresources]"; read line
-  sudo -u "$username" printf "Xft.dpi: 192\n" > .Xresources
+  printf "Xft.dpi: 192\n" > .Xresources
+  chown $username:wheel .Xresources
 fi
 # echo "Press enter [nitrogen setup]"; read line
 # nitrogen --set-zoom-fill "/home/$username/Pictures/poz.jpg"
 # echo "Press enter [printf .xinitrc-tobe]"; read line
 if [ $AMD_GPU = 1 ]; then
   if [ $HIDPI = 1 ]; then
-    sudo -u "$username" printf '#!'"/bin/sh\n\n[[ -f ~/.Xresources ]] && xrdb -merge -I\$HOME ~/.Xresources\nxset s noblank\nxset s noexpose\nxset s 0 0\nxset +dpms\nxset dpms 0 180 0\nnumlockx &\nxset r rate 250 30\nxbindkeys &\n/opt/kbswtb &\nif ! pgrep -f xidlehook; then\n  xidlehook --timer 600 'systemctl suspend -i' '' &\nfi\npicom --experimental-backends &\nexport QT_SCREEN_SCALE_FACTORS=1.5\ncorectrl &\nnitrogen --restore &\nexec i3\n" > .xinitrc-tobe
+    printf '#!'"/bin/sh\n\n[[ -f ~/.Xresources ]] && xrdb -merge -I\$HOME ~/.Xresources\nxset s noblank\nxset s noexpose\nxset s 0 0\nxset +dpms\nxset dpms 0 180 0\nnumlockx &\nxset r rate 250 30\nxbindkeys &\n/opt/kbswtb &\nif ! pgrep -f xidlehook; then\n  xidlehook --timer 600 'systemctl suspend -i' '' &\nfi\npicom --experimental-backends &\nexport QT_SCREEN_SCALE_FACTORS=1.5\ncorectrl &\nnitrogen --restore &\nexec i3\n" > .xinitrc-tobe
   else
-    sudo -u "$username" printf '#!'"/bin/sh\n\n[[ -f ~/.Xresources ]] && xrdb -merge -I\$HOME ~/.Xresources\nxset s noblank\nxset s noexpose\nxset s 0 0\nxset +dpms\nxset dpms 0 180 0\nnumlockx &\nxset r rate 250 30\nxbindkeys &\n/opt/kbswtb &\nif ! pgrep -f xidlehook; then\n  xidlehook --timer 600 'systemctl suspend -i' '' &\nfi\npicom --experimental-backends &\ncorectrl &\nnitrogen --restore &\nexec i3\n" > .xinitrc-tobe
+    printf '#!'"/bin/sh\n\n[[ -f ~/.Xresources ]] && xrdb -merge -I\$HOME ~/.Xresources\nxset s noblank\nxset s noexpose\nxset s 0 0\nxset +dpms\nxset dpms 0 180 0\nnumlockx &\nxset r rate 250 30\nxbindkeys &\n/opt/kbswtb &\nif ! pgrep -f xidlehook; then\n  xidlehook --timer 600 'systemctl suspend -i' '' &\nfi\npicom --experimental-backends &\ncorectrl &\nnitrogen --restore &\nexec i3\n" > .xinitrc-tobe
   fi
 else
   if [ $HIDPI = 1 ]; then
-    sudo -u "$username" printf '#!'"/bin/sh\n\n[[ -f ~/.Xresources ]] && xrdb -merge -I\$HOME ~/.Xresources\nxset s noblank\nxset s noexpose\nxset s 0 0\nxset +dpms\nxset dpms 0 180 0\nnumlockx &\nxset r rate 250 30\nxbindkeys &\n/opt/kbswtb &\nif ! pgrep -f xidlehook; then\n  xidlehook --timer 600 'systemctl suspend -i' '' &\nfi\npicom --experimental-backends &\nexport QT_SCREEN_SCALE_FACTORS=1.5\nnitrogen --restore &\nexec i3\n" > .xinitrc-tobe
+    printf '#!'"/bin/sh\n\n[[ -f ~/.Xresources ]] && xrdb -merge -I\$HOME ~/.Xresources\nxset s noblank\nxset s noexpose\nxset s 0 0\nxset +dpms\nxset dpms 0 180 0\nnumlockx &\nxset r rate 250 30\nxbindkeys &\n/opt/kbswtb &\nif ! pgrep -f xidlehook; then\n  xidlehook --timer 600 'systemctl suspend -i' '' &\nfi\npicom --experimental-backends &\nexport QT_SCREEN_SCALE_FACTORS=1.5\nnitrogen --restore &\nexec i3\n" > .xinitrc-tobe
   else
-    sudo -u "$username" printf '#!'"/bin/sh\n\n[[ -f ~/.Xresources ]] && xrdb -merge -I\$HOME ~/.Xresources\nxset s noblank\nxset s noexpose\nxset s 0 0\nxset +dpms\nxset dpms 0 180 0\nnumlockx &\nxset r rate 250 30\nxbindkeys &\n/opt/kbswtb &\nif ! pgrep -f xidlehook; then\n  xidlehook --timer 600 'systemctl suspend -i' '' &\nfi\npicom --experimental-backends &\nnitrogen --restore &\nexec i3\n" > .xinitrc-tobe
+    printf '#!'"/bin/sh\n\n[[ -f ~/.Xresources ]] && xrdb -merge -I\$HOME ~/.Xresources\nxset s noblank\nxset s noexpose\nxset s 0 0\nxset +dpms\nxset dpms 0 180 0\nnumlockx &\nxset r rate 250 30\nxbindkeys &\n/opt/kbswtb &\nif ! pgrep -f xidlehook; then\n  xidlehook --timer 600 'systemctl suspend -i' '' &\nfi\npicom --experimental-backends &\nnitrogen --restore &\nexec i3\n" > .xinitrc-tobe
   fi
 fi
 # echo "Press enter [printf .xinitrc]"; read line
 if [ $MORE_PROGS = 1 ]; then
-  sudo -u "$username" printf '#!'"/bin/sh\n\ncd /home/$username\nsystemctl --user start pipewire-pulse\npactl set-sink-volume @DEFAULT_SINK@ 100%%\nnitrogen --set-zoom-fill Pictures/poz.jpg\nnitrogen --save\npsd\nsed -i \'s/^.*\\\\\"USE_BACKUPS\\\\\"=\\\\\"yes\\\\\".*\$/\\\\\"USE_BACKUPS\\\\\"=\\\\\"no\\\\\"/\' .config/psd/psd.conf\nsystemctl --user enable psd\nsystemctl --user start psd\nexec bash --norc -c \"cd /home/$username; mv .xinitrc-tobe .xinitrc && source .xinitrc\"\n" > .xinitrc
+  printf '#!'"/bin/sh\n\ncd /home/$username\nsystemctl --user start pipewire-pulse\npactl set-sink-volume @DEFAULT_SINK@ 100%%\nnitrogen --set-zoom-fill Pictures/poz.jpg\nnitrogen --save\npsd\nsed -i \'s/^.*\\\\\"USE_BACKUPS\\\\\"=\\\\\"yes\\\\\".*\$/\\\\\"USE_BACKUPS\\\\\"=\\\\\"no\\\\\"/\' .config/psd/psd.conf\nsystemctl --user enable psd\nsystemctl --user start psd\nexec bash --norc -c \"cd /home/$username; mv .xinitrc-tobe .xinitrc && source .xinitrc\"\n" > .xinitrc
 else
-  sudo -u "$username" printf '#!'"/bin/sh\n\ncd /home/$username\nsystemctl --user start pipewire-pulse\npactl set-sink-volume @DEFAULT_SINK@ 100%%\nnitrogen --set-zoom-fill Pictures/poz.jpg\nnitrogen --save\nexec bash --norc -c \"cd /home/$username; mv .xinitrc-tobe .xinitrc && source .xinitrc\"\n" > .xinitrc
+  printf '#!'"/bin/sh\n\ncd /home/$username\nsystemctl --user start pipewire-pulse\npactl set-sink-volume @DEFAULT_SINK@ 100%%\nnitrogen --set-zoom-fill Pictures/poz.jpg\nnitrogen --save\nexec bash --norc -c \"cd /home/$username; mv .xinitrc-tobe .xinitrc && source .xinitrc\"\n" > .xinitrc
 fi
+chown $username:wheel .xinitrc .xinitrc-tobe
 # echo "Press enter [cp .bashrc]"; read line
 cp "/home/$username/.bashrc" /tmp/bashrc_radni
 # echo "Press enter [chmod bashrc_radni]"; read line
@@ -373,37 +376,27 @@ fi
 
 #			ungoogled-chromium
 
-# echo "Press enter [add ug-ch to pacman-key]"; read line
-while ! curl -s 'https://download.opensuse.org/repositories/home:/ungoogled_chromium/Arch/x86_64/home_ungoogled_chromium_Arch.key' | pacman-key -a -; do
-  reconnect
-done
-# echo "Press enter [add ug-ch to /etc/pacman.conf]"; read line
-printf "[home_ungoogled_chromium_Arch]\nSigLevel = Required TrustAll\nServer = https://download.opensuse.org/repositories/home:/ungoogled_chromium/Arch/\$arch\n" | tee --append /etc/pacman.conf
-# echo "Press enter [pacman ungoogled-chromium]"; read line
-while ! pacman -Sy --noconfirm --needed pipewire-jack profile-sync-daemon ungoogled-chromium; do
-  reconnect
-done
-# echo "Press enter [printf /etc/chromium-flags.conf]"; read line
-if [ $AMD_GPU = 1 ]; then
-  sudo -u "$username" printf -- "--disk-cache-dir=/home/$username/chromium/cache\n--disk-cache-size=1073741824\n--ignore-gpu-blocklist\n--enable-gpu-rasterization\n--enable-zero-copy\n--enable-features=VaapiVideoDecoder\n--use-gl=egl\n" > /etc/chromium-flags.conf
-else
-  sudo -u "$username" printf -- "--disk-cache-dir=/home/$username/chromium/cache\n--disk-cache-size=1073741824\n" > /etc/chromium-flags.conf
+if [ $MORE_PROGS = 1 ]; then
+  while ! curl -s 'https://download.opensuse.org/repositories/home:/ungoogled_chromium/Arch/x86_64/home_ungoogled_chromium_Arch.key' | pacman-key -a -; do
+    reconnect
+  done
+  printf "[home_ungoogled_chromium_Arch]\nSigLevel = Required TrustAll\nServer = https://download.opensuse.org/repositories/home:/ungoogled_chromium/Arch/\$arch\n" | tee --append /etc/pacman.conf
+  while ! pacman -Sy --noconfirm --needed pipewire-jack profile-sync-daemon ungoogled-chromium; do
+    reconnect
+  done
+  if [ $AMD_GPU = 1 ]; then
+    printf -- "--disk-cache-dir=/home/$username/chromium/cache\n--disk-cache-size=1073741824\n--ignore-gpu-blocklist\n--enable-gpu-rasterization\n--enable-zero-copy\n--enable-features=VaapiVideoDecoder\n--use-gl=egl\n" > /etc/chromium-flags.conf
+  else
+    printf -- "--disk-cache-dir=/home/$username/chromium/cache\n--disk-cache-size=1073741824\n" > /etc/chromium-flags.conf
+  fi
+  chown $username:wheel /etc/chromium-flags.conf
 fi
-# echo "Press enter [sed psd.conf]"; read line
-# sudo -u "$username" sed -i 's/^.*\"USE_BACKUPS\"=\"yes\".*$/\"USE_BACKUPS\"=\"no\"/' "/home/$username/.config/psd/psd.conf"
-# echo "Press enter [enable psd]"; read line
-# sudo -u "$username" systemctl --user enable psd
-# echo "Press enter [start psd]"; read line
-# sudo -u "$username" systemctl --user start psd
 
 #			cleaning
 
-# echo "Press enter [cleaning rust]"; read line
 pacman --noconfirm -Rsn rust
-# echo "Press enter [cleaning pacman]"; read line
 rm -rf /var/cache/pacman/pkg
 
 #			reboot
 
-# echo "Press enter [reboot]"; read line
 reboot
