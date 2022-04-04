@@ -108,6 +108,7 @@ reconnect() {
     WWAIT=1
   done
   printf "\n:)\n"
+  sleep 1
 }
 
 while ! curl https://raw.githubusercontent.com/donaastor/archgd/main/scripts/wifi-guard.sh > /tmp/wifi-guard.sh; do
