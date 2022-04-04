@@ -106,6 +106,7 @@ reconnect() {
     WWAIT=1
   done
   printf "\n:)\n"
+  sleep 1
 }
 
 
