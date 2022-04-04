@@ -102,7 +102,7 @@ aur_get_one() {
   sed 's/^.*\(................\)$/\1/' tren2 > tren3
   rm tren1 tren2 tren3
   while read ano_pgp; do
-    while ! gpg --recv-key $ano_pgp; do
+    while ! sudo -u "$username" gpg --recv-keys $ano_pgp; do
       reconnect
     done
   done < tren3
