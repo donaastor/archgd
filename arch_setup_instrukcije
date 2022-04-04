@@ -202,10 +202,11 @@ vivaldi:
 ******  gimp  **********************************************************************************
 gimp:
 	Preferences -> Interface -> Icon Theme -> Custom icon size: large
+	(i ako to nije dovoljno:)
 iskopiraj folder Dark iz /usr/share/gimp/2.0/themes u ~/.config/GIMP/2.10/themes/ i preimenuj ga u DarkHighDPI
 u DarkHighDPI/gtkrc otkomentiraj linije:
-	gtk-font-name = "Sans 20"
-	  font_name = "Sans 20"
+	gtk-font-name = "Sans 13"
+	  font_name = "Sans 13"
 gimp:
 	Preferences > Interface > Theme: DarkHighDPI
 ******  guvcview  ******************************************************************************
