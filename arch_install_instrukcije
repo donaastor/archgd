@@ -54,6 +54,7 @@
 		nesto kao "amdgpu_bl0")
 	cat brightness
 	echo 31 > brightness
+
 -------------- INSTALL --------------
 nakon sto bootujemo u arch live, radimo:
 1. proveravamo imamo li internet:
