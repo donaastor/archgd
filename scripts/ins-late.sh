@@ -399,7 +399,7 @@ fi
 #			cleaning
 
 # echo "Press enter [cleaning rust]"; read line
-pacman -Rsn rust
+pacman --noconfirm -Rsn rust
 # echo "Press enter [cleaning pacman]"; read line
 rm -rf /var/cache/pacman/pkg
 
