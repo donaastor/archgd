@@ -134,6 +134,7 @@ aur_get() {
 
 sleep 2
 reconnect
+timedatectl set-ntp true
 
 #			getty
 
@@ -151,7 +152,7 @@ sed -i 's/noedit = no/noedit = yes/' "/tmp/pikaur_radni.conf"
 sed -i 's/donteditbydefault = no/donteditbydefault = yes/' "/tmp/pikaur_radni.conf"
 sudo -u "$username" cp "/tmp/pikaur_radni.conf" "/home/$username/.config/pikaur.conf"
 if [ $MORE_PROGS = 1 ]; then
-  ad_progs="texlive-formatsextra texlive-langcyrillic texlive-latexextra texlive-science openssh tmux vlc feh zathura zathura-djvu zathura-pdf-poppler flameshot calc geany geany-plugins pcmanfm-gtk3 simplescreenrecorder"
+  ad_progs="texlive-formatsextra texlive-langcyrillic texlive-latexextra texlive-science openssh tmux vlc feh zathura zathura-djvu zathura-pdf-poppler flameshot calc geany geany-plugins pcmanfm-gtk3 simplescreenrecorder gimp"
   aur_progs="lyx"
 else
   ad_progs=""
