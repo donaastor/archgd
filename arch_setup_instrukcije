@@ -33,10 +33,16 @@
 			path = "/sys/class/power_supply/BAT1/uevent"
 			format_percentage: "%.01f%s"
 		}
+4. Suspend
+	proveri da li racunar zaista ide na pravi (deep) suspend
+	u fajlu /sys/power/state treba da je sadrzano "mem",
+	a u fajlu /sys/power/mem_sleep treba da je uokvireno "deep"
+	ako to nije tako, onda probaj nesto na silu, vidi
+	https://www.kernel.org/doc/html/latest/admin-guide/pm/sleep-states.html
 
 --------------- SETUP ---------------
 
-	...nista, skripta ins2.sh bi trebalo da je sve odradila
+	...nista, skripta ins-late.sh bi trebalo da je sve odradila
 
 
 
