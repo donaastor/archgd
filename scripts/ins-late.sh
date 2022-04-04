@@ -76,6 +76,8 @@ reconnect() {
   printf "\n:)\n"
 }
 
+2>/dev/null 1>/dev/null bash "/home/$username/scripts/wifi-guard.sh" &
+
 
 
 
