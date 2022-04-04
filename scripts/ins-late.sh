@@ -236,7 +236,7 @@ else
   fi
 fi
 if [ $MORE_PROGS = 1 ]; then
-  printf '#!'"/bin/sh\n\ncd /home/$username\nsystemctl --user start pipewire-pulse\npactl set-sink-volume @DEFAULT_SINK@ 100%%\npsd\nsed -i \'s/^.*\\\\\"USE_BACKUPS\\\\\"=\\\\\"yes\\\\\".*\$/\\\\\"USE_BACKUPS\\\\\"=\\\\\"no\\\\\"/\' .config/psd/psd.conf\nsystemctl --user enable psd\nsystemctl --user start psd\nexec bash --norc -c \"cd /home/$username; mv .xinitrc-tobe .xinitrc && source .xinitrc\"\n" > .xinitrc
+  printf '#!'"/bin/sh\n\ncd /home/$username\nsystemctl --user start pipewire-pulse\npactl set-sink-volume @DEFAULT_SINK@ 100%%\npsd\nsed -i \'s/^.*USE_BACKUPS=\\\\\"yes\\\\\".*\$/USE_BACKUPS=\\\\\"no\\\\\"/\' .config/psd/psd.conf\nsystemctl --user enable psd\nsystemctl --user start psd\nexec bash --norc -c \"cd /home/$username; mv .xinitrc-tobe .xinitrc && source .xinitrc\"\n" > .xinitrc
 else
   printf '#!'"/bin/sh\n\ncd /home/$username\nsystemctl --user start pipewire-pulse\npactl set-sink-volume @DEFAULT_SINK@ 100%%\nexec bash --norc -c \"cd /home/$username; mv .xinitrc-tobe .xinitrc && source .xinitrc\"\n" > .xinitrc
 fi
