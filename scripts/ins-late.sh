@@ -74,6 +74,7 @@ reconnect() {
     WWAIT=1
   done
   printf "\n:)\n"
+  sleep 1
 }
 
 2>/dev/null 1>/dev/null bash "/home/$username/scripts/wifi-guard.sh" "$ssid_dft" &
