@@ -319,7 +319,7 @@ fi
 
 #			cleaning
 
-pacman --noconfirm -Rsn rust
+# pacman --noconfirm -Rsn rust
 rm -rf /var/cache/pacman/pkg
 
 #			reboot
