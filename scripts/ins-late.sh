@@ -235,11 +235,17 @@ else
     printf '#!'"/bin/sh\n\n[[ -f ~/.Xresources ]] && xrdb -merge -I\$HOME ~/.Xresources\nxset s noblank\nxset s noexpose\nxset s 0 0\nxset +dpms\nxset dpms 0 180 0\nnumlockx &\nxset r rate 250 30\nxbindkeys &\n/opt/kbswtb &\nif ! pgrep -f xidlehook; then\n  xidlehook --timer 600 'systemctl suspend -i' '' &\nfi\npicom --experimental-backends &\nnitrogen --restore &\nexec i3\n" > .xinitrc-tobe
   fi
 fi
+# if [ $MORE_PROGS = 1 ]; then
+#   printf '#!'"/bin/sh\n\ncd /home/$username\nsystemctl --user start pipewire-pulse\npactl set-sink-volume @DEFAULT_SINK@ 100%%\npsd\nsed -i \'s/^.*USE_BACKUPS=\\\\\"yes\\\\\".*\$/USE_BACKUPS=\\\\\"no\\\\\"/\' .config/psd/psd.conf\nsystemctl --user enable psd\nsystemctl --user start psd\nexec bash --norc -c \"cd /home/$username; mv .xinitrc-tobe .xinitrc && source .xinitrc\"\n" > .xinitrc
+# else
+#   printf '#!'"/bin/sh\n\ncd /home/$username\nsystemctl --user start pipewire-pulse\npactl set-sink-volume @DEFAULT_SINK@ 100%%\nexec bash --norc -c \"cd /home/$username; mv .xinitrc-tobe .xinitrc && source .xinitrc\"\n" > .xinitrc
+# fi
 if [ $MORE_PROGS = 1 ]; then
-  printf '#!'"/bin/sh\n\ncd /home/$username\nsystemctl --user start pipewire-pulse\npactl set-sink-volume @DEFAULT_SINK@ 100%%\npsd\nsed -i \'s/^.*USE_BACKUPS=\\\\\"yes\\\\\".*\$/USE_BACKUPS=\\\\\"no\\\\\"/\' .config/psd/psd.conf\nsystemctl --user enable psd\nsystemctl --user start psd\nexec bash --norc -c \"cd /home/$username; mv .xinitrc-tobe .xinitrc && source .xinitrc\"\n" > .xinitrc
+  xit_ad="psd\nsed -i 's/^.*USE_BACKUPS=\\\\\"yes\\\\\".*$/USE_BACKUPS=\\\\\"no\\\\\"/' .config/psd/psd.conf\nsystemctl --user enable psd\nsystemctl --user start psd\n"
 else
-  printf '#!'"/bin/sh\n\ncd /home/$username\nsystemctl --user start pipewire-pulse\npactl set-sink-volume @DEFAULT_SINK@ 100%%\nexec bash --norc -c \"cd /home/$username; mv .xinitrc-tobe .xinitrc && source .xinitrc\"\n" > .xinitrc
+  xit_ad=""
 fi
+printf '#!'"/bin/sh\n\ncd /home/$username\nsystemctl --user start pipewire-pulse\nprintf '#!'\"/bin/bash\\\\n\\\\ngotov() {\\\\n  exec bash --norc -c \\\\\"rm /tmp/to100.sh; exit \\\\\$1\\\\\"\\\\n}\\\\n\\\\nvrti() {\\\\n  xcn=0\\\\n  ycn=0\\\\n  while :; do\\\\n    if pactl set-sink-volume @DEFAULT_SINK@ 100%%%%; then gotov 0; fi\\\\n    xcn=\\\\\$(( \\\\\$xcn + 1 ))\\\\n    if [ \\\\\$xcn = \\\\\$1 ]; then\\\\n      xcn=0\\\\n      ycn=\\\\\$(( \\\\\$ycn + 1 ))\\\\n      if [ \\\\\$ycn = \\\\\$2 ]; then break; fi\\\\n      sleep 1\\\\n    fi\\\\n  done\\\\n}\\\\n\\\\nvrti 3 4\\\\nvrti 2 5\\\\nvrti 1 8\\\\n\\\\ngotov 1\\\\n\" > /tmp/to100.sh\nbash /tmp/to100.sh &\n""$xit_ad""exec bash --norc -c \"cd /home/$username; mv .xinitrc-tobe .xinitrc && source .xinitrc\"\n" > .xinitrc
 printf "[xin_-1]\nfile=/home/$username/Pictures/poz.jpg\nmode=5\nbgcolor=#000000\n" > .config/nitrogen/bg-saved.cfg
 chown $username:wheel .xinitrc .xinitrc-tobe .config/nitrogen/bg-saved.cfg
 cp "/home/$username/.bashrc" /tmp/bashrc_radni
