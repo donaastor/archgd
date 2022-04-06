@@ -326,6 +326,7 @@ if [ $MORE_PROGS = 1 ]; then
   unzip /tmp/uBlock.crx -d $ubld
   cd $ubld
   rm -rf "_metadata"
+  xdg-settings set default-web-browser chromium.desktop
 fi
 
 #			cleaning
