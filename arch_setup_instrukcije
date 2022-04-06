@@ -13,7 +13,7 @@
 	bitno je da namestis Xft.dpi za X, da bi sistem znao
 	DPI monitora, a za aplikacije namestaj rucno jer svaka
 	koristi svoje nesto: uglavnom su to flagovi GDK_SCALE,
-	GDK_DPI_SCALE, QT_SCALE_FACTOR, QT_QT_SCREEN_SCALE_FACTORS
+	GDK_DPI_SCALE, QT_SCALE_FACTOR, QT_SCREEN_SCALE_FACTORS
 	koje iz terminala mozes bukvalno da pozoves sa
 	"GDK_SCALE=2 geany" npr, a kada nesto odlucis da hoces
 	definitivno da koristis, onda mozes da ga exportujes u
