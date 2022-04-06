@@ -70,20 +70,12 @@ chromium:
 		Languages:
 			UKLJUCI Offer to translate pages that aren't in a language you read
 			ISKLJUCI Spell check
-	promeni flag:
-		chrome://flags/#extension-mime-request-handling
-	na	"Download as regular file"
 	idi na:
 		chrome://extensions/
 	ukljuci "Developer mode"
 	klikni "Load unpacked" i odaberi /home/korsic/chromium/extensions/uBlock
 	uBlock -> Details:
 		iskljuci "Collect errors"
-		udji u Extension options:
-			ako imas neke zelje...
-	...
-	..bookmarks
-	...
 ******  Samba  *********************************************************************************
 terminal:
 	pacman -S samba
@@ -152,32 +144,6 @@ geany(i root):
 	Tools -> Plugin Manager: select Auto-close; Preferences: unmark "Parenthesis" and "Double quotes"
 	exit geany
 	iskopiraj sve iz foldera "colorschemes" u ~/.config/geany/colorschemes/
-******  Vivaldi  *******************************************************************************
-vivaldi:
-	classic,
-	import nothing,
-	block trackers,
-	theme = vivaldi, DON'T use OS theme
-	bookmarks: obrisi sve,
-	Settings:
-		Sync:
-			username: donaastor
-			password: ***************
-	restart
-	Settings:
-		General:
-			Set as Default
-			Close and Exit: NE, NE
-		Themes:
-			Themes: Dark
-			Background: AuroraDark
-			Color: Opacity 100%, Enable Blur = OFF
-			Scheduled Themes: 6:00, 20:00
-		Start Page: Speed dial:
-			max columns: 8
-			thumbnail size: small
-		Search: DuckDuckGo, search field display: disable
-	levi Panel: translate.google.com, separate width
 ******  gimp  **********************************************************************************
 gimp:
 	Preferences -> Interface -> Icon Theme -> Custom icon size: large
@@ -193,7 +159,7 @@ guvcview: Photo/File=~/trenut, Video/File=~/trenut
 ******  printer  *******************************************************************************
 terminal:
 	pacman -S cups libcups system-config-printer hplip
-	yay -S hplip-plugin
+	pikaur -S hplip-plugin
 	sudo systemctl start cups.service
 	hp-setup -i "printer-ip" (umesto "printer-ip" stavis ip printera, trebalo bi 192.168.1.105)
 	sudo systemctl disable cups.service
@@ -225,8 +191,8 @@ tlauncher:
 hamachi:
 
 terminal:
-	yay logmein-hamachi
-	yay -Sc
+	pikaur logmein-hamachi
+	pikaur -Sc
 	sudo systemctl start logmein-hamachi
 	sudo systemctl stop logmein-hamachi
 thunar(root):
@@ -240,5 +206,5 @@ terminal:
 ******  LaTeX  *********************************************************************************
 terminal:
 	pacman -S --needed lyx texlive-formatsextra texlive-langcyrillic texlive-latexextra texlive-science texlive-fontsextra
-	yay -S tikzit
+	pikaur -S tikzit
 ************************************************************************************************
