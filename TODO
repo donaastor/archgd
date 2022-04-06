@@ -1,0 +1,11 @@
+1. dodaj mehanizam da odglavljivanje skidanja u ins-late.sh:
+    1.1. prvo sva instaliranja podeli na skidanje i instaliranje
+    1.2. napravi skriptu koja cita redove (read line) i razume tri vrste linije:
+        pocetak procesa,
+        kraj procesa,
+        output procesa,
+        i ovaj treci ispisuje na izlaz. ako proces u toku od jednog minuta nista
+        ne ispise, ubij ga. ovu skriptu startuj na pocetku ins- skripte
+    1.3. svaku komandu skidanja uokviri u skriptu koja prvo ispisuje svoj pid
+         (echo $$) i zatim se pretvara u komandu skidanja (sa exec) i output
+         te skripte preusmeri na onu prvu skriptu
