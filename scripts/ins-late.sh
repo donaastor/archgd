@@ -236,7 +236,7 @@ else
   fi
 fi
 if [ $MORE_PROGS = 1 ]; then
-  xit_ad="printf '"'#!'"'\"/bin/bash\\\\n\\\\npsd\\\\ncd /home/$username/.config/psd\\\\nxcn=0\\\\nwhile :; do\\\\n  if [ -f psd.conf ]; then\\\\n    sed -i 's/^.*USE_BACKUPS=\\\\\\\\\\\\\\\\\\\\\"yes\\\\\\\\\\\\\\\\\\\\\".*\\\\\$/USE_BACKUPS=\\\\\\\\\\\\\\\\\\\\\"no\\\\\\\\\\\\\\\\\\\\\"/' psd.conf\\\\n    break\\\\n  else\\\\n    xcn=\\\\\$(( \\\\\$xcn + 1 ))\\\\n    if [ \\\\\$xcn = 400 ]; then break; fi\\\\n    sleep 0.3\\\\n  fi\\\\ndone\\\\nsystemctl --user enable psd\\\\nsystemctl --user start psd\\\\nxcn=0\\\\nwhile :; do\\\\n  if [ -L /home/$username/.config/chromium ]; then\\\\n    break\\\\n  else\\\\n    xcn=\\\\\$(( \\\\\$xcn + 1 ))\\\\n    if [ \\\\\$xcn = 200 ]; then break; fi\\\\n    sleep 0.5\\\\n  fi\\\\ndone\\\\ncrxversion=\\\\\"\\\\\$(pacman -Qi ungoogled-chromium | sed -n '/^Version/p' | awk '{print \\\\\$3}' | sed 's/^\\\\\\\\\\\\\\\\(.*\\\\\\\\\\\\\\\\)-.*\\\\\$/\\\\\\\\\\\\\\\\1/')\\\\\"\\\\ncurl -L 'https://clients2.google.com/service/update2/crx?response=redirect&os=linux&arch=x86-64&os_arch=x86_64&nacl_arch=x86_64&prod=chromiumcrx&prodchannel=unknown&prodversion='\\\\\"\\\\\$crxversion\\\\\"'&acceptformat=crx2,crx3&x=id%%%%3Dcjpalhdlnbpafiamejdnhcphjbkeiagm%%%%26uc' > /tmp/uBlock.crx\\\\nubld=\\\\\"/home/$username/chromium/extensions/uBlock\\\\\"\\\\nmkdir \\\\\$ubld\\\\nunzip /tmp/uBlock.crx -d \\\\\$ubld\\\\ncd \\\\\$ubld\\\\nrm -rf \\\\\"_metadata\\\\\"\\\\nrm -rf /tmp/psdconf.sh\\\\n\" > /tmp/psdconf.sh\nbash /tmp/psdconf.sh &\n"
+  xit_ad="printf '"'#!'"'\"/bin/bash\\\\n\\\\npsd\\\\ncd /home/$username/.config/psd\\\\nxcn=0\\\\nwhile :; do\\\\n  if [ -f psd.conf ]; then\\\\n    sed -i 's/^.*USE_BACKUPS=\\\\\\\\\\\\\\\\\\\\\"yes\\\\\\\\\\\\\\\\\\\\\".*\\\\\$/USE_BACKUPS=\\\\\\\\\\\\\\\\\\\\\"no\\\\\\\\\\\\\\\\\\\\\"/' psd.conf\\\\n    break\\\\n  else\\\\n    xcn=\\\\\$(( \\\\\$xcn + 1 ))\\\\n    if [ \\\\\$xcn = 400 ]; then break; fi\\\\n    sleep 0.3\\\\n  fi\\\\ndone\\\\nsystemctl --user enable psd\\\\nsystemctl --user start psd\\\\nrm -rf /tmp/psdconf.sh\\\\n\" > /tmp/psdconf.sh\nbash /tmp/psdconf.sh &\n"
 else
   xit_ad=""
 fi
@@ -317,6 +317,15 @@ if [ $MORE_PROGS = 1 ]; then
   fi
   chown $username:wheel /etc/chromium-flags.conf
   mkdir /home/$username/chromium/extensions
+  crxversion="$(pacman -Qi ungoogled-chromium | sed -n '/^Version/p' | awk '{print $3}' | sed 's/^\(.*\)-.*$/\1/')"
+  while ! curl -L 'https://clients2.google.com/service/update2/crx?response=redirect&os=linux&arch=x86-64&os_arch=x86_64&nacl_arch=x86_64&prod=chromiumcrx&prodchannel=unknown&prodversion='"$crxversion"'&acceptformat=crx2,crx3&x=id%3Dcjpalhdlnbpafiamejdnhcphjbkeiagm%26uc' > /tmp/uBlock.crx; do
+    reconnect
+  done
+  ubld="/home/$username/chromium/extensions/uBlock"
+  mkdir $ubld
+  unzip /tmp/uBlock.crx -d $ubld
+  cd $ubld
+  rm -rf "_metadata"
 fi
 
 #			cleaning
