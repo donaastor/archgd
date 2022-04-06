@@ -224,6 +224,7 @@ done
 cd archgd
 rm -rf .git
 sudo -u "$username" mv scripts "/home/$username/scripts"
+sudo -u "$username" mv arch_install_instrukcije arch_programs_setup "/home/$username/scripts/"
 sudo -u "$username" mkdir "/home/$username/Pictures"
 sudo -u "$username" mv poz_r.jpg "/home/$username/Pictures/poz.jpg"
 sudo -u "$username" mkdir "/home/$username/.config"
