@@ -70,6 +70,9 @@ chromium:
 		Languages:
 			UKLJUCI Offer to translate pages that aren't in a language you read
 			ISKLJUCI Spell check
+		Downloads:
+			Location: /home/korsic/tren
+			UKLJUCI Ask where to save each file before downloading
 	idi na:
 		chrome://extensions/
 	ukljuci "Developer mode"
