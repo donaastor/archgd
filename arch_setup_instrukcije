@@ -73,27 +73,6 @@ chromium:
 	promeni flag:
 		chrome://flags/#extension-mime-request-handling
 	na	"Download as regular file"
-	otvori URL:
-		https://chrome.google.com/webstore/category/extensions
-	ukljuci JavaScript
-	pretrazi "ublock origin"
-		(ili samo idi na "https://chrome.google.com/webstore/search/ublock%20origin")
-	udji na "uBlock Origin" i kopiraj URL
-		(ili samo idi na desni klik i "Copy link address")
-	iskljuci JavaScript
-	otvori URL:
-		https://crxextractor.com/
-	ukljuci JavaScript
-	klikni "START FOR FREE"
-	pastuj kopirani URL u polje gde pise "URL from Chrome WebStore"
-	stisni Download i cd-uj se u folder gde si skinuo fajl
-		(recimo da se fajl zove extension.crx)
-	iskljuci JavaScript
-	mkdir /home/korsic/chromium/extensions
-	mkdir /home/korsic/chromium/extensions/uBlock
-	pacman -S unzip
-	unzip extension.crx -d /home/korsic/chromium/extensions/uBlock
-	rm -r /home/korsic/chromium/extensions/uBlock/_metadata
 	idi na:
 		chrome://extensions/
 	ukljuci "Developer mode"
