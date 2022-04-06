@@ -73,12 +73,6 @@ chromium:
 		Downloads:
 			Location: /home/korsic/tren
 			UKLJUCI Ask where to save each file before downloading
-	idi na:
-		chrome://extensions/
-	ukljuci "Developer mode"
-	klikni "Load unpacked" i odaberi /home/korsic/chromium/extensions/uBlock
-	uBlock -> Details:
-		iskljuci "Collect errors"
 ******  Samba  *********************************************************************************
 terminal:
 	pacman -S samba
