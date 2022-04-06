@@ -316,6 +316,7 @@ if [ $MORE_PROGS = 1 ]; then
     printf -- "--disk-cache-dir=/home/$username/chromium/cache\n--disk-cache-size=1073741824\n" > /etc/chromium-flags.conf
   fi
   chown $username:wheel /etc/chromium-flags.conf
+  mkdir /home/$username/chromium/extensions
 fi
 
 #			cleaning
