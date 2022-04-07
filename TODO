@@ -9,3 +9,5 @@
     1.3. svaku komandu skidanja uokviri u skriptu koja prvo ispisuje svoj pid
          (echo $$) i zatim se pretvara u komandu skidanja (sa exec) i output
          te skripte preusmeri na onu prvu skriptu
+
+  OSIM sto nece moci bas tako
