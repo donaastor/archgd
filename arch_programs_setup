@@ -84,33 +84,18 @@ thunar:
 	dodaj u ~/.bashrc-personal:
 		alias f='sudo mount -t tmpfs -o size=3072m tmpfs /home/korsic/Filmovi; sudo systemctl restart smb nmb'
 		alias uf='sudo umount Filmovi'
-	iskopiraj smb.conf u /etc/samba/
+	iskopiraj smb.conf u /etc/samba/	????
 ******  Thunar  ********************************************************************************
-thunar(i root):
-	Edit -> Preferences -> Display:
-		View new folders using: Last Active View
-		Date: Format: Custom: %a, %_d. %b, %Y, %H:%M:%S
-	Edit -> Configure custom actions...:
-		obrisi:
-			Check sha1sum
-			Check sha256sum
-			Check md5sum
-			Run
-			Convert png to jpg
-			Conkyzen
-			Open with gitahead
-		menjaj:
-			Open Terminal Here:
-				xfce4-terminal --default-working-directory=%f
-			Create symlink:
-				ln -s %f %n_link
-			Open folder as root:
-				gksu --disable-grab dbus-run-session thunar %f
-			Ownership to root:
-				gnome-keyring-daemon -r -d;gksu --disable-grab "chown -R root:root %F"
-			Ownership to user:
-				gnome-keyring-daemon -r -d;gksu --disable-grab "chown -R $USER:$USER %F"
-	iskopiraj accels.scm u ~/.config/Thunar/
+	Open Terminal Here:
+		xfce4-terminal --default-working-directory=%f
+	Create symlink:
+		ln -s %f %n_link
+	Open folder as root:
+		gksu --disable-grab dbus-run-session thunar %f
+	Ownership to root:
+		gnome-keyring-daemon -r -d;gksu --disable-grab "chown -R root:root %F"
+	Ownership to user:
+		gnome-keyring-daemon -r -d;gksu --disable-grab "chown -R $USER:$USER %F"
 ******  Geany  *********************************************************************************
 geany(i root):
 	Edit -> Preferences:
@@ -152,7 +137,7 @@ u DarkHighDPI/gtkrc otkomentiraj linije:
 gimp:
 	Preferences > Interface > Theme: DarkHighDPI
 ******  guvcview  ******************************************************************************
-guvcview: Photo/File=~/trenut, Video/File=~/trenut
+guvcview: Photo/File=~/tren, Video/File=~/tren
 ******  printer  *******************************************************************************
 terminal:
 	pacman -S cups libcups system-config-printer hplip
