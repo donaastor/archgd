@@ -84,7 +84,7 @@ thunar:
 	dodaj u ~/.bashrc-personal:
 		alias f='sudo mount -t tmpfs -o size=3072m tmpfs /home/korsic/Filmovi; sudo systemctl restart smb nmb'
 		alias uf='sudo umount Filmovi'
-	iskopiraj smb.conf u /etc/samba/	????
+	iskopiraj smb.conf u /etc/samba/
 ******  Thunar  ********************************************************************************
 	Open Terminal Here:
 		xfce4-terminal --default-working-directory=%f
