@@ -10,4 +10,8 @@
          (echo $$) i zatim se pretvara u komandu skidanja (sa exec) i output
          te skripte preusmeri na onu prvu skriptu
 
-  OSIM sto nece moci bas tako
+  OSIM sto nece moci bas tako,
+  mozda ovo da probam:
+
+namestim da tokom skidanja 'read line' ubija proces za skidanje npr tako sto
+forkujem proces nekako da jedan ceka read line a drugi skida
