@@ -153,7 +153,7 @@ sed -i 's/noedit = no/noedit = yes/' "/tmp/pikaur_radni.conf"
 sed -i 's/donteditbydefault = no/donteditbydefault = yes/' "/tmp/pikaur_radni.conf"
 sudo -u "$username" cp "/tmp/pikaur_radni.conf" "/home/$username/.config/pikaur.conf"
 if [ $MORE_PROGS = 1 ]; then
-  ad_progs="texlive-formatsextra texlive-langcyrillic texlive-latexextra texlive-science openssh tmux vlc feh zathura zathura-djvu zathura-pdf-poppler flameshot calc geany geany-plugins pcmanfm-gtk3 simplescreenrecorder gimp"
+  ad_progs="texlive-formatsextra texlive-langcyrillic texlive-latexextra texlive-science openssh tmux vlc feh zathura zathura-djvu zathura-pdf-poppler flameshot calc geany geany-plugins pcmanfm-gtk3 simplescreenrecorder gimp transmission-qt"
   aur_progs="lyx"
 else
   ad_progs=""
@@ -298,6 +298,9 @@ if [ $MORE_PROGS = 1 ]; then
   sudo -u "$username" xdg-mime default lyx.desktop text/x-tex
   sudo -u "$username" xdg-mime default geany.desktop text/plain text/html text/x-c text/x-c++ text/x-java-source text/x-script text/x-script.python
   sudo -u "$username" xdg-mime default pcmanfm.desktop inode/mount-point inode/directory
+  sudo -u "$username" mkdir "/home/$username/.config/transmission"
+  sudo -u "$username" printf "{\n\t\"download-dir\": \"/tmp\"\n}\n" > "/home/$username/.config/transmission/settings.json"
+  chown $username:wheel "/home/$username/.config/transmission/settings.json"
 fi
 
 #			ungoogled-chromium
