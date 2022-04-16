@@ -206,7 +206,7 @@ rm /root/.bash_profile
 
 sensors-detect --auto
 sed -i 's/^# set zap/set zap/' /etc/nanorc
-printf "\nalias ls=\'ls --color=tty\'\nalias q=\'exit\'\nalias cl=\'clear\'\nalias mountu=\'sudo mount -o gid=users,fmask=113,dmask=002\'\nalias stfu=\'shutdown now\'\nalias sus=\'systemctl suspend\'\n" >> /etc/bash.bashrc
+printf "\nalias ls=\'ls --color=tty\'\nalias q=\'exit\'\nalias cl=\'clear\'\nalias stfu=\'shutdown now\'\nalias sus=\'systemctl suspend\'\n" >> /etc/bash.bashrc
 
 cp /etc/xdg/picom.conf /tmp/picom_radni.conf
 sed -i 's/^fade-in-step/#fade-in-step/' /tmp/picom_radni.conf
@@ -246,7 +246,7 @@ chown $username:wheel .xinitrc .xinitrc-tobe .config/nitrogen/bg-saved.cfg
 cp "/home/$username/.bashrc" /tmp/bashrc_radni
 chmod 777 /tmp/bashrc_radni
 sed -i 's/^alias ls.*$//' /tmp/bashrc_radni
-printf "if [ -z \"\${DISPLAY}\" ] && [ \"\${XDG_VTNR}\" -eq 1 ]; then\n  startx\nfi\n" >> /tmp/bashrc_radni
+printf "alias mountu=\'sudo mount -o gid=users,fmask=113,dmask=002\'\n\nif [ -z \"\${DISPLAY}\" ] && [ \"\${XDG_VTNR}\" -eq 1 ]; then\n  startx\nfi\n" >> /tmp/bashrc_radni
 sudo -u "$username" cp /tmp/bashrc_radni "/home/$username/.bashrc"
 printf '#!/bin/bash\n\nfor tty in /dev/tty{1..6}\ndo\n  /usr/bin/setleds -D +num < \"$tty\";\ndone\n' > /usr/local/bin/numlock
 chmod 755 /usr/local/bin/numlock
