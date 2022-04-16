@@ -1,0 +1,71 @@
+guide za archlinux i windows 11
+
+na linuxu:
+	mkdir ~/sharing
+	mkdir ~/sharing/write
+	mkdir ~/sharing/read
+na windowsu:
+	Control Panel -> Network and Internet -> Network and Sharing Center -> Change advanced sharing settings:
+		sve na on, osim 
+
+sa linuxa na windows:
+	na linuxu:
+		sudo nano /etc/fstab (dodaj na kraj):
+			tmpfs /home/korsic/sharing/write tmpfs defaults,size=2048M 0 0
+		sudo mount -t tmpfs tmpfs /home/korsic/sharing/write -o defaults,size=2048M
+		sudo pacman -S samba
+		sudo nano /etc/samba/smb.conf:
+			[global]
+				workgroup = WORKGROUP
+				server string = Samba Server
+				server role = standalone server
+				log file = /usr/local/samba/var/log.%m
+				max log size = 50
+				dns proxy = no
+				server smb encrypt = desired
+				min protocol = SMB2
+				protocol = SMB3
+			
+			[arch]
+				path = /home/korsic/sharing/write
+				available = yes
+				browsable = yes
+				read only = yes
+				valid users = korsic
+			
+		sudo smbpasswd -a korsic
+		sudo smbpasswd -a nobody
+		sudo ufw allow CIFS
+		sudo mkdir /usr/local/samba
+		sudo mkdir /usr/local/samba/var
+		sudo systemctl start smb nmb
+	na windowsu:
+		file explorer -> ... -> Map Network Drive:
+			Drive							L:
+			Folder							\\linux local ip\arch\
+			Reconnect at sign-in			on
+			login as different user			on
+			user:
+				korsic
+
+sa windowsa na linux:
+	na windowsu:
+		ImDisk/RamDisk Configuration:
+			Drive Letter					S:
+			Allocate Memory Dynamically		on
+			File System:					NTFS
+			Launch on Windows Startup		on
+			Create TEMP folder				false
+			Advanced/Drive Label			Sharing
+		file explorer -> S: properties -> Security:
+			Everyone: 						Read & execute, List folder contents, Read
+		file explorer -> S: properties -> Sharing/Advanced Sharing:
+			Share this folder				on
+			Share name						win11
+			max connections					5
+			caching							No
+
+na linuxu:
+	(default port je 445, ali mozes ostaviti prazno)
+	sudo nano /etc/bash.bashrc (dodaj u aliase):
+		alias shares='sudo systemctl restart smb; sudo mount -t cifs //<IP_ADDRESS>/win11 /home/korsic/sharing/read -o port=<PORT>,workgroup=WORKGROUP,iocharset=utf8,pass='
