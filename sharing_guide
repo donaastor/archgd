@@ -1,4 +1,11 @@
 guide za archlinux i windows 11
+deo sto se tice linuxa radi savrseno,
+deo sto se tice windowsa je katastrofa!
+	- drive koji je linuxov share se stalno reconnectuje i usporava (puno!) boot
+	- ako sharujem nesto na windowsu, sve se to vidi sa mreze kad se logujes kao anonymous
+	TREBA:
+	- staviti sifru na nalog i ne dozvoliti logovanje kao anonymous
+	- napraviti shortcut skriptu za logovanje na linux share
 
 na linuxu:
 	mkdir ~/sharing
