@@ -6,7 +6,7 @@ na linuxu:
 	mkdir ~/sharing/read
 na windowsu:
 	Control Panel -> Network and Internet -> Network and Sharing Center -> Change advanced sharing settings:
-		sve na on, osim 
+		sve je off, samo file sharing na srednjem profilu je on
 
 sa linuxa na windows:
 	na linuxu:
