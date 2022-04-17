@@ -1,13 +1,5 @@
 guide za archlinux i windows 11
-deo sto se tice linuxa radi savrseno,
-deo sto se tice windowsa je katastrofa!
-	- drive koji je linuxov share se stalno reconnectuje i usporava (puno!) boot
-	- ako sharujem nesto na windowsu, sve se to vidi sa mreze kad se logujes kao anonymous
-	- ImDisk RamDisk se ne sharuje automatski na bootu (obrnuto od prvog problema)
-	TREBA:
-	- staviti sifru na nalog i ne dozvoliti logovanje kao anonymous (https://docs.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/network-access-do-not-allow-anonymous-enumeration-of-sam-accounts-and-shares)
-	- napraviti shortcut skriptu za logovanje na linux share?
-	- staviti da se jedan drajv automatski sharuje (nauciti batch vrv)
+podrazumeva se da se Windows user zove Admin
 
 na linuxu:
 	mkdir ~/sharing
@@ -62,33 +54,39 @@ sa linuxa na windows:
 		sudo mkdir /usr/local/samba/var
 		sudo systemctl start smb nmb
 	na windowsu:
-		file explorer -> ... -> Map Network Drive:
-			Drive							L:
-			Folder							\\linux local ip\arch\
-			Reconnect at sign-in			on
-			login as different user			on
-			user:
-				korsic
+		file explorer -> ... -> Add a network location:
+			location: \\<LINUX_LOCAL_IP>\arch\
+			name: Linux
 
 sa windowsa na linux:
 	na windowsu:
+		napravi folder "C:\Users\Admin\Sharing" i udji u Properties:
+			Sharing -> Advanced Sharing:
+				Share this folder,
+				Share name: win11
+				Limit the number of simultaneous users to: 5
+				Permissions:
+					Everyone - obrisi
+					Administrators: Read & execute, List folder contents, Read
+				Caching:
+					No files or programs from the shared folder are available offline
 		ImDisk/RamDisk Configuration:
-			Drive Letter					S:
-			Allocate Memory Dynamically		on
-			File System:					NTFS
-			Launch on Windows Startup		on
-			Create TEMP folder				false
-			Advanced/Drive Label			Sharing
-		file explorer -> S: properties -> Sharing/Advanced Sharing:
-			Share this folder				on
-			Share name						win11
-			max connections					5
-			caching							No
-			permissions:
-				Everyone - obrisi
-				Administrators:						Read & execute, List folder contents, Read
+			Drive Letter: S:
+			Allocate Memory Dynamically: on
+			File System: NTFS
+			Launch on Windows Startup: on
+			Create TEMP folder: false
+			Advanced/Drive Label: Sharing
+			Advanced/Use Mount Point: C:\Users\Admin\Sharing
+		Task Scheduler -> Task Scheduler Library -> Create Task:
+			General: Name = Sharing, check "Run with highest privileges"
+			Triggers: At log on (Any user)
+			Actions: Start a program, program = subst, arguments = S: "C:\Users\Admin\Sharing"
+			Conditions: uncheck "Start the task only if the computer is on AC power"
+			Settings: check "Run task as soon as possible after a scheduled start is missed"
+		log off, log on
 
 na linuxu:
 	(default port je 445, ali mozes ostaviti prazno)
 	sudo nano /etc/bash.bashrc (dodaj u aliase):
-		alias shares='sudo systemctl restart smb; sudo mount -t cifs //192.168.1.106/win11 /home/<LINUX_USER>/sharing/read -o port=<PORT>,workgroup=WORKGROUP,iocharset=utf8,username=<WINDOWS_USER>,password=<PASSWORD>'
+		alias shares='sudo systemctl restart smb; sudo mount -t cifs //<WINDOWS_LOCAL_IP>/win11 /home/<LINUX_USER>/sharing/read -o port=<PORT>,workgroup=WORKGROUP,iocharset=utf8,username=Admin,password=<PASSWORD>'
