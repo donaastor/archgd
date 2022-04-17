@@ -23,6 +23,8 @@ na windowsu:
 	Edit Group Policy:
 		Computer Configuration -> Windows Settings -> Security Settings -> Local Policies -> Security Options:
 			"Network access: Do not allow anonymous enumeration of SAM accounts and shares": Enabled
+		Computer Configuration -> Administrative Templates -> Windows Components -> Search:
+			"Prevent automatically adding shared folders in the Windows Search Index": Enabled
 	Services:
 		Function Discovery Provider Host,
 		Function Discovery Resource Publication:
