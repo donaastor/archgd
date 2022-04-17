@@ -3,7 +3,7 @@ deo sto se tice linuxa radi savrseno,
 deo sto se tice windowsa je katastrofa!
 	- drive koji je linuxov share se stalno reconnectuje i usporava (puno!) boot
 	- ako sharujem nesto na windowsu, sve se to vidi sa mreze kad se logujes kao anonymous
-	- nista se ne sharuje automatski na bootu (obrnuto od prvog problema)
+	- ImDisk RamDisk se ne sharuje automatski na bootu (obrnuto od prvog problema)
 	TREBA:
 	- staviti sifru na nalog i ne dozvoliti logovanje kao anonymous
 	- napraviti shortcut skriptu za logovanje na linux share
