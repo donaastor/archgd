@@ -16,6 +16,7 @@ na linuxu:
 na windowsu:
 	Control Panel -> Network and Internet -> Network and Sharing Center -> Change advanced sharing settings:
 		sve je off, samo file sharing na srednjem profilu je on
+	TinyWall Firewall: dozvoli: "file explorer" i "System"
 
 sa linuxa na windows:
 	na linuxu:
