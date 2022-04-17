@@ -5,7 +5,7 @@ deo sto se tice windowsa je katastrofa!
 	- ako sharujem nesto na windowsu, sve se to vidi sa mreze kad se logujes kao anonymous
 	- ImDisk RamDisk se ne sharuje automatski na bootu (obrnuto od prvog problema)
 	TREBA:
-	- staviti sifru na nalog i ne dozvoliti logovanje kao anonymous (resenje je u bookmarks)
+	- staviti sifru na nalog i ne dozvoliti logovanje kao anonymous (https://docs.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/network-access-do-not-allow-anonymous-enumeration-of-sam-accounts-and-shares)
 	- napraviti shortcut skriptu za logovanje na linux share?
 	- staviti da se jedan drajv automatski sharuje (nauciti batch vrv)
 
