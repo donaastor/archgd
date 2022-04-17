@@ -23,7 +23,10 @@ na windowsu:
 	Edit Group Policy:
 		Computer Configuration -> Windows Settings -> Security Settings -> Local Policies -> Security Options:
 			"Network access: Do not allow anonymous enumeration of SAM accounts and shares": Enabled
-	... kako sakriti komp da ne bude discoverable
+	Services:
+		Function Discovery Provider Host,
+		Function Discovery Resource Publication:
+			oba na Disable
 
 sa linuxa na windows:
 	na linuxu:
@@ -74,13 +77,14 @@ sa windowsa na linux:
 			Launch on Windows Startup		on
 			Create TEMP folder				false
 			Advanced/Drive Label			Sharing
-		file explorer -> S: properties -> Security:
-			Everyone: 						Read & execute, List folder contents, Read
 		file explorer -> S: properties -> Sharing/Advanced Sharing:
 			Share this folder				on
 			Share name						win11
 			max connections					5
 			caching							No
+			permissions:
+				Everyone - obrisi
+				Administrators:						Read & execute, List folder contents, Read
 
 na linuxu:
 	(default port je 445, ali mozes ostaviti prazno)
