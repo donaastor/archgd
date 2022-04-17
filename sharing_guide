@@ -5,6 +5,9 @@ na linuxu:
 	mkdir ~/sharing
 	mkdir ~/sharing/write
 	mkdir ~/sharing/read
+	jedno ili drugo:
+		sudo chown root:root ~/sharing/read
+		chmod 555 ~/sharing/read
 na windowsu:
 	Control Panel -> Network and Internet -> Network and Sharing Center -> Change advanced sharing settings:
 		sve je off, samo file sharing na "Guest or Public (current profile)" je on
