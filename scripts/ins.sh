@@ -111,10 +111,12 @@ reconnect() {
   sleep 1
 }
 
-while ! curl https://raw.githubusercontent.com/donaastor/archgd/main/scripts/wifi-guard.sh > /tmp/wifi-guard.sh; do
-  reconnect
-done
-2>/dev/null 1>/dev/null bash "/tmp/wifi-guard.sh" "$ssid_dft" &
+if [ $WIFI = 1 ]; then
+  while ! curl https://raw.githubusercontent.com/donaastor/archgd/main/scripts/wifi-guard.sh > /tmp/wifi-guard.sh; do
+    reconnect
+  done
+  2>/dev/null 1>/dev/null bash "/tmp/wifi-guard.sh" "$ssid_dft" &
+fi
 
 timedatectl set-ntp true
 
