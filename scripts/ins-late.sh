@@ -77,8 +77,9 @@ reconnect() {
   sleep 1
 }
 
-2>/dev/null 1>/dev/null bash "/home/$username/scripts/wifi-guard.sh" "$ssid_dft" &
-
+if [ $WIFI = 1 ]; then
+  2>/dev/null 1>/dev/null bash "/home/$username/scripts/wifi-guard.sh" "$ssid_dft" &
+fi
 
 
 
