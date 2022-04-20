@@ -86,44 +86,48 @@ fi
 
 aur_get_one() {
   cd /tmp/aur_repos
-  while ! sudo -u "$username" git clone --depth 1 https://aur.archlinux.org/$1.git; do
-    reconnect
-  done
-  cd $1
-  
-  sed -n '/^.*depends = .*$/p' .SRCINFO > tren1
-  sed '/^.*optdepends = .*$/d' tren1 > tren2
-  sed 's/^.*depends = \(.*\)$/\1/' tren2 > tren3
-  while read hahm; do
-    if ! pacman -Q $hahm; then
-      printf "$hahm\n" >> tren4
-    fi
-  done < tren3
-# sed '/^i3-wm$/d' tren3 > tren4
-  local dpd_list="$(tr '\n' ' ' < tren4)"
-  rm tren1 tren2 tren3 tren4
-  while ! pacman -S --noconfirm --needed $dpd_list; do
-    reconnect
-  done
-  sed -n '/^.*validpgpkeys = .*$/p' .SRCINFO > tren1
-  sed 's/^.*validpgpkeys = \([[:alnum:]]\+\).*$/\1/' tren1 > tren2
-  sed 's/^.*\(................\)$/\1/' tren2 > tren3
-  while read ano_pgp; do
-    while ! sudo -u "$username" gpg --recv-keys $ano_pgp; do
+  if ! [ -d "$1" ]; then
+    while ! sudo -u "$username" git clone --depth 1 https://aur.archlinux.org/$1.git; do
       reconnect
     done
-  done < tren3
-  rm tren1 tren2 tren3
-  while ! sudo -u "$username" makepkg -do; do
-    reconnect
-  done
-  sudo -u "$username" makepkg -e
-  find . -maxdepth 1 -type f -iregex "^\./$1.*\.pkg\.tar\.zst$" > tren5
-  local pkg_name="$(sed -n '1p' tren5)"
-  rm tren5
-  while ! pacman -U --noconfirm --needed "${pkg_name}"; do
-    reconnect
-  done
+    cd $1
+    
+    sed -n '/^.*depends = .*$/p' .SRCINFO > tren1
+    sed '/^.*optdepends = .*$/d' tren1 > tren2
+    sed 's/^.*depends = \(.*\)$/\1/' tren2 > tren3
+    while read hahm; do
+      if ! pacman -Q $hahm; then
+        printf "$hahm\n" >> tren4
+      fi
+    done < tren3
+    if [ -e tren4 ]; then
+      local dpd_list="$(tr '\n' ' ' < tren4)"
+      rm tren4
+      while ! pacman -S --noconfirm --needed $dpd_list; do
+        reconnect
+      done
+    fi
+    rm tren1 tren2 tren3
+    sed -n '/^.*validpgpkeys = .*$/p' .SRCINFO > tren1
+    sed 's/^.*validpgpkeys = \([[:alnum:]]\+\).*$/\1/' tren1 > tren2
+    sed 's/^.*\(................\)$/\1/' tren2 > tren3
+    while read ano_pgp; do
+      while ! sudo -u "$username" gpg --recv-keys $ano_pgp; do
+        reconnect
+      done
+    done < tren3
+    rm tren1 tren2 tren3
+    while ! sudo -u "$username" makepkg -do; do
+      reconnect
+    done
+    sudo -u "$username" makepkg -e
+    find . -maxdepth 1 -type f -iregex "^\./$1.*\.pkg\.tar\.zst$" > tren5
+    local pkg_name="$(sed -n '1p' tren5)"
+    rm tren5
+    while ! pacman -U --noconfirm --needed "${pkg_name}"; do
+      reconnect
+    done
+  fi
 }
 
 aur_get() {
@@ -247,6 +251,7 @@ else
   xit_ad=""
 fi
 printf '#!'"/bin/sh\n\nprintf '"'#!'"'\"/bin/bash\\\\n\\\\ngotov() {\\\\n  exec bash --norc -c \\\\\"rm /tmp/to100.sh; exit \\\\\$1\\\\\"\\\\n}\\\\n\\\\nvrti() {\\\\n  xcn=0\\\\n  ycn=0\\\\n  while :; do\\\\n    if pactl set-sink-volume @DEFAULT_SINK@ 100%%%%; then gotov 0; fi\\\\n    xcn=\\\\\$(( \\\\\$xcn + 1 ))\\\\n    if [ \\\\\$xcn = \\\\\$1 ]; then\\\\n      xcn=0\\\\n      ycn=\\\\\$(( \\\\\$ycn + 1 ))\\\\n      if [ \\\\\$ycn = \\\\\$2 ]; then break; fi\\\\n      sleep 1\\\\n    fi\\\\n  done\\\\n}\\\\n\\\\nsystemctl --user start pipewire-pulse\\\\nvrti 3 4\\\\nvrti 2 5\\\\nvrti 1 8\\\\n\\\\ngotov 1\\\\n\" > /tmp/to100.sh\nbash /tmp/to100.sh &\n""$xit_ad""exec bash -c \"cd /home/$username; mv .xinitrc-tobe .xinitrc && source .xinitrc\"\n" > .xinitrc
+sudo -u "$username" mkdir .config/nitrogen
 printf "[xin_-1]\nfile=/home/$username/Pictures/poz.jpg\nmode=5\nbgcolor=#000000\n" > .config/nitrogen/bg-saved.cfg
 chown $username:wheel .xinitrc .xinitrc-tobe .config/nitrogen/bg-saved.cfg
 cp "/home/$username/.bashrc" /tmp/bashrc_radni
