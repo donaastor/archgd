@@ -66,9 +66,7 @@ nakon sto bootujemo u arch live, radimo:
 	station _device_ get-networks
 	station _device_ connect _SSID_
 	quit
-2. namestamo sat:
-	timedatectl set-ntp true
-3. pravimo particije na disku:
+2. pravimo particije na disku:
 	3.1. da izlistamo particije:
 		fdisk -l
 	3.2. sada biramo disk za instalaciju, na primer /dev/nvme0n1, i otvaramo ga:
@@ -82,9 +80,9 @@ nakon sto bootujemo u arch live, radimo:
 		od 0x80800 do 0x80800+0x800*(broj MiB za glavnu particiju)
 	3.5. pisemo promene na disk:
 		w
-4. listamo nove particije:
+3. listamo nove particije:
 	fdisk -l
-5. pokreni skriptu:
+4. pokreni skriptu:
 	cd /tmp
 	curl https://raw.githubusercontent.com/donaastor/archgd/main/scripts/ins.sh > ins.sh
 	bash ins.sh
