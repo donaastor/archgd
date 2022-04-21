@@ -92,4 +92,5 @@ sa windowsa na linux:
 na linuxu:
 	(default port je 445, ali mozes ostaviti prazno)
 	sudo nano ~/.bashrc (dodaj u aliase):
-		alias shares='sudo systemctl restart smb; sudo mount -t cifs //<WINDOWS_LOCAL_IP>/win11 /home/<LINUX_USER>/sharing/read -o port=<PORT>,workgroup=WORKGROUP,iocharset=utf8,username=Admin,password=<PASSWORD>'
+		alias shares='sudo systemctl restart smb nmb; sudo mount -t cifs //<WINDOWS_LOCAL_IP>/win11 /home/<LINUX_USER>/sharing/read -o port=<PORT>,workgroup=WORKGROUP,iocharset=utf8,username=Admin,password=<PASSWORD>'
+		alias shoff='sudo systemctl stop smb nmb; sudo umount /home/<LINUX_USER>/sharing/read'
