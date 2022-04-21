@@ -10,8 +10,8 @@ na linuxu:
 		chmod 555 ~/sharing/read
 na windowsu:
 	Control Panel -> Network and Internet -> Network and Sharing Center -> Change advanced sharing settings:
-		sve je off, samo file sharing na "Guest or Public (current profile)" je on
-	TinyWall Firewall: dozvoli: "file explorer" i "System"
+		sve je off, samo file sharing na "Guest or Public (current profile)" je on i Password protection na "All Networks"
+	TinyWall Firewall: dozvoli: "file explorer"
 	Settings -> Accounts -> Sign-in options -> Password -> Add
 	                                        -> If you've been busy... : Never
 	SysinternalsSuite/Autologon64.exe: unesi sifru i klikni Enable
