@@ -216,7 +216,7 @@ rm /root/.bash_profile
 
 sensors-detect --auto
 sed -i 's/^# set zap/set zap/' /etc/nanorc
-printf "\nalias ls=\'ls --color=tty\'\nalias q=\'exit\'\nalias cl=\'clear\'\nalias stfu=\'shutdown now\'\nalias sus=\'systemctl suspend\'\n" >> /etc/bash.bashrc
+printf "\nalias ls=\'ls --color=tty\'\nalias ip=\'ip -color=auto\'\nalias q=\'exit\'\nalias cl=\'clear\'\nalias stfu=\'shutdown now\'\nalias sus=\'systemctl suspend\'\n" >> /etc/bash.bashrc
 
 cp /etc/xdg/picom.conf /tmp/picom_radni.conf
 sed -i 's/^fade-in-step/#fade-in-step/' /tmp/picom_radni.conf
