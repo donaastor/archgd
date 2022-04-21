@@ -70,7 +70,7 @@ sa windowsa na linux:
 				Limit the number of simultaneous users to: 5
 				Permissions:
 					Everyone - obrisi
-					Administrators: Read & execute, List folder contents, Read
+					Administrators: Read
 				Caching:
 					No files or programs from the shared folder are available offline
 		ImDisk/RamDisk Configuration:
