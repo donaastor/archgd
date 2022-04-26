@@ -200,13 +200,10 @@ if [ $AMD_GPU = 1 ]; then
   chown $username:wheel "/home/$username/.config/corectrl/corectrl.ini"
 fi
 if [ $CPU_NEW = 1 ]; then
-  echo "Press enter [pacman linux-headers dkms]"; read line
   while ! pacman -S --noconfirm --needed linux-headers dkms; do
     reconnect
   done
-  echo "Press enter [aur_get zen3]"; read line
   aur_get zenpower3-dkms zenmonitor3-git
-  echo "Press enter [modprobe zenpower]"; read line
   modprobe zenpower
 fi
 
