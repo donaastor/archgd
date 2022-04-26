@@ -1,0 +1,7 @@
+sudo pacman -S cups hplip
+pikaur -S hplip-plugin
+sudo systemctl start cups
+// port forwarding
+
+//
+hp-setup -i "haha-ip"
