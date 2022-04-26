@@ -75,6 +75,8 @@ chromium:
 		Downloads:
 			Location: /home/korsic/tren
 			UKLJUCI Ask where to save each file before downloading
+******  CoreCtrl  ******************************************************************************
+Global Profile: CPU off, GPU on -> Ventilation: Curve: (40,40), (60,70), (70,100)
 ******  Thunar  ********************************************************************************
 	Open Terminal Here:
 		xfce4-terminal --default-working-directory=%f
