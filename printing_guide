@@ -5,3 +5,8 @@ sudo systemctl start cups
 
 //
 hp-setup -i "haha-ip"
+http://localhost:631/
+	Administration -> Manage Printers:
+		Modify Printer -> Not shared
+		Options -> Page size = A4
+.
