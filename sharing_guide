@@ -51,7 +51,6 @@ sa linuxa na windows:
 				valid users = korsic
 			
 		sudo smbpasswd -a korsic
-		sudo smbpasswd -a nobody
 		sudo ufw allow CIFS
 		sudo mkdir /usr/local/samba
 		sudo mkdir /usr/local/samba/var
