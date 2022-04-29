@@ -160,7 +160,7 @@ fi
 #			resolv.conf
 
 if [ $WIFI = 1 ]; then
-  printf "\n\nnameserver 8.8.8.8" >> /mnt/etc/resolv.conf
+  printf "\n\nnameserver 84.200.69.80" >> /mnt/etc/resolv.conf
 fi
 
 #			reboot
