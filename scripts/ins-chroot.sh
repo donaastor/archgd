@@ -115,7 +115,7 @@ reconnect() {
 if ! [ -d /var/cache ]; then mkdir /var/cache; fi
 if ! [ -d /var/cache/pacman ]; then mkdir /var/cache/pacman; fi
 if ! [ -d /var/cache/pacman/pkg ]; then mkdir /var/cache/pacman/pkg; fi
-rm -r /var/cache/pacman/pkg/*
+rm -rf /var/cache/pacman/pkg/*
 mount -t tmpfs tmpfs -o defaults,size=2560M /var/cache/pacman/pkg
 
 
@@ -150,7 +150,7 @@ ln -sf /usr/share/zoneinfo/Europe/Belgrade /etc/localtime
 while ! pacman -S --noconfirm --needed networkmanager grub git base-devel; do
   reconnect
 done
-rm -r /var/cache/pacman/pkg/*
+rm -rf /var/cache/pacman/pkg/*
 
 #			sudo
 
@@ -166,7 +166,7 @@ else
   while ! pacman -S --noconfirm --needed iwd; do
     reconnect
   done
-  rm -r /var/cache/pacman/pkg/*
+  rm -rf /var/cache/pacman/pkg/*
   mkdir /etc/iwd
   printf "\n\n[General]\nEnableNetworkConfiguration=true\n" > /etc/iwd/main.conf
   systemctl enable NetworkManager iwd
@@ -195,7 +195,7 @@ if [ $EFI = 1 ]; then
   while ! pacman -S --noconfirm --needed efibootmgr; do
     reconnect
   done
-  rm -r /var/cache/pacman/pkg/*
+  rm -rf /var/cache/pacman/pkg/*
   grub-install --target=x86_64-efi --efi-directory=/efi --bootloader-id=GRUB
 else
   grub-install $drive_name
@@ -218,7 +218,7 @@ else
     reconnect
   done
 fi
-rm -r /var/cache/pacman/pkg/*
+rm -rf /var/cache/pacman/pkg/*
 cp grub /etc/default/grub
 grub-mkconfig -o /boot/grub/grub.cfg
 
