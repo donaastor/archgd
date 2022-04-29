@@ -86,7 +86,7 @@ fi
 
 aur_get_one() {
   cd /tmp/aur_repos
-  if ! [ -d "$1" ]; then
+  if ! pacman -Q $1; then
     while ! sudo -u "$username" git clone --depth 1 https://aur.archlinux.org/$1.git; do
       reconnect
     done
@@ -127,6 +127,7 @@ aur_get_one() {
     while ! pacman -U --noconfirm --needed "${pkg_name}"; do
       reconnect
     done
+    rm -rf /tmp/aur_repos/*
   fi
 }
 
@@ -137,6 +138,16 @@ aur_get() {
   done
 }
 
+
+
+
+
+
+if ! [ -d /var/cache ]; then mkdir /var/cache; fi
+if ! [ -d /var/cache/pacman ]; then mkdir /var/cache/pacman; fi
+if ! [ -d /var/cache/pacman/pkg ]; then mkdir /var/cache/pacman/pkg; fi
+rm -rf /var/cache/pacman/pkg/*
+mount -t tmpfs tmpfs -o defaults,size=2560M /var/cache/pacman/pkg
 
 
 
@@ -172,10 +183,12 @@ fi
 while ! pacman -S --noconfirm --needed nano xorg-server xorg-xinit xorg-xrdb numlockx xbindkeys i3-gaps i3status i3lock rofi nitrogen picom pipewire pipewire-pulse pipewire-jack wireplumber rtkit alacritty xdg-utils ttf-liberation man-db man-pages nnn htop perl-file-mimeinfo zip unzip p7zip ufw $ad_progs; do
   reconnect
 done
+rm -rf /var/cache/pacman/pkg/*
 if [ $BATT = 1 ]; then
   while ! pacman -S --noconfirm --needed acpi; do
     reconnect
   done
+  rm -rf /var/cache/pacman/pkg/*
 fi
 aur_get xidlehook xkb-switch-i3 xkblayout-state-git $aur_progs
 if [ $AMD_GPU = 1 ]; then
@@ -189,6 +202,7 @@ if [ $AMD_GPU = 1 ]; then
       reconnect
     done
   fi
+  rm -rf /var/cache/pacman/pkg/*
   echo "Press enter [aur_get corectrl]"; read line
   aur_get corectrl
   echo "Press enter [cp corectrl.desktop]"; read line
@@ -203,6 +217,7 @@ if [ $CPU_NEW = 1 ]; then
   while ! pacman -S --noconfirm --needed linux-headers dkms; do
     reconnect
   done
+  rm -rf /var/cache/pacman/pkg/*
   aur_get zenpower3-dkms zenmonitor3-git
   modprobe zenpower
 fi
@@ -321,6 +336,7 @@ if [ $MORE_PROGS = 1 ]; then
   while ! pacman -Sy --noconfirm --needed pipewire-jack profile-sync-daemon ungoogled-chromium; do
     reconnect
   done
+  rm -rf /var/cache/pacman/pkg/*
   if [ $AMD_GPU = 1 ]; then
     printf -- "--disk-cache-dir=/home/$username/chromium/cache\n--disk-cache-size=1073741824\n--extension-mime-request-handling\n--load-extension=/home/$username/chromium/extensions/uBlock\n--ignore-gpu-blocklist\n--enable-gpu-rasterization\n--enable-zero-copy\n--enable-features=VaapiVideoDecoder\n--use-gl=egl\n" > /etc/chromium-flags.conf
   else
@@ -343,7 +359,7 @@ fi
 #			cleaning
 
 # pacman --noconfirm -Rsn rust
-rm -rf /var/cache/pacman/pkg
+rm -rf /var/cache/pacman/pkg/*
 
 #			reboot
 
