@@ -1,5 +1,6 @@
 guide za archlinux i windows 11
 podrazumeva se da se Windows user zove Admin
+umesto podesavanja na linuxu, moze se pokrenuti skripta scripts/share.sh kao normalni user (ne kao root)
 
 na linuxu:
 	mkdir ~/sharing
