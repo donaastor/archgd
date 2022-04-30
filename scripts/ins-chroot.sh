@@ -239,6 +239,7 @@ sudo -u "$username" mv poz_r.jpg "/home/$username/Pictures/poz.jpg"
 sudo -u "$username" mkdir "/home/$username/.config"
 if [ $MORE_PROGS = 1 ]; then
   sudo -u "$username" mv "geany" "/home/$username/.config/geany"
+  sudo -u "$username" mv "pcmanfm" "/home/$username/.config/pcmanfm"
 fi
 
 #			getty
