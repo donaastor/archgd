@@ -354,6 +354,7 @@ if [ $MORE_PROGS = 1 ]; then
   cd $ubld
   rm -rf "_metadata"
   xdg-settings set default-web-browser chromium.desktop
+  sed -e 's/^\(.*=\)\(chromium.desktop;\)\(..*\)$/\1\3/' -e 's/^\(.*\)\(chromium\)\(.desktop;\)$/\1geany\3/' -i /usr/share/applications/mimeinfo.cache
 fi
 
 #			cleaning
