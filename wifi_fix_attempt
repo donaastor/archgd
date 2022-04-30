@@ -1,0 +1,6 @@
+u fajl /etc/NetworkManager/conf.d/wifi-powersave.conf stavi:
+	[connection]
+	wifi.powersave = 2
+u grub config stavi ovaj kernel parametar:
+	pci=noaer
+sudo grub-mkconfig -o /boot/grub/grub.cfg
