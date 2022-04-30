@@ -23,4 +23,4 @@ printf "Windows OS username: "
 read win_user
 printf "Windows OS password: "
 read win_pass
-sed "s/^\(PS1='\[\\\\u@\\\\h \\\\W\]\\\\. '\)$/alias shares='sudo systemctl restart smb nmb; sudo mount -t cifs \/\/$win_ip\/win $n_HOME\/sharing\/read -o port=$win_port,workgroup=WORKGROUP,iocharset=utf8,username=$win_user,password=$win_pass'\nalias shoff='sudo systemctl stop smb nmb; sudo umount $n_HOME\/sharing\/read'\n\1/" -i $HOME/.bashrc
+sed "s/^\(PS1='\[\\\\u@\\\\h \\\\W\]\\\\. '\)$/alias shares='sudo systemctl restart smb nmb; sudo mount -t cifs \/\/$win_ip\/win $n_HOME\/sharing\/read -o port=$win_port,workgroup=WORKGROUP,iocharset=utf8,username=$win_user,password=$win_pass'\nalias shoff='sudo systemctl stop smb nmb; sudo umount $n_HOME\/sharing\/read'\n\n\1/" -i $HOME/.bashrc
