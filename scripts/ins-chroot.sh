@@ -160,6 +160,13 @@ gpasswd -a $username sudo
 
 #			internet
 
+if ! [ -d /etc/NetworkManager ]; then
+  mkdir /etc/NetworkManager
+fi
+if ! [ -d /etc/NetworkManager/conf.d ]; then
+  mkdir /etc/NetworkManager/conf.d
+fi
+printf "[main]\ndns=none\n" > /etc/NetworkManager/conf.d/dns.conf
 if [ $WIFI = 0 ]; then
   systemctl enable NetworkManager
 else
