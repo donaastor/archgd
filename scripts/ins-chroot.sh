@@ -211,7 +211,7 @@ mkdir /tmp/grub_radni
 cd /tmp/grub_radni
 cp /etc/default/grub grub
 sed -i 's/^GRUB_TIMEOUT=.*$/GRUB_TIMEOUT=1/' grub
-if [ $AMD_GPU = 1 ]; then
+if [ $GPU_NEW = 1 ]; then
   sed -i 's/\(^GRUB_CMDLINE_LINUX_DEFAULT.*\)\"/\1 amdgpu.ppfeaturemask=0xffffffff mitigations=off\"/' grub
 else
   sed -i 's/\(^GRUB_CMDLINE_LINUX_DEFAULT.*\)\"/\1 mitigations=off\"/' grub
