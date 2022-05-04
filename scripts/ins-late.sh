@@ -194,11 +194,11 @@ aur_get xidlehook xkb-switch-i3 xkblayout-state-git $aur_progs
 if [ $AMD_GPU = 1 ]; then
   echo "Press enter [pacman vulkan...]"; read line
   if [ $GPU_NEW = 1 ]; then
-    while ! pacman -S --noconfirm --needed xf86-video-amdgpu libva-mesa-driver vulkan-tools mesa-utils libva-utils; do
+    while ! pacman -S --noconfirm --needed mesa xf86-video-amdgpu mesa-vdpau libva-mesa-driver vulkan-radeon vulkan-tools mesa-utils libva-utils; do
       reconnect
     done
   else
-    while ! pacman -S --noconfirm --needed xf86-video-ati libva-mesa-driver vulkan-tools mesa-utils libva-utils; do
+    while ! pacman -S --noconfirm --needed mesa xf86-video-ati mesa-vdpau libva-mesa-driver vulkan-radeon vulkan-tools mesa-utils libva-utils; do
       reconnect
     done
   fi
