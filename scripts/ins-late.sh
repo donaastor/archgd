@@ -175,12 +175,12 @@ sed -i 's/donteditbydefault = no/donteditbydefault = yes/' "/tmp/pikaur_radni.co
 sudo -u "$username" cp "/tmp/pikaur_radni.conf" "/home/$username/.config/pikaur.conf"
 if [ $MORE_PROGS = 1 ]; then
   ad_progs="texlive-formatsextra texlive-langcyrillic texlive-latexextra texlive-science openssh tmux vlc feh zathura zathura-djvu zathura-pdf-poppler flameshot calc geany geany-plugins pcmanfm-gtk3 gvfs simplescreenrecorder gimp transmission-qt"
-  aur_progs="lyx"
+  aur_progs=""
 else
   ad_progs=""
   aur_progs=""
 fi
-while ! pacman -S --noconfirm --needed nano xorg-server xorg-xinit xorg-xrdb numlockx xbindkeys i3-gaps i3status i3lock rofi nitrogen picom pipewire pipewire-pulse pipewire-jack wireplumber rtkit alacritty xdg-utils ttf-liberation man-db man-pages nnn htop perl-file-mimeinfo zip unzip p7zip ufw $ad_progs; do
+while ! pacman -S --noconfirm --needed nano xorg-server xorg-xinit xorg-xrdb numlockx xbindkeys i3-gaps i3status i3lock rofi nitrogen picom pipewire pipewire-pulse pipewire-jack wireplumber rtkit alacritty xdg-utils ttf-liberation man-db man-pages nnn htop perl-file-mimeinfo zip unzip p7zip ufw lshw usbutils exfatprogs $ad_progs; do
   reconnect
 done
 rm -rf /var/cache/pacman/pkg/*
@@ -319,6 +319,7 @@ if [ $MORE_PROGS = 1 ]; then
   sudo -u "$username" xdg-mime default feh.desktop image/png image/jpeg
   sudo -u "$username" xdg-mime default org.pwmt.zathura.desktop application/pdf image/vnd.djvu
   sudo -u "$username" xdg-mime default lyx.desktop text/x-tex
+  sudo -u "$username" xdg-mime default onlyoffice-desktopeditors.desktop application/msword application/msexcel application/vnd.ms-word application/vnd.ms-excel application/vnd.openxmlformats-officedocument.spreadsheetml.sheet application/vnd.openxmlformats-officedocument.wordprocessingml.document
   sudo -u "$username" xdg-mime default geany.desktop text/plain text/html text/x-c text/x-c++ text/x-java-source text/x-script text/x-script.python
   sudo -u "$username" xdg-mime default pcmanfm.desktop inode/mount-point inode/directory
   sudo -u "$username" mkdir "/home/$username/.config/transmission"
