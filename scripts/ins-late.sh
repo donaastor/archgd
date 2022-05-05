@@ -206,10 +206,24 @@ if [ $AMD_GPU = 1 ]; then
   echo "Press enter [aur_get corectrl]"; read line
   aur_get corectrl
   echo "Press enter [cp corectrl.desktop]"; read line
+  if ! [ -d "/home/$username/.config/autostart" ]; then
+    sudo -u "$username" mkdir "/home/$username/.config/autostart"
+    chown $username:wheel "/home/$username/.config/autostart"
+  fi
   sudo -u "$username" cp /usr/share/applications/org.corectrl.corectrl.desktop "/home/$username/.config/autostart/org.corectrl.corectrl.desktop"
   echo "Press enter [printf polkit rule]"; read line
+  if ! [ -d "/etc/polkit-1" ]; then
+    mkdir "/etc/polkit-1"
+  fi
+  if ! [ -d "/etc/polkit-1/rules.d" ]; then
+    mkdir "/etc/polkit-1/rules.d"
+  fi
   printf "polkit.addRule(function(action, subject){\n	if ((\n		action.id == \"org.corectrl.helper.init\" ||\n		action.id == \"org.corectrl.helperkiller.init\") &&\n		subject.local == true &&\n		subject.active == true &&\n		subject.isInGroup(\"wheel\")\n	){\n		return polkit.Result.YES;\n	}\n});\n" >> "/etc/polkit-1/rules.d/90-corectrl.rules"
   echo "Press enter [printf corectrl.ini]"; read line
+  if ! [ -d "/home/$username/.config/corectrl" ]; then
+    sudo -u "$username" mkdir "/home/$username/.config/corectrl"
+    chown $username:wheel "/home/$username/.config/corectrl"
+  fi
   printf "[General]\nstartOnSysTray=true\n" > "/home/$username/.config/corectrl/corectrl.ini"
   chown $username:wheel "/home/$username/.config/corectrl/corectrl.ini"
 fi
