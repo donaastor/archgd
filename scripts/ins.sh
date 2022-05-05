@@ -137,7 +137,7 @@ fi
 #			linux
 
 pacman -Sy
-pacman -S archlinux-keyring
+pacman -S --noconfirm archlinux-keyring
 while ! pacstrap /mnt base linux linux-firmware; do
   reconnect
 done
