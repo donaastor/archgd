@@ -192,7 +192,6 @@ if [ $BATT = 1 ]; then
 fi
 aur_get xidlehook xkb-switch-i3 xkblayout-state-git $aur_progs
 if [ $AMD_GPU = 1 ]; then
-  echo "Press enter [pacman vulkan...]"; read line
   if [ $GPU_NEW = 1 ]; then
     while ! pacman -S --noconfirm --needed mesa xf86-video-amdgpu mesa-vdpau libva-mesa-driver vulkan-radeon vulkan-tools mesa-utils libva-utils; do
       reconnect
@@ -203,15 +202,12 @@ if [ $AMD_GPU = 1 ]; then
     done
   fi
   rm -rf /var/cache/pacman/pkg/*
-  echo "Press enter [aur_get corectrl]"; read line
   aur_get corectrl
-  echo "Press enter [cp corectrl.desktop]"; read line
   if ! [ -d "/home/$username/.config/autostart" ]; then
     sudo -u "$username" mkdir "/home/$username/.config/autostart"
     chown $username:wheel "/home/$username/.config/autostart"
   fi
   sudo -u "$username" cp /usr/share/applications/org.corectrl.corectrl.desktop "/home/$username/.config/autostart/org.corectrl.corectrl.desktop"
-  echo "Press enter [printf polkit rule]"; read line
   if ! [ -d "/etc/polkit-1" ]; then
     mkdir "/etc/polkit-1"
   fi
@@ -219,7 +215,6 @@ if [ $AMD_GPU = 1 ]; then
     mkdir "/etc/polkit-1/rules.d"
   fi
   printf "polkit.addRule(function(action, subject){\n	if ((\n		action.id == \"org.corectrl.helper.init\" ||\n		action.id == \"org.corectrl.helperkiller.init\") &&\n		subject.local == true &&\n		subject.active == true &&\n		subject.isInGroup(\"wheel\")\n	){\n		return polkit.Result.YES;\n	}\n});\n" >> "/etc/polkit-1/rules.d/90-corectrl.rules"
-  echo "Press enter [printf corectrl.ini]"; read line
   if ! [ -d "/home/$username/.config/corectrl" ]; then
     sudo -u "$username" mkdir "/home/$username/.config/corectrl"
     chown $username:wheel "/home/$username/.config/corectrl"
