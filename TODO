@@ -16,4 +16,6 @@
 	namestim da tokom skidanja 'read line' ubija proces za skidanje npr tako sto
 	forkujem proces nekako da jedan ceka read line a drugi skida
 
-2. printer
+2. skripta za updatovanje lokalnih skripti
+
+3. BEZI NA GITLAB
