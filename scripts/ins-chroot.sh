@@ -25,24 +25,22 @@ fi
 prt1="$2"
 prt2="$3"
 if [ "${params:0:1}" = "0" ]; then
-  AMD_CPU=0
-else
-  AMD_CPU=1
-  if [ "${params:0:1}" = "2" ]; then
-    CPU_NEW=1
-  else
-    CPU_NEW=0
-  fi
+  CPU=0
+elif [ "${params:0:1}" = "1" ]; then
+  CPU=1
+elif [ "${params:0:1}" = "2" ]; then
+  CPU=2
 fi
 if [ "${params:1:1}" = "0" ]; then
-  AMD_GPU=0
-else
-  AMD_GPU=1
-  if [ "${params:1:1}" = "2" ]; then
-    GPU_NEW=1
-  else
-    GPU_NEW=0
-  fi
+  GPU=0
+elif [ "${params:1:1}" = "1" ]; then
+  GPU=1
+elif [ "${params:1:1}" = "2" ]; then
+  GPU=2
+elif [ "${params:1:1}" = "3" ]; then
+  GPU=3
+elif [ "${params:1:1}" = "4" ]; then
+  GPU=4
 fi
 if [ "${params:2:1}" = "1" ]; then
   WIFI=1
@@ -196,6 +194,16 @@ sudo -u "$username" mkdir .cargo
 sudo -u "$username" mkdir chromium
 sudo -u "$username" mkdir chromium/cache
 
+#			modules
+
+if [ $GPU = 1 ]; then
+  sed 's/^MODULES=(\(.*\))$/MODULES=(radeon \1)/' -i /etc/mkinitcpio.conf
+  mkinitcpio -P
+elif [ $GPU = 2 ] || [ $GPU = 3 ]; then
+  sed 's/^MODULES=(\(.*\))$/MODULES=(amdgpu \1)/' -i /etc/mkinitcpio.conf
+  mkinitcpio -P
+fi
+
 #			grub
 
 if [ $EFI = 1 ]; then
@@ -211,12 +219,14 @@ mkdir /tmp/grub_radni
 cd /tmp/grub_radni
 cp /etc/default/grub grub
 sed -i 's/^GRUB_TIMEOUT=.*$/GRUB_TIMEOUT=1/' grub
-if [ $GPU_NEW = 1 ]; then
-  sed -i 's/\(^GRUB_CMDLINE_LINUX_DEFAULT.*\)\"/\1 amdgpu.ppfeaturemask=0xffffffff mitigations=off\"/' grub
-else
+if [ $GPU = 0 ] || [ $GPU = 1 ]; then
   sed -i 's/\(^GRUB_CMDLINE_LINUX_DEFAULT.*\)\"/\1 mitigations=off\"/' grub
+elif [ $GPU = 2 ]; then
+  sed -i 's/\(^GRUB_CMDLINE_LINUX_DEFAULT.*\)\"/\1 mitigations=off radeon.si_support=0 radeon.cik_support=0 amdgpu.si_support=1 amdgpu.cik_support=1 amdgpu.ppfeaturemask=0xffffffff\"/' grub
+elif [ $GPU = 3 ]; then
+  sed -i 's/\(^GRUB_CMDLINE_LINUX_DEFAULT.*\)\"/\1 mitigations=off amdgpu.ppfeaturemask=0xffffffff\"/' grub
 fi
-if [ $AMD_CPU = 0 ]; then
+if [ $CPU = 0 ]; then
   while ! pacman -S --noconfirm --needed intel-ucode; do
     reconnect
   done

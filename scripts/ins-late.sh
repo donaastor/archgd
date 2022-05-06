@@ -3,24 +3,22 @@
 username="$1"
 params="$2"
 if [ "${params:0:1}" = "0" ]; then
-  AMD_CPU=0
-else
-  AMD_CPU=1
-  if [ "${params:0:1}" = "2" ]; then
-    CPU_NEW=1
-  else
-    CPU_NEW=0
-  fi
+  CPU=0
+elif [ "${params:0:1}" = "1" ]; then
+  CPU=1
+elif [ "${params:0:1}" = "2" ]; then
+  CPU=2
 fi
 if [ "${params:1:1}" = "0" ]; then
-  AMD_GPU=0
-else
-  AMD_GPU=1
-  if [ "${params:1:1}" = "2" ]; then
-    GPU_NEW=1
-  else
-    GPU_NEW=0
-  fi
+  GPU=0
+elif [ "${params:1:1}" = "1" ]; then
+  GPU=1
+elif [ "${params:1:1}" = "2" ]; then
+  GPU=2
+elif [ "${params:1:1}" = "3" ]; then
+  GPU=3
+elif [ "${params:1:1}" = "4" ]; then
+  GPU=4
 fi
 if [ "${params:2:1}" = "1" ]; then
   WIFI=1
@@ -191,12 +189,12 @@ if [ $BATT = 1 ]; then
   rm -rf /var/cache/pacman/pkg/*
 fi
 aur_get xidlehook xkb-switch-i3 xkblayout-state-git $aur_progs
-if [ $AMD_GPU = 1 ]; then
-  if [ $GPU_NEW = 1 ]; then
+if [ $GPU != 0 ]; then
+  if [ $GPU = 2 ] || [ $GPU = 3 ]; then
     while ! pacman -S --noconfirm --needed mesa xf86-video-amdgpu mesa-vdpau libva-mesa-driver vulkan-radeon vulkan-tools mesa-utils libva-utils; do
       reconnect
     done
-  else
+  elif [ $GPU = 1 ]; then
     while ! pacman -S --noconfirm --needed mesa xf86-video-ati mesa-vdpau libva-mesa-driver vulkan-radeon vulkan-tools mesa-utils libva-utils; do
       reconnect
     done
@@ -222,7 +220,7 @@ if [ $AMD_GPU = 1 ]; then
   printf "[General]\nstartOnSysTray=true\n" > "/home/$username/.config/corectrl/corectrl.ini"
   chown $username:wheel "/home/$username/.config/corectrl/corectrl.ini"
 fi
-if [ $CPU_NEW = 1 ]; then
+if [ $CPU = 2 ]; then
   while ! pacman -S --noconfirm --needed linux-headers dkms; do
     reconnect
   done
@@ -253,7 +251,7 @@ if [ $HIDPI = 1 ]; then
   printf "Xft.dpi: 192\n" > .Xresources
   chown $username:wheel .Xresources
 fi
-if [ $AMD_GPU = 1 ]; then
+if [ $GPU != 0 ]; then
   if [ $HIDPI = 1 ]; then
     printf '#!'"/bin/sh\n\n[[ -f ~/.Xresources ]] && xrdb -merge -I\$HOME ~/.Xresources\nxset s noblank\nxset s noexpose\nxset s 0 0\nxset +dpms\nxset dpms 0 180 0\nnumlockx &\nxset r rate 250 30\nxbindkeys &\n/opt/kbswtb &\nif ! pgrep -f xidlehook; then\n  xidlehook --timer 600 'systemctl suspend -i' '' &\nfi\npicom --experimental-backends &\nexport QT_SCREEN_SCALE_FACTORS=1.5\ncorectrl &\nnitrogen --restore &\nexec i3\n" > .xinitrc-tobe
   else
@@ -347,7 +345,7 @@ if [ $MORE_PROGS = 1 ]; then
     reconnect
   done
   rm -rf /var/cache/pacman/pkg/*
-  if [ $AMD_GPU = 1 ]; then
+  if [ $GPU != 0 ]; then
     printf -- "--disk-cache-dir=/home/$username/chromium/cache\n--disk-cache-size=1073741824\n--extension-mime-request-handling\n--load-extension=/home/$username/chromium/extensions/uBlock\n--ignore-gpu-blocklist\n--enable-gpu-rasterization\n--enable-zero-copy\n--enable-features=VaapiVideoDecoder\n--use-gl=egl\n" > /etc/chromium-flags.conf
   else
     printf -- "--disk-cache-dir=/home/$username/chromium/cache\n--disk-cache-size=1073741824\n--extension-mime-request-handling\n--load-extension=/home/$username/chromium/extensions/uBlock" > /etc/chromium-flags.conf

@@ -2,7 +2,7 @@
 
 num_of_args=$#
 if [ "$num_of_args" -lt "5" ]; then
-  printf "At least 5 arguments expected:\n1. BIOS type: BIOS or EFI\n2. Boot partition\n3. Root partition\n4. (optional, only if BIOS selected) name of the whole drive\n5. username\n6. parameters... a string of 0's and 1's\n    first bit: set iff you have an AMD processor, specifically set 2 if it's Zen\n    second bit: set iff you have an AMD GPU, specifically set 2 if it's GCN 3 or newer\n    third bit: set iff WiFi available and ethernet not available\n    fourth bit: set iff you want to set up for HiDPI\n    fifth bit: set iff you have a battery\n    sixth bit: set iff you want more programs installed\n7. (optional, only if WiFi selected) SSID\n"
+  printf "At least 5 arguments expected:\n1. BIOS type: BIOS or EFI\n2. Boot partition\n3. Root partition\n4. (optional, only if BIOS selected) name of the whole drive\n5. username\n6. parameters... a string of 0's and 1's (and other digits)\n    first bit: set:\n      0 - if you have an Intel CPU,\n      1 - if you have an AMD pre-Zen CPU, or\n      2 - if you have an AMD Zen CPU\n    second bit: set:\n      0 - for no graphics driver,\n      1 - if you have an AMD GCN-2 or older GPU,\n      2 - if you have a GCN-1 or GCN-2, but want newer drivers, or\n      3 - if you have a newer AMD GPU (for newer drivers)\n    third bit: set if WiFi available and ethernet not available\n    fourth bit: set if you want to set up for HiDPI\n    fifth bit: set if you have a battery\n    sixth bit: set if you want more programs installed\n7. (optional, only if WiFi selected) SSID\n"
   exit 1
 fi
 if [ "$1" = "EFI" ]; then
@@ -25,24 +25,22 @@ fi
 prt1="$2"
 prt2="$3"
 if [ "${params:0:1}" = "0" ]; then
-  AMD_CPU=0
-else
-  AMD_CPU=1
-  if [ "${params:0:1}" = "2" ]; then
-    CPU_NEW=1
-  else
-    CPU_NEW=0
-  fi
+  CPU=0
+elif [ "${params:0:1}" = "1" ]; then
+  CPU=1
+elif [ "${params:0:1}" = "2" ]; then
+  CPU=2
 fi
 if [ "${params:1:1}" = "0" ]; then
-  AMD_GPU=0
-else
-  AMD_GPU=1
-  if [ "${params:1:1}" = "2" ]; then
-    GPU_NEW=1
-  else
-    GPU_NEW=0
-  fi
+  GPU=0
+elif [ "${params:1:1}" = "1" ]; then
+  GPU=1
+elif [ "${params:1:1}" = "2" ]; then
+  GPU=2
+elif [ "${params:1:1}" = "3" ]; then
+  GPU=3
+elif [ "${params:1:1}" = "4" ]; then
+  GPU=4
 fi
 if [ "${params:2:1}" = "1" ]; then
   WIFI=1
