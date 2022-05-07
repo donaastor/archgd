@@ -1,7 +1,153 @@
 #!/bin/bash
 
-sudo pacman -S cups hplip
-pikaur -S hplip-plugin
+username=$USER
+if [ "$username" = "root" ]; then
+  echo "Don't run this script as root!"
+  exit 2
+fi
+
+if pacman -Q iwd; then
+  ima_iwd=1
+else
+  ima_iwd=0
+fi
+
+if [ $ima_iwd = 1 ]; then
+  ssid_dft="$( iwctl station wlan0 show | grep -- 'Connected network' | awk '{print $3}' )"
+  if [ "$ssid_dft" = "" ]; then
+    WIFI=0
+  else
+    WIFI=1
+  fi
+else
+  WIFI=0
+fi
+
+if [ $WIFI = 0 ]; then
+  inrt="$( ip route )"
+  if [ "$inrt" = "" ]; then
+    incn=0
+  else
+    incn=1
+  fi
+else
+  incn=1
+fi
+
+if [ $incn = 0 ]; then
+  echo "No internet connection, aborting."
+  exit 1
+fi
+
+reconnect() {
+  local JOS=1
+  local WWAIT=0
+  printf "Connecting...\n"
+  while [ $JOS = 1 ]; do
+    if [ $WWAIT = 1 ]; then
+      sleep 1
+    fi
+    if [ $WIFI = 1 ]; then
+      if iwctl station wlan0 connect "$ssid_dft"; then
+        JOS=0
+      else
+        printf "\n"
+      fi
+    else
+      if getent hosts archlinux.org; then
+        JOS=0
+      else
+        printf "."
+      fi
+    fi
+    WWAIT=1
+  done
+  printf "\n:)\n"
+  sleep 1
+}
+
+aur_get_one() {
+  cd /tmp/aur_repos
+  if ! pacman -Q $1; then
+    while ! sudo -u "$username" git clone --depth 1 https://aur.archlinux.org/$1.git; do
+      reconnect
+    done
+    cd $1
+    
+    sed -n '/^.*depends = .*$/p' .SRCINFO > tren1
+    sed '/^.*optdepends = .*$/d' tren1 > tren2
+    sed 's/^.*depends = \(.*\)$/\1/' tren2 > tren3
+    while read hahm; do
+      if ! pacman -Q $hahm; then
+        printf "$hahm\n" >> tren4
+      fi
+    done < tren3
+    if [ -e tren4 ]; then
+      local dpd_list="$(tr '\n' ' ' < tren4)"
+      rm tren4
+      while ! pacman -S --noconfirm --needed $dpd_list; do
+        reconnect
+      done
+    fi
+    rm tren1 tren2 tren3
+    sed -n '/^.*validpgpkeys = .*$/p' .SRCINFO > tren1
+    sed 's/^.*validpgpkeys = \([[:alnum:]]\+\).*$/\1/' tren1 > tren2
+    sed 's/^.*\(................\)$/\1/' tren2 > tren3
+    while read ano_pgp; do
+      while ! sudo -u "$username" gpg --recv-keys $ano_pgp; do
+        reconnect
+      done
+    done < tren3
+    rm tren1 tren2 tren3
+    while ! sudo -u "$username" makepkg -do; do
+      reconnect
+    done
+    sudo -u "$username" makepkg -e
+    find . -maxdepth 1 -type f -iregex "^\./$1.*\.pkg\.tar\.zst$" > tren5
+    local pkg_name="$(sed -n '1p' tren5)"
+    rm tren5
+    while ! pacman -U --noconfirm --needed "${pkg_name}"; do
+      reconnect
+    done
+    rm -rf /tmp/aur_repos/*
+  fi
+}
+
+aur_get() {
+  while (( "$#" )); do
+    aur_get_one $1
+    shift
+  done
+}
+
+if [ $WIFI = 1 ]; then
+  2>/dev/null 1>/dev/null bash "/home/$username/scripts/wifi-guard.sh" "$ssid_dft" &
+fi
+
+#			skripta
+
+AUTO=0
+while getopts ":a" OPTION; do
+  case $OPTION in
+    a)
+      AUTO=1
+      echo "Automated setup"
+      ;;
+  esac
+done
+
+if [ $AUTO = 1 ]; then
+  pacad="--noconfirm"
+else
+  pacad=""
+fi
+
+sudo pacman -S --needed "$pacad" cups hplip
+if [ $AUTO = 1 ]; then
+  aur_get hplip-plugin
+else
+  pikaur -S hplip-plugin
+fi
 Q1_F=1
 while [ $Q1_F == 1 ]; do
   printf "Are you accessing your printer directly (yes/no)? "
@@ -39,3 +185,4 @@ sudo systemctl start cups
 hp-setup -i -a -x $fake_ip
 p_name=$( lpstat -d )
 lpoptions -p "$p_name" -o PageSize=A4
+echo "Exiting setup..."
