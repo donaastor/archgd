@@ -69,7 +69,7 @@ reconnect() {
 aur_get_one() {
   cd /tmp/aur_repos
   if ! pacman -Q $1; then
-    while ! sudo -u "$username" git clone --depth 1 https://aur.archlinux.org/$1.git; do
+    while ! git clone --depth 1 https://aur.archlinux.org/$1.git; do
       reconnect
     done
     cd $1
@@ -85,7 +85,7 @@ aur_get_one() {
     if [ -e tren4 ]; then
       local dpd_list="$(tr '\n' ' ' < tren4)"
       rm tren4
-      while ! pacman -S --noconfirm --needed $dpd_list; do
+      while ! sudo pacman -S --noconfirm --needed $dpd_list; do
         reconnect
       done
     fi
@@ -94,19 +94,19 @@ aur_get_one() {
     sed 's/^.*validpgpkeys = \([[:alnum:]]\+\).*$/\1/' tren1 > tren2
     sed 's/^.*\(................\)$/\1/' tren2 > tren3
     while read ano_pgp; do
-      while ! sudo -u "$username" gpg --recv-keys $ano_pgp; do
+      while ! gpg --recv-keys $ano_pgp; do
         reconnect
       done
     done < tren3
     rm tren1 tren2 tren3
-    while ! sudo -u "$username" makepkg -do; do
+    while ! makepkg -do; do
       reconnect
     done
-    sudo -u "$username" makepkg -e
+    makepkg -e
     find . -maxdepth 1 -type f -iregex "^\./$1.*\.pkg\.tar\.zst$" > tren5
     local pkg_name="$(sed -n '1p' tren5)"
     rm tren5
-    while ! pacman -U --noconfirm --needed "${pkg_name}"; do
+    while ! sudo pacman -U --noconfirm --needed "${pkg_name}"; do
       reconnect
     done
     rm -rf /tmp/aur_repos/*
