@@ -183,6 +183,7 @@ else
 fi
 sudo systemctl start cups
 hp-setup -i -a -x $fake_ip
-p_name=$( lpstat -d )
-lpoptions -p "$p_name" -o PageSize=A4
+p_name="$( sudo cat /etc/cups/printers.conf | sed -n '/^<Printer .*>$/p' | sed 's/^<Printer \(.*\)>$/\1/' )"
+lpadmin -d "$p_name"
+lpadmin -p "$p_name" -o PageSize=A4
 echo "Exiting setup..."
