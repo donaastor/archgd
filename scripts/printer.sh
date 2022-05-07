@@ -193,12 +193,16 @@ while ! hp-setup -i -a -x $fake_ip; do
 done
 p_name="$( sudo cat /etc/cups/printers.conf | sed -n '/^<Printer .*>$/p' | sed 's/^<Printer \(.*\)>$/\1/' )"
 while [ "$p_name" = "" ]; do
+  echo "Waiting for CUPS to load printer..."
+  sleep 1
   p_name="$( sudo cat /etc/cups/printers.conf | sed -n '/^<Printer .*>$/p' | sed 's/^<Printer \(.*\)>$/\1/' )"
 done
 while ! lpadmin -d "$p_name"; do
+  echo "Waiting for CUPS to load printer..."
   sleep 1
 done
 while ! lpadmin -p "$p_name" -o PageSize=A4; do
+  echo "Waiting for CUPS to load printer..."
   sleep 1
 done
 echo "Exiting setup..."
