@@ -182,6 +182,14 @@ while ! pacman -S --noconfirm --needed nano xorg-server xorg-xinit xorg-xrdb xor
   reconnect
 done
 rm -rf /var/cache/pacman/pkg/*
+while ! modprobe fuse; do
+  depmod
+  sleep 1
+done
+while ! modprobe ntfs3; do
+  depmod
+  sleep 1
+done
 if [ $BATT = 1 ]; then
   while ! pacman -S --noconfirm --needed acpi; do
     reconnect
