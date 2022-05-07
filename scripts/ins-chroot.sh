@@ -197,10 +197,10 @@ sudo -u "$username" mkdir chromium/cache
 #			modules
 
 if [ $GPU = 1 ]; then
-  sed 's/^MODULES=(\(.*\))$/MODULES=(radeon \1)/' -i /etc/mkinitcpio.conf
+  sed -e 's/^MODULES=()$/MODULES=(radeon)/' -e 's/^MODULES=(\(.*\))$/MODULES=(radeon \1)/' -i /etc/mkinitcpio.conf
   mkinitcpio -P
 elif [ $GPU = 2 ] || [ $GPU = 3 ]; then
-  sed 's/^MODULES=(\(.*\))$/MODULES=(amdgpu \1)/' -i /etc/mkinitcpio.conf
+  sed -e 's/^MODULES=()$/MODULES=(amdgpu)/' -e 's/^MODULES=(\(.*\))$/MODULES=(amdgpu \1)/' -i /etc/mkinitcpio.conf
   mkinitcpio -P
 fi
 
