@@ -186,8 +186,19 @@ else
   read fake_ip
 fi
 sudo systemctl start cups
-hp-setup -i -a -x $fake_ip
+echo "Starting CUPS..."
+sleep 0.3
+while ! hp-setup -i -a -x $fake_ip; do
+  sleep 1
+done
 p_name="$( sudo cat /etc/cups/printers.conf | sed -n '/^<Printer .*>$/p' | sed 's/^<Printer \(.*\)>$/\1/' )"
-lpadmin -d "$p_name"
-lpadmin -p "$p_name" -o PageSize=A4
+while [ "$p_name" = "" ]; do
+  p_name="$( sudo cat /etc/cups/printers.conf | sed -n '/^<Printer .*>$/p' | sed 's/^<Printer \(.*\)>$/\1/' )"
+done
+while ! lpadmin -d "$p_name"; do
+  sleep 1
+done
+while ! lpadmin -p "$p_name" -o PageSize=A4; do
+  sleep 1
+done
 echo "Exiting setup..."
