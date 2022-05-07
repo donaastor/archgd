@@ -189,6 +189,7 @@ sudo systemctl start cups
 echo "Starting CUPS..."
 sleep 0.3
 while ! hp-setup -i -a -x $fake_ip; do
+  echo "Waiting for CUPS to initialize..."
   sleep 1
 done
 p_name="$( sudo cat /etc/cups/printers.conf | sed -n '/^<Printer .*>$/p' | sed 's/^<Printer \(.*\)>$/\1/' )"
