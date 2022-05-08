@@ -8,12 +8,13 @@ fi
 cd /tmp
 mkdir current_scripts_from_git
 cd current_scripts_from_git
-curl https://raw.githubusercontent.com/donaastor/archgd/main/scripts/ins.sh > ins.sh
-curl https://raw.githubusercontent.com/donaastor/archgd/main/scripts/ins-chroot.sh > ins-chroot.sh
-curl https://raw.githubusercontent.com/donaastor/archgd/main/scripts/ins-late.sh > ins-late.sh
-curl https://raw.githubusercontent.com/donaastor/archgd/main/scripts/share.sh > share.sh
-curl https://raw.githubusercontent.com/donaastor/archgd/main/scripts/printer.sh > printer.sh
-curl https://raw.githubusercontent.com/donaastor/archgd/main/scripts/wifi-guard.sh > wifi-guard.sh
+curl --no-sessionid https://raw.githubusercontent.com/donaastor/archgd/main/scripts/ins.sh > ins.sh
+curl --no-sessionid https://raw.githubusercontent.com/donaastor/archgd/main/scripts/ins-chroot.sh > ins-chroot.sh
+curl --no-sessionid https://raw.githubusercontent.com/donaastor/archgd/main/scripts/ins-late.sh > ins-late.sh
+curl --no-sessionid https://raw.githubusercontent.com/donaastor/archgd/main/scripts/share.sh > share.sh
+curl --no-sessionid https://raw.githubusercontent.com/donaastor/archgd/main/scripts/printer.sh > printer.sh
+curl --no-sessionid https://raw.githubusercontent.com/donaastor/archgd/main/scripts/wifi-guard.sh > wifi-guard.sh
+curl --no-sessionid https://raw.githubusercontent.com/donaastor/archgd/main/scripts/update.sh > update.sh
 
 hash2=""
 
@@ -34,3 +35,4 @@ smeni ins-late
 smeni share
 smeni printer
 smeni wifi-guard
+smeni update
