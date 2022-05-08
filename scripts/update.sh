@@ -42,3 +42,5 @@ if [ $MV_UD = 1 ]; then
   exec bash --norc -c "mv /tmp/current_scripts_from_git/update.sh /home/$username/scripts/update.sh"
   echo "Updated update"
 fi
+
+#gawadw
