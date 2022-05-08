@@ -37,9 +37,7 @@ smeni() {
 for scn in $scripts; do
   smeni "$scn"
 done
-if [ $MV_UD = 1 ]; then
-  exec bash --norc -c "mv /tmp/current_scripts_from_git/update.sh /home/$username/scripts/update.sh"
-  echo "Updated update"
-fi
-
 printf "\nNote that github servers 5 minutes old versions.\n"
+if [ $MV_UD = 1 ]; then
+  exec bash --norc -c "mv /tmp/current_scripts_from_git/update.sh /home/$username/scripts/update.sh; echo \"Updated update\""
+fi
