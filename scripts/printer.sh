@@ -207,4 +207,8 @@ while ! lpadmin -p "$p_name" -o PageSize=A4; do
   echo "Waiting for CUPS to load printer..."
   sleep 1
 done
+if [ -f "/home/$username/.config/gtk-3.0/settings.ini" ]; then
+  mv "/home/$username/.config/gtk-3.0/settings.ini" "/home/$username/.config/gtk-3.0/settings-before-print-setup.ini"
+fi
+printf "[Settings]\ngtk-print-backends=file,cups,pdf\n" > "/home/$username/.config/gtk-3.0/settings.ini"
 echo "Exiting setup..."
