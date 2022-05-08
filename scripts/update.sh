@@ -27,6 +27,7 @@ smeni() {
   if [ "$hash1" != "$hash2" ]; then
     if [ "$1" = "update" ]; then
       MV_UD=1
+      echo "\"update.sh\" will be updated"
     else
       mv "$1.sh" "/home/$username/scripts/$1.sh"
       echo "Updated \"$1\""
@@ -39,5 +40,5 @@ for scn in $scripts; do
 done
 printf "\nNote that github servers 5 minutes old versions.\n"
 if [ $MV_UD = 1 ]; then
-  exec bash --norc -c "mv /tmp/current_scripts_from_git/update.sh /home/$username/scripts/update.sh; echo \"Updated update\""
+  exec bash --norc -c "mv /tmp/current_scripts_from_git/update.sh /home/$username/scripts/update.sh; echo \"Updated updater\""
 fi
