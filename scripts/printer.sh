@@ -185,6 +185,7 @@ else
   printf "Printer IP: "
   read fake_ip
 fi
+sudo systemctl enable cups.socket
 sudo systemctl start cups
 echo "Starting CUPS..."
 sleep 0.3
