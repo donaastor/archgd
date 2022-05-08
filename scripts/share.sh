@@ -116,4 +116,4 @@ printf "Username: "
 read win_user
 printf "Password for $win_user: "
 read win_pass
-sed "s/^\(PS1='\[\\\\u@\\\\h \\\\W\]\\\\. '\)$/alias shares='sudo systemctl restart smb nmb; sudo mount -t cifs \/\/$win_ip\/$rem_name $n_HOME\/sharing\/read -o port=$win_port,workgroup=WORKGROUP,iocharset=utf8,username=$win_user,password=$win_pass,cache=none'\nalias shoff='sudo systemctl stop smb nmb; sudo umount $n_HOME\/sharing\/read'\n\n\1/" -i $HOME/.bashrc
+sed "s/^\(PS1='\[\\\\u@\\\\h \\\\W\]\\\\. '\)$/\1\nalias shares='sudo systemctl restart smb nmb; sudo mount -t cifs \/\/$win_ip\/$rem_name $n_HOME\/sharing\/read -o port=$win_port,workgroup=WORKGROUP,iocharset=utf8,username=$win_user,password=$win_pass,cache=none'\nalias shoff='sudo systemctl stop smb nmb; sudo umount $n_HOME\/sharing\/read'\n/" -i $HOME/.bashrc
