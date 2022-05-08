@@ -42,4 +42,4 @@ if [ $MV_UD = 1 ]; then
   echo "Updated update"
 fi
 
-#gawadw2
+printf "\nNote that github servers 5 minutes old versions.\n"
