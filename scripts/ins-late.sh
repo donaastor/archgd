@@ -284,7 +284,7 @@ chown $username:wheel .xinitrc .xinitrc-tobe .config/nitrogen/bg-saved.cfg
 cp "/home/$username/.bashrc" /tmp/bashrc_radni
 chmod 777 /tmp/bashrc_radni
 sed -i 's/^alias ls.*$//' /tmp/bashrc_radni
-printf "alias mountu=\'sudo mount -o uid=$username,gid=wheel,fmask=113,dmask=002,sync\'\n\nif [ -z \"\${DISPLAY}\" ] && [ \"\${XDG_VTNR}\" -eq 1 ]; then\n  startx\nfi\n" >> /tmp/bashrc_radni
+printf "alias udsc=\'bash /home/$username/scripts/update.sh\'\nalias mountu=\'sudo mount -o uid=$username,gid=wheel,fmask=113,dmask=002,sync\'\n\nif [ -z \"\${DISPLAY}\" ] && [ \"\${XDG_VTNR}\" -eq 1 ]; then\n  startx\nfi\n" >> /tmp/bashrc_radni
 sudo -u "$username" cp /tmp/bashrc_radni "/home/$username/.bashrc"
 printf '#!/bin/bash\n\nfor tty in /dev/tty{1..6}\ndo\n  /usr/bin/setleds -D +num < \"$tty\";\ndone\n' > /usr/local/bin/numlock
 chmod 755 /usr/local/bin/numlock
