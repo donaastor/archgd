@@ -1,6 +1,7 @@
 #!/bin/bash
 
 scripts="ins ins-chroot ins-late share printer wifi-guard update"
+guides="arch sharing"
 
 username=$USER
 if [ "$username" = "root" ]; then
@@ -14,6 +15,9 @@ fi
 cd current_scripts_from_git
 for scn in $scripts; do
   curl --no-sessionid "https://raw.githubusercontent.com/donaastor/archgd/main/scripts/$scn.sh" > "$scn.sh"
+done
+for gdn in $guides; do
+  curl --no-sessionid "https://raw.githubusercontent.com/donaastor/archgd/main/$gdn""_guide" > "$gdn""_guide"
 done
 
 hash2=""
@@ -34,9 +38,22 @@ smeni() {
     fi
   fi
 }
+smeni_gd() {
+  hash1="$( md5sum $1'_guide' | awk '{printf $1}' )"
+  if [ -f "/home/$username/scripts/$1""_guide" ]; then
+    hash2="$( md5sum /home/$username/scripts/$1'_guide' | awk '{printf $1}' )"
+  fi
+  if [ "$hash1" != "$hash2" ]; then
+    mv "$1.sh" "/home/$username/scripts/$1""_guide"
+    echo "Updated \"$1\" guide"
+  fi
+}
 
 for scn in $scripts; do
   smeni "$scn"
+done
+for gdn in $guides; do
+  smeni_gd "$gdn"
 done
 printf "\nNote that github might serve up to 5 minutes old versions.\n\n"
 if [ $MV_UD = 1 ]; then
