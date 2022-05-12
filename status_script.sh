@@ -5,8 +5,8 @@ if [[ ! -p "/tmp/i3statusP" ]]; then
 	mkfifo "/tmp/i3statusP"
 fi
 locs="hwmon1 hwmon2 hwmon3 hwmon4"
-temps=("temp3 temp4")
-labels=("Tccd1 Tccd2")
+temps=("temp3" "temp4")
+labels=("Tccd1" "Tccd2")
 if ! [ -d /tmp/hwmon_cpu ]; then
   txtt=""
   USPEH=0
@@ -25,7 +25,7 @@ if ! [ -d /tmp/hwmon_cpu ]; then
       break
     fi
   done
-  ln -s "/sys/class/hwmon/$loc" /tmp/hwmon_cpu
+  ln -s "/sys/class/hwmon/$defloc" /tmp/hwmon_cpu
 fi
 i3status --config ~/.config/i3/i3status > /tmp/i3statusP &
 cpref="[{\"name\":\"keyboard layout\",\"markup\":\"none\",\"full_text\":\""
