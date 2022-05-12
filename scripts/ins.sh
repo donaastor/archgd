@@ -1,11 +1,24 @@
 #!/bin/bash
 
+efiquit() {
+  echo "You are not in UEFI. Quitting"
+  exit 33
+}
+
 num_of_args=$#
 if [ "$num_of_args" -lt "5" ]; then
   printf "At least 5 arguments expected:\n1. BIOS type: BIOS or EFI\n2. Boot partition\n3. Root partition\n4. (optional, only if BIOS selected) name of the whole drive\n5. username\n6. parameters... a string of 0's and 1's (and other digits)\n    first bit: set:\n      0 - if you have an Intel CPU,\n      1 - if you have an AMD pre-Zen CPU, or\n      2 - if you have an AMD Zen CPU\n    second bit: set:\n      0 - for no graphics driver,\n      1 - if you have an AMD GCN-2 or older GPU,\n      2 - if you have a GCN-1 or GCN-2, but want newer drivers, or\n      3 - if you have a newer AMD GPU (for newer drivers)\n    third bit: set if WiFi available and ethernet not available\n    fourth bit: set if you want to set up for HiDPI\n    fifth bit: set if you have a battery\n    sixth bit: set if you want more programs installed\n7. (optional, only if WiFi selected) SSID\n"
   exit 1
 fi
 if [ "$1" = "EFI" ]; then
+  efipop=""
+  if ! efipop="$(ls /sys/firmware/efi/efivars)"; then
+    efiquit
+  fi
+  if [ "$efipop" = "" ]; then
+    efiquit
+  fi
+  echo "You are in UEFI. Continuing"
   EFI=1
   username="$4"
   params="$5"
