@@ -262,6 +262,7 @@ if [ $HIDPI = 1 ]; then
   echo "Press enter [HiDPI .Xresources]"; read line
   printf "Xft.dpi: 192\n" > .Xresources
   chown $username:wheel .Xresources
+  echo "done with .Xresources"; read line
 fi
 if [ $GPU != 0 ]; then
   if [ $HIDPI = 1 ]; then
