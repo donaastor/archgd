@@ -82,6 +82,15 @@ while getopts ":a" OPTION; do
   esac
 done
 
+if [ $AUTO = 1 ]; then
+  while ! sudo pacman -S --needed --noconfirm samba; then
+    reconnect
+  fi
+else
+  while ! sudo pacman -S --needed samba; then
+    reconnect
+  fi
+fi
 mkdir $HOME/sharing
 mkdir $HOME/sharing/write
 mkdir $HOME/sharing/read
@@ -89,11 +98,6 @@ n_HOME=$HOME
 sudo chown root:root $n_HOME/sharing/read
 printf "\ntmpfs $n_HOME/sharing/write tmpfs defaults,size=2048M 0 0\n" | sudo tee -a /etc/fstab > /dev/null
 sudo mount -t tmpfs tmpfs $n_HOME/sharing/write -o defaults,size=2048M
-if [ $AUTO = 1 ]; then
-  sudo pacman -S --needed --noconfirm samba
-else
-  sudo pacman -S --needed samba
-fi
 n_USER=$USER
 printf "Name your share: "
 read loc_name
