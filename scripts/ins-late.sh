@@ -243,7 +243,7 @@ rm /root/.bash_profile
 
 sensors-detect --auto
 sed -i 's/^# set zap/set zap/' /etc/nanorc
-printf "\nalias ls=\'ls --color=tty\'\nalias ip=\'ip -color=auto\'\nalias q=\'exit\'\nalias cl=\'clear\'\nalias stfu=\'shutdown now\'\nalias sus=\'systemctl suspend\'\n" >> /etc/bash.bashrc
+printf "\nvol() {\n  pactl set-sink-volume @DEFAULT_SINK@ \$1%%\n}\nalias ls=\'ls --color=tty\'\nalias ip=\'ip -color=auto\'\nalias q=\'exit\'\nalias cl=\'clear\'\nalias stfu=\'shutdown now\'\nalias sus=\'systemctl suspend\'\n" >> /etc/bash.bashrc
 
 if ! [ -d /etc/modprobe.d ]; then
   mkdir /etc/modprobe.d
