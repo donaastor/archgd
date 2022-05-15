@@ -100,8 +100,8 @@ read loc_name
 if [ -f /etc/samba/smb.conf ]; then
   sudo mv /etc/samba/smb.conf /etc/samba/smb-before-share-script.conf
 fi
-sudo printf "[global]\nworkgroup = WORKGROUP\nserver string = Samba Server\nserver role = standalone server\nlog file = /usr/local/samba/var/log.%m\nmax log size = 50\ndns proxy = no\nserver smb encrypt = desired\nmin protocol = SMB2\nprotocol = SMB3\n\n[$loc_name]\npath = $n_HOME/sharing/write\navailable = yes\nbrowsable = yes\nread only = yes\nvalid users = $n_USER\n" > /etc/samba/smb.conf
-echo "Password for connecting to share:"
+sudo printf "[global]\nworkgroup = WORKGROUP\nserver string = Samba Server\nserver role = standalone server\nlog file = /usr/local/samba/var/log.%%m\nmax log size = 50\ndns proxy = no\nserver smb encrypt = desired\nmin protocol = SMB2\nprotocol = SMB3\n\n[$loc_name]\npath = $n_HOME/sharing/write\navailable = yes\nbrowsable = yes\nread only = yes\nvalid users = $n_USER\n" > /etc/samba/smb.conf
+echo "Password for connecting to \"$loc_name\" as $n_USER:"
 sudo smbpasswd -a $n_USER
 sudo ufw allow CIFS
 sudo mkdir /usr/local/samba
@@ -114,6 +114,6 @@ printf "Remote share name: "
 read rem_name
 printf "Username: "
 read win_user
-printf "Password for $win_user: "
+printf "Password for connecting to \"$rem_name\" as $win_user: "
 read win_pass
 sed "s/^\(PS1='\[\\\\u@\\\\h \\\\W\]\\\\. '\)$/\1\nalias shares='sudo systemctl restart smb nmb; sudo mount -t cifs \/\/$win_ip\/$rem_name $n_HOME\/sharing\/read -o port=$win_port,workgroup=WORKGROUP,iocharset=utf8,username=$win_user,password=$win_pass,cache=none'\nalias shoff='sudo systemctl stop smb nmb; sudo umount $n_HOME\/sharing\/read'\n/" -i $HOME/.bashrc
