@@ -146,11 +146,15 @@ else
   pacad=""
 fi
 
-sudo pacman -S --needed "$pacad" cups hplip
+while ! sudo pacman -S --needed "$pacad" cups hplip; then
+  reconnect
+fi
 if [ $AUTO = 1 ]; then
   aur_get hplip-plugin
 else
-  pikaur -S hplip-plugin
+  while ! pikaur -S hplip-plugin; then
+    reconnect
+  fi
 fi
 Q1_F=1
 while [ $Q1_F == 1 ]; do
