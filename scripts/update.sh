@@ -44,7 +44,7 @@ smeni_gd() {
     hash2="$( md5sum /home/$username/scripts/$1'_guide' | awk '{printf $1}' )"
   fi
   if [ "$hash1" != "$hash2" ]; then
-    mv "$1.sh" "/home/$username/scripts/$1""_guide"
+    mv "$1""_guide" "/home/$username/scripts/$1""_guide"
     echo "Updated \"$1\" guide"
   fi
 }
