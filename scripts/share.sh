@@ -83,13 +83,13 @@ while getopts ":a" OPTION; do
 done
 
 if [ $AUTO = 1 ]; then
-  while ! sudo pacman -S --needed --noconfirm samba; then
+  while ! sudo pacman -S --needed --noconfirm samba; do
     reconnect
-  fi
+  done
 else
-  while ! sudo pacman -S --needed samba; then
+  while ! sudo pacman -S --needed samba; do
     reconnect
-  fi
+  done
 fi
 mkdir $HOME/sharing
 mkdir $HOME/sharing/write
