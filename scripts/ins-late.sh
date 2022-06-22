@@ -345,7 +345,7 @@ if [ $MORE_PROGS = 1 ]; then
   sudo -u "$username" mkdir "/home/$username/.config/transmission"
   sudo -u "$username" printf "{\n\t\"download-dir\": \"/tmp\"\n}\n" > "/home/$username/.config/transmission/settings.json"
   chown $username:wheel "/home/$username/.config/transmission/settings.json"
-  sed -i 's/^;date\.timezone =$/date\.timezone = Europe\/Belgrade/' /etc/php/php.ini
+  sed -i 's/^;date\.timezone =$/date\.timezone = \"Europe\/Belgrade\"/' /etc/php/php.ini
 fi
 
 #			ungoogled-chromium
