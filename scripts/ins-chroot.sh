@@ -2,7 +2,7 @@
 
 num_of_args=$#
 if [ "$num_of_args" -lt "5" ]; then
-  printf "At least 5 arguments expected:\n1. BIOS type: BIOS or EFI\n2. Boot partition\n3. Root partition\n4. (optional, only if BIOS selected) name of the whole drive\n5. username\n6. parameters... a string of 0's and 1's\n    first bit: set iff you have an AMD processor, specifically set 2 if it's Zen\n    second bit: set iff you have an AMD GPU, specifically set 2 if it's GCN 3 or newer\n    third bit: set iff WiFi available and ethernet not available\n    fourth bit: set iff you want to set up for HiDPI\n    fifth bit: set iff you have a battery\n    sixth bit: set iff you want more programs installed\n7. (optional, only if WiFi selected) SSID\n"
+  printf "At least 5 arguments expected:\n1. BIOS type: BIOS or EFI\n2. Boot partition\n3. Root partition\n4. (optional, only if BIOS selected) name of the whole drive\n5. username\n6. parameters... a string of 0's and 1's (and other digits)\n    first bit: set:\n      0 - if you have an Intel CPU,\n      1 - if you have an AMD pre-Zen CPU, or\n      2 - if you have an AMD Zen CPU\n    second bit: set:\n      0 - for no graphics driver,\n      1 - if you have an AMD GCN-2 or older GPU,\n      2 - if you have a GCN-1 or GCN-2, but want newer drivers, or\n      3 - if you have a newer AMD GPU (for newer drivers)\n      4 - if you have an RDNA 2 or newer GPU\n    third bit: set if WiFi available and ethernet not available\n    fourth bit: set if you want to set up for HiDPI\n    fifth bit: set if you have a battery\n    sixth bit: set if you want more programs installed\n7. (optional, only if WiFi selected) SSID\n"
   exit 1
 fi
 if [ "$1" = "EFI" ]; then
@@ -200,7 +200,7 @@ echo 'press enter for MODULES'; read line
 if [ $GPU = 1 ]; then
   sed -e 's/^MODULES=(\(..*\))$/MODULES=(radeon \1)/' -e 's/^MODULES=()$/MODULES=(radeon)/' -i /etc/mkinitcpio.conf
   mkinitcpio -P
-elif [ $GPU = 2 ] || [ $GPU = 3 ]; then
+elif [ $GPU = 2 ] || [ $GPU = 3 ] || [ $GPU = 4 ]; then
   sed -e 's/^MODULES=(\(..*\))$/MODULES=(amdgpu \1)/' -e 's/^MODULES=()$/MODULES=(amdgpu)/' -i /etc/mkinitcpio.conf
   mkinitcpio -P
 fi
@@ -229,6 +229,8 @@ elif [ $GPU = 2 ]; then
   sed -i 's/\(^GRUB_CMDLINE_LINUX_DEFAULT.*\)\"/\1 mitigations=off radeon.si_support=0 radeon.cik_support=0 amdgpu.si_support=1 amdgpu.cik_support=1 amdgpu.ppfeaturemask=0xffffffff\"/' grub
 elif [ $GPU = 3 ]; then
   sed -i 's/\(^GRUB_CMDLINE_LINUX_DEFAULT.*\)\"/\1 mitigations=off amdgpu.ppfeaturemask=0xffffffff\"/' grub
+elif [ $GPU = 4 ]; then
+  sed -i 's/\(^GRUB_CMDLINE_LINUX_DEFAULT.*\)\"/\1 mitigations=off amdgpu.ppfeaturemask=0xffffffff amdgpu.dcdebugmask=0x10\"/' grub
 fi
 if [ $CPU = 0 ]; then
   while ! pacman -S --noconfirm --needed intel-ucode; do
