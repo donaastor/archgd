@@ -331,7 +331,7 @@ else
   fi
 fi
 echo "[g++ kbswtb.cpp]"
-g++ kbswtb.cpp -o kbswtb -pipe -fwrapv -fno-plt -fno-semantic-interposition -std=c++20 -mcmodel=large -march=x86-64 -mtune=generic -Wshadow -Wno-unused-result -Wall -L /usr/lib -lm -lz -lcrypt -lutil -ldl -lpthread -lrt -O3 -lX11 -lxkbfile
+g++ kbswtb.cpp -o kbswtb -pipe -fwrapv -fno-plt -fno-semantic-interposition -std=c++20 -mcmodel=large -march=x86-64 -mtune=generic -Wshadow -Wno-unused-result -Wall -O3 -L /usr/lib -Wl,--as-needed -lm -lz -lcrypt -lutil -ldl -lpthread -lrt -lX11 -lxkbfile
 mv kbswtb /opt/kbswtb
 cd "/home/$username/.config/i3"
 chmod 755 status_script.sh
