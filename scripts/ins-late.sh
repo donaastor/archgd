@@ -250,7 +250,7 @@ rm /root/.bash_profile
 
 sensors-detect --auto
 sed -i 's/^# set zap/set zap/' /etc/nanorc
-printf "\nvol() {\n  if [ -z \"\$1\" ]; then\n    pactl get-sink-volume @DEFAULT_SINK@\n  else\n    pactl set-sink-volume @DEFAULT_SINK@ \$1%%\n  fi\n}\nalias ls=\'ls --color=tty\'\nalias lsa=\'ls -la\'\nalias ip=\'ip -color=auto\'\nalias cal=\'cal -m3\'\nalias q=\'exit\'\nalias cl=\'clear\'\nalias stfu=\'shutdown now\'\nalias sus=\'systemctl suspend\'\n" >> /etc/bash.bashrc
+printf "\nsleep() {\n  if [ \"\$USER\" = \"$username\" ]; then\n    if [ \"\$1\" = \"on\" ]; then\n      if ! pgrep -f xidlehook; then\n        xidlehook --timer 600 'systemctl suspend -i' '' &\n      fi\n    elif [ \"\$1\" = \"off\" ]; then\n      sudo pkill xidlehook\n    else\n      echo \"wrong parameter\"\n    fi\n  else\n    if [ \"\$1\" = \"on\" ]; then\n      if ! pgrep -f xidlehook; then\n        xidlehook --timer 600 'systemctl suspend -i' '' &\n      fi\n    elif [ \"\$1\" = \"off\" ]; then\n      pkill xidlehook\n    else\n      echo \"wrong parameter\"\n    fi\n  fi\n}\nvol() {\n  if [ -z \"\$1\" ]; then\n    pactl get-sink-volume @DEFAULT_SINK@\n  else\n    pactl set-sink-volume @DEFAULT_SINK@ \$1%%\n  fi\n}\nalias ls=\'ls --color=tty\'\nalias lsa=\'ls -la\'\nalias ip=\'ip -color=auto\'\nalias cal=\'cal -m3\'\nalias q=\'exit\'\nalias cl=\'clear\'\nalias stfu=\'shutdown now\'\nalias sus=\'systemctl suspend\'\n" >> /etc/bash.bashrc
 
 if ! [ -d /etc/modprobe.d ]; then
   mkdir /etc/modprobe.d
