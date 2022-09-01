@@ -172,7 +172,7 @@ sed -i 's/noedit = no/noedit = yes/' "/tmp/pikaur_radni.conf"
 sed -i 's/donteditbydefault = no/donteditbydefault = yes/' "/tmp/pikaur_radni.conf"
 sudo -u "$username" cp "/tmp/pikaur_radni.conf" "/home/$username/.config/pikaur.conf"
 if [ $MORE_PROGS = 1 ]; then
-  ad_progs="texlive-formatsextra texlive-langcyrillic texlive-latexextra texlive-science openssh tmux vlc feh zathura zathura-djvu zathura-pdf-poppler flameshot calc geany geany-plugins pcmanfm-gtk3 gvfs simplescreenrecorder gimp transmission-qt torsocks php"
+  ad_progs="texlive-core texlive-formatsextra texlive-langcyrillic texlive-latexextra texlive-science openssh tmux vlc feh zathura zathura-djvu zathura-pdf-poppler flameshot calc geany geany-plugins pcmanfm-gtk3 gvfs simplescreenrecorder gimp transmission-qt torsocks php python python-pip"
   aur_progs=""
 else
   ad_progs=""
@@ -197,36 +197,43 @@ if [ $BATT = 1 ]; then
   rm -rf /var/cache/pacman/pkg/*
 fi
 aur_get xidlehook xkb-switch-i3 xkblayout-state-git $aur_progs
-if [ $GPU != 0 ]; then
+if [ $GPU -ne 0 ]; then
   if [ $GPU = 2 ] || [ $GPU = 3 ]; then
     while ! pacman -S --noconfirm --needed mesa xf86-video-amdgpu mesa-vdpau libva-mesa-driver vulkan-radeon vulkan-tools mesa-utils libva-utils; do
       reconnect
     done
+  elif [ $GPU = 4 ]; then
+    while ! pacman -S --noconfirm --needed vulkan-tools mesa-utils libva-utils; do
+      reconnect
+    done
+    aur_get mesa-git xf86-video-amdgpu-git
   elif [ $GPU = 1 ]; then
     while ! pacman -S --noconfirm --needed mesa xf86-video-ati mesa-vdpau libva-mesa-driver vulkan-radeon vulkan-tools mesa-utils libva-utils; do
       reconnect
     done
   fi
-  rm -rf /var/cache/pacman/pkg/*
-  aur_get corectrl
-  if ! [ -d "/home/$username/.config/autostart" ]; then
-    sudo -u "$username" mkdir "/home/$username/.config/autostart"
-    chown $username:wheel "/home/$username/.config/autostart"
+  if [ $GPU -ne 4 ]; then
+    rm -rf /var/cache/pacman/pkg/*
+    aur_get corectrl
+    if ! [ -d "/home/$username/.config/autostart" ]; then
+      sudo -u "$username" mkdir "/home/$username/.config/autostart"
+      chown $username:wheel "/home/$username/.config/autostart"
+    fi
+    sudo -u "$username" cp /usr/share/applications/org.corectrl.corectrl.desktop "/home/$username/.config/autostart/org.corectrl.corectrl.desktop"
+    if ! [ -d "/etc/polkit-1" ]; then
+      mkdir "/etc/polkit-1"
+    fi
+    if ! [ -d "/etc/polkit-1/rules.d" ]; then
+      mkdir "/etc/polkit-1/rules.d"
+    fi
+    printf "polkit.addRule(function(action, subject){\n	if ((\n		action.id == \"org.corectrl.helper.init\" ||\n		action.id == \"org.corectrl.helperkiller.init\") &&\n		subject.local == true &&\n		subject.active == true &&\n		subject.isInGroup(\"wheel\")\n	){\n		return polkit.Result.YES;\n	}\n});\n" >> "/etc/polkit-1/rules.d/90-corectrl.rules"
+    if ! [ -d "/home/$username/.config/corectrl" ]; then
+      sudo -u "$username" mkdir "/home/$username/.config/corectrl"
+      chown $username:wheel "/home/$username/.config/corectrl"
+    fi
+    printf "[General]\nstartOnSysTray=true\n" > "/home/$username/.config/corectrl/corectrl.ini"
+    chown $username:wheel "/home/$username/.config/corectrl/corectrl.ini"
   fi
-  sudo -u "$username" cp /usr/share/applications/org.corectrl.corectrl.desktop "/home/$username/.config/autostart/org.corectrl.corectrl.desktop"
-  if ! [ -d "/etc/polkit-1" ]; then
-    mkdir "/etc/polkit-1"
-  fi
-  if ! [ -d "/etc/polkit-1/rules.d" ]; then
-    mkdir "/etc/polkit-1/rules.d"
-  fi
-  printf "polkit.addRule(function(action, subject){\n	if ((\n		action.id == \"org.corectrl.helper.init\" ||\n		action.id == \"org.corectrl.helperkiller.init\") &&\n		subject.local == true &&\n		subject.active == true &&\n		subject.isInGroup(\"wheel\")\n	){\n		return polkit.Result.YES;\n	}\n});\n" >> "/etc/polkit-1/rules.d/90-corectrl.rules"
-  if ! [ -d "/home/$username/.config/corectrl" ]; then
-    sudo -u "$username" mkdir "/home/$username/.config/corectrl"
-    chown $username:wheel "/home/$username/.config/corectrl"
-  fi
-  printf "[General]\nstartOnSysTray=true\n" > "/home/$username/.config/corectrl/corectrl.ini"
-  chown $username:wheel "/home/$username/.config/corectrl/corectrl.ini"
 fi
 if [ $CPU = 2 ]; then
   while ! pacman -S --noconfirm --needed linux-headers dkms; do
@@ -264,17 +271,17 @@ if [ $HIDPI = 1 ]; then
   chown $username:wheel .Xresources
   echo "done with .Xresources"; read line
 fi
-if [ $GPU != 0 ]; then
+if [ $GPU -ne 0 ] && [ $GPU -ne 4 ]; then
   if [ $HIDPI = 1 ]; then
-    printf '#!'"/bin/sh\n\n[[ -f ~/.Xresources ]] && xrdb -merge -I\$HOME ~/.Xresources\nxset s noblank\nxset s noexpose\nxset s 0 0\nxset +dpms\nxset dpms 0 180 0\nbash --norc -c 'xset_ctr=0; while ! xset r rate 250 30; do xset_ctr=\$(( \$xset_ctr + 1 )); if [ \$xset_ctr = 105 ]; then break; fi; sleep 2; done' &\nnumlockx &\nxbindkeys &\n/opt/kbswtb &\nif ! pgrep -f xidlehook; then\n  xidlehook --timer 600 'systemctl suspend -i' '' &\nfi\npicom --experimental-backends &\nexport QT_SCREEN_SCALE_FACTORS=1.5\ncorectrl &\nnitrogen --restore &\nexec i3\n" > .xinitrc-tobe
+    printf '#!'"/bin/sh\n\n[[ -f ~/.Xresources ]] && xrdb -merge -I\$HOME ~/.Xresources\nxset s noblank\nxset s noexpose\nxset s 0 0\nxset +dpms\nxset dpms 0 180 0\nxset r rate 250 30\nnumlockx &\nxbindkeys &\n(sleep 1.5 && /opt/kbswtb) &\nif ! pgrep -f xidlehook; then\n  xidlehook --timer 600 'systemctl suspend -i' '' &\nfi\npicom --experimental-backends &\nexport QT_SCREEN_SCALE_FACTORS=1.5\ncorectrl &\nnitrogen --restore &\nexec i3\n" > .xinitrc-tobe
   else
-    printf '#!'"/bin/sh\n\n[[ -f ~/.Xresources ]] && xrdb -merge -I\$HOME ~/.Xresources\nxset s noblank\nxset s noexpose\nxset s 0 0\nxset +dpms\nxset dpms 0 180 0\nbash --norc -c 'xset_ctr=0; while ! xset r rate 250 30; do xset_ctr=\$(( \$xset_ctr + 1 )); if [ \$xset_ctr = 105 ]; then break; fi; sleep 2; done' &\nnumlockx &\nxbindkeys &\n/opt/kbswtb &\nif ! pgrep -f xidlehook; then\n  xidlehook --timer 600 'systemctl suspend -i' '' &\nfi\npicom --experimental-backends &\ncorectrl &\nnitrogen --restore &\nexec i3\n" > .xinitrc-tobe
+    printf '#!'"/bin/sh\n\n[[ -f ~/.Xresources ]] && xrdb -merge -I\$HOME ~/.Xresources\nxset s noblank\nxset s noexpose\nxset s 0 0\nxset +dpms\nxset dpms 0 180 0\nxset r rate 250 30\nnumlockx &\nxbindkeys &\n(sleep 1.5 && /opt/kbswtb) &\nif ! pgrep -f xidlehook; then\n  xidlehook --timer 600 'systemctl suspend -i' '' &\nfi\npicom --experimental-backends &\ncorectrl &\nnitrogen --restore &\nexec i3\n" > .xinitrc-tobe
   fi
 else
   if [ $HIDPI = 1 ]; then
-    printf '#!'"/bin/sh\n\n[[ -f ~/.Xresources ]] && xrdb -merge -I\$HOME ~/.Xresources\nxset s noblank\nxset s noexpose\nxset s 0 0\nxset +dpms\nxset dpms 0 180 0\nbash --norc -c 'xset_ctr=0; while ! xset r rate 250 30; do xset_ctr=\$(( \$xset_ctr + 1 )); if [ \$xset_ctr = 105 ]; then break; fi; sleep 2; done' &\nnumlockx &\nxbindkeys &\n/opt/kbswtb &\nif ! pgrep -f xidlehook; then\n  xidlehook --timer 600 'systemctl suspend -i' '' &\nfi\npicom --experimental-backends &\nexport QT_SCREEN_SCALE_FACTORS=1.5\nnitrogen --restore &\nexec i3\n" > .xinitrc-tobe
+    printf '#!'"/bin/sh\n\n[[ -f ~/.Xresources ]] && xrdb -merge -I\$HOME ~/.Xresources\nxset s noblank\nxset s noexpose\nxset s 0 0\nxset +dpms\nxset dpms 0 180 0\nxset r rate 250 30\nnumlockx &\nxbindkeys &\n(sleep 1.5 && /opt/kbswtb) &\nif ! pgrep -f xidlehook; then\n  xidlehook --timer 600 'systemctl suspend -i' '' &\nfi\npicom --experimental-backends &\nexport QT_SCREEN_SCALE_FACTORS=1.5\nnitrogen --restore &\nexec i3\n" > .xinitrc-tobe
   else
-    printf '#!'"/bin/sh\n\n[[ -f ~/.Xresources ]] && xrdb -merge -I\$HOME ~/.Xresources\nxset s noblank\nxset s noexpose\nxset s 0 0\nxset +dpms\nxset dpms 0 180 0\nbash --norc -c 'xset_ctr=0; while ! xset r rate 250 30; do xset_ctr=\$(( \$xset_ctr + 1 )); if [ \$xset_ctr = 105 ]; then break; fi; sleep 2; done' &\nnumlockx &\nxbindkeys &\n/opt/kbswtb &\nif ! pgrep -f xidlehook; then\n  xidlehook --timer 600 'systemctl suspend -i' '' &\nfi\npicom --experimental-backends &\nnitrogen --restore &\nexec i3\n" > .xinitrc-tobe
+    printf '#!'"/bin/sh\n\n[[ -f ~/.Xresources ]] && xrdb -merge -I\$HOME ~/.Xresources\nxset s noblank\nxset s noexpose\nxset s 0 0\nxset +dpms\nxset dpms 0 180 0\nxset r rate 250 30\nnumlockx &\nxbindkeys &\n(sleep 1.5 && /opt/kbswtb) &\nif ! pgrep -f xidlehook; then\n  xidlehook --timer 600 'systemctl suspend -i' '' &\nfi\npicom --experimental-backends &\nnitrogen --restore &\nexec i3\n" > .xinitrc-tobe
   fi
 fi
 if [ $MORE_PROGS = 1 ]; then
