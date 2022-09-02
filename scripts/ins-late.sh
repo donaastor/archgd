@@ -140,7 +140,7 @@ aur_get_one() {
     sed -n '/^.*depends = .*$/p' .SRCINFO > tren1
     sed '/^.*optdepends = .*$/d' tren1 > tren2
     sed -e 's/^.*makedepends = \(.*\)$/\1/' -e '/^.*depends = .*$/d' tren2 > tren3
-    sed -e '/^.*makedepends = .*$/d' -e 's/^.*depends = \(.*\)$/\1/' tren2 > tren6
+    # sed -e '/^.*makedepends = .*$/d' -e 's/^.*depends = \(.*\)$/\1/' tren2 > tren6
     while read hahm; do
       if ! pacman -Q $hahm; then
         printf "$hahm\n" >> tren4
@@ -170,7 +170,7 @@ aur_get_one() {
     find . -maxdepth 1 -type f -iregex "^\./$1.*\.pkg\.tar\.zst$" > tren5
     local pkg_name="$(sed -n '1p' tren5)"
     rm tren5
-    local pdpdl="$(tr '\n' ' ' < tren6)"
+    # local pdpdl="$(tr '\n' ' ' < tren6)"
     while ! pacman -U --noconfirm --needed --verbose "${pkg_name}"; do
       reconnect
     done
@@ -219,6 +219,7 @@ if [ $GPU -ne 0 ]; then
       reconnect
     done
   elif [ $GPU = 4 ]; then
+    while ! pacman -S --noconfirm --needed libva --assume-installed=libgl
     aur_get mesa-git xf86-video-amdgpu-git
     while ! pacman -S --noconfirm --needed vulkan-tools mesa-utils libva-utils; do
       reconnect
