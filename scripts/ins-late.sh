@@ -153,7 +153,8 @@ aur_get_one() {
         reconnect
       done
     fi
-    rm tren1 tren2 tren3 tren4
+    rm tren1 tren2 tren3
+    # rm tren4
     sed -n '/^.*validpgpkeys = .*$/p' .SRCINFO > tren1
     sed 's/^.*validpgpkeys = \([[:alnum:]]\+\).*$/\1/' tren1 > tren2
     sed 's/^.*\(................\)$/\1/' tren2 > tren3
@@ -219,7 +220,12 @@ if [ $GPU -ne 0 ]; then
       reconnect
     done
   elif [ $GPU = 4 ]; then
-    while ! pacman -S --noconfirm --needed libva --assume-installed=libgl
+    while ! pacman -S --noconfirm --needed libva --assume-installed=libgl; do
+      reconnect
+    done
+    while ! pacman -Sdd --noconfirm libglvnd; do
+      reconnect
+    done
     aur_get mesa-git xf86-video-amdgpu-git
     while ! pacman -S --noconfirm --needed vulkan-tools mesa-utils libva-utils; do
       reconnect
