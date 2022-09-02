@@ -171,6 +171,22 @@ sed -i 's/keepbuilddeps = no/keepbuilddeps = yes/' "/tmp/pikaur_radni.conf"
 sed -i 's/noedit = no/noedit = yes/' "/tmp/pikaur_radni.conf"
 sed -i 's/donteditbydefault = no/donteditbydefault = yes/' "/tmp/pikaur_radni.conf"
 sudo -u "$username" cp "/tmp/pikaur_radni.conf" "/home/$username/.config/pikaur.conf"
+if [ $GPU -ne 0 ]; then
+  if [ $GPU = 2 ] || [ $GPU = 3 ]; then
+    while ! pacman -S --noconfirm --needed mesa xf86-video-amdgpu mesa-vdpau libva-mesa-driver vulkan-radeon vulkan-tools mesa-utils libva-utils; do
+      reconnect
+    done
+  elif [ $GPU = 4 ]; then
+    aur_get mesa-git xf86-video-amdgpu-git
+    while ! pacman -S --noconfirm --needed vulkan-tools mesa-utils libva-utils; do
+      reconnect
+    done
+  elif [ $GPU = 1 ]; then
+    while ! pacman -S --noconfirm --needed mesa xf86-video-ati mesa-vdpau libva-mesa-driver vulkan-radeon vulkan-tools mesa-utils libva-utils; do
+      reconnect
+    done
+  fi
+fi
 if [ $MORE_PROGS = 1 ]; then
   ad_progs="texlive-core texlive-formatsextra texlive-langcyrillic texlive-latexextra texlive-science openssh tmux vlc feh zathura zathura-djvu zathura-pdf-poppler flameshot calc geany geany-plugins pcmanfm-gtk3 gvfs simplescreenrecorder gimp transmission-qt torsocks php python python-pip"
   aur_progs=""
@@ -197,43 +213,27 @@ if [ $BATT = 1 ]; then
   rm -rf /var/cache/pacman/pkg/*
 fi
 aur_get xidlehook xkb-switch-i3 xkblayout-state-git $aur_progs
-if [ $GPU -ne 0 ]; then
-  if [ $GPU = 2 ] || [ $GPU = 3 ]; then
-    while ! pacman -S --noconfirm --needed mesa xf86-video-amdgpu mesa-vdpau libva-mesa-driver vulkan-radeon vulkan-tools mesa-utils libva-utils; do
-      reconnect
-    done
-  elif [ $GPU = 4 ]; then
-    aur_get mesa-git xf86-video-amdgpu-git
-    while ! pacman -S --noconfirm --needed vulkan-tools mesa-utils libva-utils; do
-      reconnect
-    done
-  elif [ $GPU = 1 ]; then
-    while ! pacman -S --noconfirm --needed mesa xf86-video-ati mesa-vdpau libva-mesa-driver vulkan-radeon vulkan-tools mesa-utils libva-utils; do
-      reconnect
-    done
+if [ $GPU -ne 4 ]; then
+  rm -rf /var/cache/pacman/pkg/*
+  aur_get corectrl
+  if ! [ -d "/home/$username/.config/autostart" ]; then
+    sudo -u "$username" mkdir "/home/$username/.config/autostart"
+    chown $username:wheel "/home/$username/.config/autostart"
   fi
-  if [ $GPU -ne 4 ]; then
-    rm -rf /var/cache/pacman/pkg/*
-    aur_get corectrl
-    if ! [ -d "/home/$username/.config/autostart" ]; then
-      sudo -u "$username" mkdir "/home/$username/.config/autostart"
-      chown $username:wheel "/home/$username/.config/autostart"
-    fi
-    sudo -u "$username" cp /usr/share/applications/org.corectrl.corectrl.desktop "/home/$username/.config/autostart/org.corectrl.corectrl.desktop"
-    if ! [ -d "/etc/polkit-1" ]; then
-      mkdir "/etc/polkit-1"
-    fi
-    if ! [ -d "/etc/polkit-1/rules.d" ]; then
-      mkdir "/etc/polkit-1/rules.d"
-    fi
-    printf "polkit.addRule(function(action, subject){\n	if ((\n		action.id == \"org.corectrl.helper.init\" ||\n		action.id == \"org.corectrl.helperkiller.init\") &&\n		subject.local == true &&\n		subject.active == true &&\n		subject.isInGroup(\"wheel\")\n	){\n		return polkit.Result.YES;\n	}\n});\n" >> "/etc/polkit-1/rules.d/90-corectrl.rules"
-    if ! [ -d "/home/$username/.config/corectrl" ]; then
-      sudo -u "$username" mkdir "/home/$username/.config/corectrl"
-      chown $username:wheel "/home/$username/.config/corectrl"
-    fi
-    printf "[General]\nstartOnSysTray=true\n" > "/home/$username/.config/corectrl/corectrl.ini"
-    chown $username:wheel "/home/$username/.config/corectrl/corectrl.ini"
+  sudo -u "$username" cp /usr/share/applications/org.corectrl.corectrl.desktop "/home/$username/.config/autostart/org.corectrl.corectrl.desktop"
+  if ! [ -d "/etc/polkit-1" ]; then
+    mkdir "/etc/polkit-1"
   fi
+  if ! [ -d "/etc/polkit-1/rules.d" ]; then
+     mkdir "/etc/polkit-1/rules.d"
+  fi
+  printf "polkit.addRule(function(action, subject){\n	if ((\n		action.id == \"org.corectrl.helper.init\" ||\n		action.id == \"org.corectrl.helperkiller.init\") &&\n		subject.local == true &&\n		subject.active == true &&\n		subject.isInGroup(\"wheel\")\n	){\n		return polkit.Result.YES;\n	}\n});\n" >> "/etc/polkit-1/rules.d/90-corectrl.rules"
+  if ! [ -d "/home/$username/.config/corectrl" ]; then
+    sudo -u "$username" mkdir "/home/$username/.config/corectrl"
+    chown $username:wheel "/home/$username/.config/corectrl"
+  fi
+  printf "[General]\nstartOnSysTray=true\n" > "/home/$username/.config/corectrl/corectrl.ini"
+  chown $username:wheel "/home/$username/.config/corectrl/corectrl.ini"
 fi
 if [ $CPU = 2 ]; then
   while ! pacman -S --noconfirm --needed linux-headers dkms; do
