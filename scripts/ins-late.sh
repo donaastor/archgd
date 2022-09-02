@@ -203,10 +203,10 @@ if [ $GPU -ne 0 ]; then
       reconnect
     done
   elif [ $GPU = 4 ]; then
+    aur_get mesa-git xf86-video-amdgpu-git
     while ! pacman -S --noconfirm --needed vulkan-tools mesa-utils libva-utils; do
       reconnect
     done
-    aur_get mesa-git xf86-video-amdgpu-git
   elif [ $GPU = 1 ]; then
     while ! pacman -S --noconfirm --needed mesa xf86-video-ati mesa-vdpau libva-mesa-driver vulkan-radeon vulkan-tools mesa-utils libva-utils; do
       reconnect
