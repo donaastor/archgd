@@ -82,53 +82,6 @@ fi
 
 
 
-aur_get_one_old() {
-  cd /tmp/aur_repos
-  if ! pacman -Q $1; then
-    while ! sudo -u "$username" git clone --depth 1 https://aur.archlinux.org/$1.git; do
-      reconnect
-    done
-    cd $1
-    
-    sed -n '/^.*depends = .*$/p' .SRCINFO > tren1
-    sed '/^.*optdepends = .*$/d' tren1 > tren2
-    sed 's/^.*depends = \(.*\)$/\1/' tren2 > tren3
-    while read hahm; do
-      if ! pacman -Q $hahm; then
-        printf "$hahm\n" >> tren4
-      fi
-    done < tren3
-    if [ -e tren4 ]; then
-      local dpd_list="$(tr '\n' ' ' < tren4)"
-      rm tren4
-      while ! pacman -S --noconfirm --needed $dpd_list; do
-        reconnect
-      done
-    fi
-    rm tren1 tren2 tren3
-    sed -n '/^.*validpgpkeys = .*$/p' .SRCINFO > tren1
-    sed 's/^.*validpgpkeys = \([[:alnum:]]\+\).*$/\1/' tren1 > tren2
-    sed 's/^.*\(................\)$/\1/' tren2 > tren3
-    while read ano_pgp; do
-      while ! sudo -u "$username" gpg --recv-keys $ano_pgp; do
-        reconnect
-      done
-    done < tren3
-    rm tren1 tren2 tren3
-    while ! sudo -u "$username" makepkg -do; do
-      reconnect
-    done
-    sudo -u "$username" makepkg -e
-    find . -maxdepth 1 -type f -iregex "^\./$1.*\.pkg\.tar\.zst$" > tren5
-    local pkg_name="$(sed -n '1p' tren5)"
-    rm tren5
-    while ! pacman -U --noconfirm --needed "${pkg_name}"; do
-      reconnect
-    done
-    rm -rf /tmp/aur_repos/*
-  fi
-}
-
 aur_get_one() {
   cd /tmp/aur_repos
   if ! pacman -Q $1; then
@@ -136,10 +89,10 @@ aur_get_one() {
       reconnect
     done
     cd $1
-    
     sed -n '/^.*depends = .*$/p' .SRCINFO > tren1
     sed '/^.*optdepends = .*$/d' tren1 > tren2
-    sed -e 's/^.*makedepends = \(.*\)$/\1/' -e '/^.*depends = .*$/d' tren2 > tren3
+    sed 's/^.*depends = \(.*\)$/\1/' tren2 > tren3
+    # sed -e 's/^.*makedepends = \(.*\)$/\1/' -e '/^.*depends = .*$/d' tren2 > tren3
     # sed -e '/^.*makedepends = .*$/d' -e 's/^.*depends = \(.*\)$/\1/' tren2 > tren6
     while read hahm; do
       if ! pacman -Q $hahm; then
@@ -154,7 +107,6 @@ aur_get_one() {
       done
     fi
     rm tren1 tren2 tren3
-    # rm tren4
     sed -n '/^.*validpgpkeys = .*$/p' .SRCINFO > tren1
     sed 's/^.*validpgpkeys = \([[:alnum:]]\+\).*$/\1/' tren1 > tren2
     sed 's/^.*\(................\)$/\1/' tren2 > tren3
@@ -164,6 +116,7 @@ aur_get_one() {
       done
     done < tren3
     rm tren1 tren2 tren3
+    # local pdpdl="$(tr '\n' ' ' < tren6)"
     while ! sudo -u "$username" makepkg -do; do
       reconnect
     done
@@ -171,7 +124,6 @@ aur_get_one() {
     find . -maxdepth 1 -type f -iregex "^\./$1.*\.pkg\.tar\.zst$" > tren5
     local pkg_name="$(sed -n '1p' tren5)"
     rm tren5
-    # local pdpdl="$(tr '\n' ' ' < tren6)"
     while ! pacman -U --noconfirm --needed --verbose "${pkg_name}"; do
       reconnect
     done
