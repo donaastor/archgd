@@ -82,7 +82,7 @@ fi
 
 
 
-aur_get_one() {
+aur_get_one_old() {
   cd /tmp/aur_repos
   if ! pacman -Q $1; then
     while ! sudo -u "$username" git clone --depth 1 https://aur.archlinux.org/$1.git; do
@@ -129,6 +129,55 @@ aur_get_one() {
   fi
 }
 
+aur_get_one() {
+  cd /tmp/aur_repos
+  if ! pacman -Q $1; then
+    while ! sudo -u "$username" git clone --depth 1 https://aur.archlinux.org/$1.git; do
+      reconnect
+    done
+    cd $1
+    
+    sed -n '/^.*depends = .*$/p' .SRCINFO > tren1
+    sed '/^.*optdepends = .*$/d' tren1 > tren2
+    sed -e 's/^.*makedepends = \(.*\)$/\1/' -e '/^.*depends = .*$/d' tren2 > tren3
+    sed -e '/^.*makedepends = .*$/d' -e 's/^.*depends = \(.*\)$/\1/' tren2 > tren6
+    while read hahm; do
+      if ! pacman -Q $hahm; then
+        printf "$hahm\n" >> tren4
+      fi
+    done < tren3
+    if [ -e tren4 ]; then
+      local dpd_list="$(tr '\n' ' ' < tren4)"
+      rm tren4
+      while ! pacman -S --noconfirm --needed $dpd_list; do
+        reconnect
+      done
+    fi
+    rm tren1 tren2 tren3 tren4
+    sed -n '/^.*validpgpkeys = .*$/p' .SRCINFO > tren1
+    sed 's/^.*validpgpkeys = \([[:alnum:]]\+\).*$/\1/' tren1 > tren2
+    sed 's/^.*\(................\)$/\1/' tren2 > tren3
+    while read ano_pgp; do
+      while ! sudo -u "$username" gpg --recv-keys $ano_pgp; do
+        reconnect
+      done
+    done < tren3
+    rm tren1 tren2 tren3
+    while ! sudo -u "$username" makepkg -do; do
+      reconnect
+    done
+    sudo -u "$username" makepkg -e
+    find . -maxdepth 1 -type f -iregex "^\./$1.*\.pkg\.tar\.zst$" > tren5
+    local pkg_name="$(sed -n '1p' tren5)"
+    rm tren5
+    local pdpdl="$(tr '\n' ' ' < tren6)"
+    while ! pacman -U --noconfirm --needed --verbose "${pkg_name}"; do
+      reconnect
+    done
+    rm -rf /tmp/aur_repos/*
+  fi
+}
+
 aur_get() {
   while (( "$#" )); do
     aur_get_one $1
@@ -164,21 +213,17 @@ printf "[Service]\nExecStart=\nExecStart=-/sbin/agetty -o \'-p -f -- \\\\\\\\u\'
 #			programi
 
 sudo -u "$username" mkdir /tmp/aur_repos
-printf "Press enter to install graphics drivers"; read line
 if [ $GPU -ne 0 ]; then
   if [ $GPU = 2 ] || [ $GPU = 3 ]; then
-    printf "GPU = 2|3, press enter"; read line
     while ! pacman -S --noconfirm --needed mesa xf86-video-amdgpu mesa-vdpau libva-mesa-driver vulkan-radeon vulkan-tools mesa-utils libva-utils; do
       reconnect
     done
   elif [ $GPU = 4 ]; then
-    printf "GPU = 4, press enter"; read line
     aur_get mesa-git xf86-video-amdgpu-git
     while ! pacman -S --noconfirm --needed vulkan-tools mesa-utils libva-utils; do
       reconnect
     done
   elif [ $GPU = 1 ]; then
-    printf "GPU = 1, press enter"; read line
     while ! pacman -S --noconfirm --needed mesa xf86-video-ati mesa-vdpau libva-mesa-driver vulkan-radeon vulkan-tools mesa-utils libva-utils; do
       reconnect
     done
