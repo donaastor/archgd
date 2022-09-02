@@ -164,6 +164,26 @@ printf "[Service]\nExecStart=\nExecStart=-/sbin/agetty -o \'-p -f -- \\\\\\\\u\'
 #			programi
 
 sudo -u "$username" mkdir /tmp/aur_repos
+printf "Press enter to install graphics drivers"; read line
+if [ $GPU -ne 0 ]; then
+  if [ $GPU = 2 ] || [ $GPU = 3 ]; then
+    printf "GPU = 2|3, press enter"; read line
+    while ! pacman -S --noconfirm --needed mesa xf86-video-amdgpu mesa-vdpau libva-mesa-driver vulkan-radeon vulkan-tools mesa-utils libva-utils; do
+      reconnect
+    done
+  elif [ $GPU = 4 ]; then
+    printf "GPU = 4, press enter"; read line
+    aur_get mesa-git xf86-video-amdgpu-git
+    while ! pacman -S --noconfirm --needed vulkan-tools mesa-utils libva-utils; do
+      reconnect
+    done
+  elif [ $GPU = 1 ]; then
+    printf "GPU = 1, press enter"; read line
+    while ! pacman -S --noconfirm --needed mesa xf86-video-ati mesa-vdpau libva-mesa-driver vulkan-radeon vulkan-tools mesa-utils libva-utils; do
+      reconnect
+    done
+  fi
+fi
 aur_get pikaur
 sudo -u "$username" pikaur
 sudo -u "$username" cp "/home/$username/.config/pikaur.conf" "/tmp/pikaur_radni.conf"
@@ -171,22 +191,6 @@ sed -i 's/keepbuilddeps = no/keepbuilddeps = yes/' "/tmp/pikaur_radni.conf"
 sed -i 's/noedit = no/noedit = yes/' "/tmp/pikaur_radni.conf"
 sed -i 's/donteditbydefault = no/donteditbydefault = yes/' "/tmp/pikaur_radni.conf"
 sudo -u "$username" cp "/tmp/pikaur_radni.conf" "/home/$username/.config/pikaur.conf"
-if [ $GPU -ne 0 ]; then
-  if [ $GPU = 2 ] || [ $GPU = 3 ]; then
-    while ! pacman -S --noconfirm --needed mesa xf86-video-amdgpu mesa-vdpau libva-mesa-driver vulkan-radeon vulkan-tools mesa-utils libva-utils; do
-      reconnect
-    done
-  elif [ $GPU = 4 ]; then
-    aur_get mesa-git xf86-video-amdgpu-git
-    while ! pacman -S --noconfirm --needed vulkan-tools mesa-utils libva-utils; do
-      reconnect
-    done
-  elif [ $GPU = 1 ]; then
-    while ! pacman -S --noconfirm --needed mesa xf86-video-ati mesa-vdpau libva-mesa-driver vulkan-radeon vulkan-tools mesa-utils libva-utils; do
-      reconnect
-    done
-  fi
-fi
 if [ $MORE_PROGS = 1 ]; then
   ad_progs="texlive-core texlive-formatsextra texlive-langcyrillic texlive-latexextra texlive-science openssh tmux vlc feh zathura zathura-djvu zathura-pdf-poppler flameshot calc geany geany-plugins pcmanfm-gtk3 gvfs simplescreenrecorder gimp transmission-qt torsocks php python python-pip"
   aur_progs=""
