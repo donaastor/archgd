@@ -146,7 +146,54 @@ nakon sto bootujemo u arch live, radimo:
 	    (sad odaberi koje levele hoces)
 	# echo "manual" > power_dpm_force_performance_level
 	# echo "1 2 3" > pp_dpm_mclk
-
+	
+		SERVICE:
+	
+	/opt/gpu_mclk:
+	
+		#!/bin/bash
+		echo "manual" > /sys/class/drm/card0/device/power_dpm_force_performance_level
+		echo "1 2 3" > /sys/class/drm/card0/device/pp_dpm_mclk
+	
+	/etc/systemd/system/gpu_mclk.service:
+	
+		[Unit]
+		Description=Increase VRAM clock
+		
+		[Service]
+		Type=oneshot
+		ExecStart=/opt/gpu_mclk
+		
+		[Install]
+		WantedBy=multi-user.target
+	
+9. GPU fan (flat):
+	# cd /sys/class/drm/card0/device/hwmon/hwmon0/
+	# echo "1" > pwm1_enable
+		(% je ovo/255, dakle 104/255=40%)
+	# echo "104" > pwm1
+	
+		SERVICE
+	
+	/opt/gpu_fan:
+	
+		#!/bin/bash
+		echo "1" > /sys/class/drm/card0/device/hwmon/hwmon0/pwm1_enable
+		echo "104" > /sys/class/drm/card0/device/hwmon/hwmon0/pwm1
+	
+	/etc/systemd/system/gpu_mclk.service:
+	
+		[Unit]
+		Description=Set GPU fans to 40%
+		After=suspend.target
+		
+		[Service]
+		Type=oneshot
+		ExecStart=/opt/gpu_fan
+		
+		[Install]
+		WantedBy=multi-user.target suspend.target
+	
 --------------- SETUP ---------------
 
 	konfigurisi:
