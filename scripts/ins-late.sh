@@ -332,7 +332,11 @@ else
 fi
 if [ $WIFI = 0 ]; then
   if [ $BATT = 0 ]; then
-    sudo -u "$username" mv i3status "/home/$username/.config/i3/i3status"
+    if [ $CPU = 2] && [ $GPU = 4 ]; then
+      sudo -u "$username" mv i3status_24 "/home/$username/.config/i3/i3status"
+    else
+      sudo -u "$username" mv i3status "/home/$username/.config/i3/i3status"
+    fi
   else
     sudo -u "$username" mv i3status-bat "/home/$username/.config/i3/i3status"
   fi
