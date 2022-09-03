@@ -274,10 +274,10 @@ sed -i 's/^\(.*dropdown_menu =.*opacity =\)\( 0\.[0-9]\{1,2\}\)\(.*\)$/\1 0.93\3
 cp /tmp/picom_radni.conf /etc/xdg/picom.conf
 cd "/home/$username"
 if [ $HIDPI = 1 ]; then
-  echo "Press enter [HiDPI .Xresources]"; read line
+  # echo "Press enter [HiDPI .Xresources]"; read line
   printf "Xft.dpi: 192\n" > .Xresources
   chown $username:wheel .Xresources
-  echo "done with .Xresources"; read line
+  # echo "done with .Xresources"; read line
 fi
 if [ $GPU -ne 0 ] && [ $GPU -ne 4 ]; then
   if [ $HIDPI = 1 ]; then
@@ -297,7 +297,7 @@ if [ $MORE_PROGS = 1 ]; then
 else
   xit_ad=""
 fi
-printf '#!'"/bin/sh\n\nprintf '"'#!'"'\"/bin/bash\\\\n\\\\ngotov() {\\\\n  exec bash --norc -c \\\\\"rm /tmp/to100.sh; exit \\\\\$1\\\\\"\\\\n}\\\\n\\\\nvrti() {\\\\n  xcn=0\\\\n  ycn=0\\\\n  while :; do\\\\n    if pactl set-sink-volume @DEFAULT_SINK@ 100%%%%; then gotov 0; fi\\\\n    xcn=\\\\\$(( \\\\\$xcn + 1 ))\\\\n    if [ \\\\\$xcn = \\\\\$1 ]; then\\\\n      xcn=0\\\\n      ycn=\\\\\$(( \\\\\$ycn + 1 ))\\\\n      if [ \\\\\$ycn = \\\\\$2 ]; then break; fi\\\\n      sleep 1\\\\n    fi\\\\n  done\\\\n}\\\\n\\\\nsystemctl --user start pipewire-pulse\\\\nvrti 3 4\\\\nvrti 2 5\\\\nvrti 1 8\\\\n\\\\ngotov 1\\\\n\" > /tmp/to100.sh\nbash /tmp/to100.sh &\n""$xit_ad""exec bash -c \"cd /home/$username; mv .xinitrc-tobe .xinitrc && loginctl terminate-user $username\"\n" > .xinitrc
+printf '#!'"/bin/sh\n\nprintf '"'#!'"'\"/bin/bash\\\\n\\\\ngotov() {\\\\n  exec bash --norc -c \\\\\"rm /tmp/to100.sh; exit \\\\\$1\\\\\"\\\\n}\\\\n\\\\nvrti() {\\\\n  xcn=0\\\\n  ycn=0\\\\n  while :; do\\\\n    if pactl set-sink-volume @DEFAULT_SINK@ 100%%%%; then gotov 0; fi\\\\n    xcn=\\\\\$(( \\\\\$xcn + 1 ))\\\\n    if [ \\\\\$xcn = \\\\\$1 ]; then\\\\n      xcn=0\\\\n      ycn=\\\\\$(( \\\\\$ycn + 1 ))\\\\n      if [ \\\\\$ycn = \\\\\$2 ]; then break; fi\\\\n      sleep 1\\\\n    fi\\\\n  done\\\\n}\\\\n\\\\nsystemctl --user start pipewire-pulse\\\\nvrti 3 4\\\\nvrti 2 5\\\\nvrti 1 8\\\\n\\\\ngotov 1\\\\n\" > /tmp/to100.sh\nbash /tmp/to100.sh &\n""$xit_ad""exec bash -c \"cd /home/$username; mv .xinitrc-tobe .xinitrc && source .xinitrc\"\n" > .xinitrc
 sudo -u "$username" mkdir .config/nitrogen
 printf "[xin_-1]\nfile=/home/$username/Pictures/poz.jpg\nmode=5\nbgcolor=#000000\n" > .config/nitrogen/bg-saved.cfg
 chown $username:wheel .xinitrc .xinitrc-tobe .config/nitrogen/bg-saved.cfg
