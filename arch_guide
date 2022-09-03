@@ -138,6 +138,14 @@ nakon sto bootujemo u arch live, radimo:
 	speed="..." (real, 1 je default, 0 je zamrznut mis)
 	xinput set-prop "$tvoj_mis" "Coordinate Transformation Matrix" $speed 0 0 0 $speed 0 0 0 1
 	stavi ovu poslednju liniju u .xinitrc kada nastelujes speed (substituisi $tvoj_mis naravno)
+8. GPU flickering:
+	za RX 6650 XT (i slicne, vrv):
+		https://bbs.archlinux.org/viewtopic.php?id=279300
+	# cd /sys/class/drm/card0/device
+	# cat pp_dpm_mclk
+	    (sad odaberi koje levele hoces)
+	# echo "manual" > power_dpm_force_performance_level
+	# echo "1 2 3" > pp_dpm_mclk
 
 --------------- SETUP ---------------
 
