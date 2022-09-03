@@ -324,7 +324,12 @@ cd i3-config
 rm -rf .git
 sudo -u "$username" mv .xbindkeysrc "/home/$username/.xbindkeysrc"
 sudo -u "$username" mkdir "/home/$username/.config/i3"
-sudo -u "$username" mv config status_script.sh "/home/$username/.config/i3/"
+sudo -u "$username" mv config "/home/$username/.config/i3/"
+if [ $CPU = 2 ] && [ $GPU = 4 ]; then
+  sudo -u "$username" mv status_script_24.sh "/home/$username/.config/i3/status_script.sh"
+else
+  sudo -u "$username" mv status_script.sh "/home/$username/.config/i3/"
+fi
 if [ $WIFI = 0 ]; then
   if [ $BATT = 0 ]; then
     sudo -u "$username" mv i3status "/home/$username/.config/i3/i3status"
