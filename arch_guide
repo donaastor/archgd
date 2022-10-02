@@ -304,7 +304,7 @@ pacman -S jre-openjdk
 --------   minecraft
 
 terminal:
-	curl $(curl -Ls -o /dev/null -w %{url_effective} https://tlauncher.org/jar | tail -c12 | sed 's/^.*-\(.*\)\.zip.*$/https:\/\/repo.tlauncher.org\/update\/lch\/TLauncher-\1.jar/') > ~/tren/TLauncher.jar
+	curl $(curl -ILs -o /dev/null -w %{url_effective} https://tlauncher.org/jar | tail -c12 | sed 's/^.*-\(.*\)\.zip.*$/https:\/\/repo.tlauncher.org\/update\/lch\/TLauncher-\1.jar/') > ~/tren/TLauncher.jar
 	chmod 755 TLauncher.jar
 	if ! [ -d ~/.tlauncher ]; then mkdir ~/.tlauncher; fi
 	cp TLauncher.jar ~/.tlauncher/TLauncher.jar
