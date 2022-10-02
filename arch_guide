@@ -298,20 +298,18 @@ guvcview: Photo/File=~/tren, Video/File=~/tren
 
 --------   java
 
+pacman -S jre-openjdk
 ...
 
 --------   minecraft
 
-minecraft:
-
-skini verziju za linux sa https://tlauncher.org/en/ u ~/trenut
-	sve verzije imaju link oblika:
-		http://repo.tlauncher.org/update/lch/TLauncher-VER.jar
-thunar:
-	otpakuj to sto si skinuo
-	kopiraj TLauncher-VER.jar u ~/.tlauncher/ i preimenuj u TLauncher.jar
-	desni klik na TLauncher.jar -> Properties -> Permissions -> Allow this file to run as a program
-	kopiraj minecraft.desktop u /usr/share/applications
+terminal:
+	curl $(curl -Ls -o /dev/null -w %{url_effective} https://tlauncher.org/jar | tail -c12 | sed 's/^.*-\(.*\)\.zip.*$/https:\/\/repo.tlauncher.org\/update\/lch\/TLauncher-\1.jar/') > ~/tren/TLauncher.jar
+	chmod 755 TLauncher.jar
+	if ! [ -d ~/.tlauncher ]; then mkdir ~/.tlauncher; fi
+	cp TLauncher.jar ~/.tlauncher/TLauncher.jar
+dodaj u aliase (~/.bashrc):
+	alias mc='java -jar ~/.tlauncher/TLauncher.jar'
 tlauncher:
 	settings:
 		resolution:	1920x1080
