@@ -1,7 +1,7 @@
 #!/bin/bash
 
 username=$USER
-if [ "$username" = "root" ]; then
+if [ $username = root ]; then
   echo "Don't run this script as root!"
   exit 2
 fi
@@ -57,7 +57,7 @@ reconnect() {
       if getent hosts archlinux.org; then
         JOS=0
       else
-        printf "."
+        printf .
       fi
     fi
     WWAIT=1
@@ -67,7 +67,7 @@ reconnect() {
 }
 
 if [ $WIFI = 1 ]; then
-  2>/dev/null 1>/dev/null bash "/home/$username/scripts/wifi-guard.sh" "$ssid_dft" &
+  2>/dev/null 1>/dev/null bash /home/$username/scripts/wifi-guard.sh "$ssid_dft" &
 fi
 
 #			skripta
