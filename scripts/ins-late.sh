@@ -2,24 +2,10 @@
 
 username="$1"
 params="$2"
-if [ "${params:0:1}" = "0" ]; then
-  CPU=0
-elif [ "${params:0:1}" = "1" ]; then
-  CPU=1
-elif [ "${params:0:1}" = "2" ]; then
-  CPU=2
-fi
-if [ "${params:1:1}" = "0" ]; then
-  GPU=0
-elif [ "${params:1:1}" = "1" ]; then
-  GPU=1
-elif [ "${params:1:1}" = "2" ]; then
-  GPU=2
-elif [ "${params:1:1}" = "3" ]; then
-  GPU=3
-elif [ "${params:1:1}" = "4" ]; then
-  GPU=4
-fi
+CPU="${params:0:1}"
+if ! [[ $CPU =~ [0-2] ]]; then CPU=0; fi
+GPU="${params:1:1}"
+if ! [[ $GPU =~ [0-4] ]]; then GPU=0; fi
 if [ "${params:2:1}" = "1" ]; then
   WIFI=1
   ssid_dft="$3"
