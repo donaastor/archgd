@@ -2,33 +2,14 @@
 #include <cstdlib>
 #include <cstring>
 
-namespace sio{
-	int open(const char *filename, char *buffer){
-		FILE *f = fopen(filename,"rb");
-		fseek(f,0,SEEK_END);
-		int len = ftell(f);
-		rewind(f);
-		fread(buffer,len,1,f);
-		fclose(f);
-		return len;
-	}
-	void save(const char *filename, char *buffer, int length){
-		FILE *f = fopen(filename,"wb");
-		fwrite(buffer,length,1,f);
-		fclose(f);
-	}
-}
-
 char zakon[0x8000000];
 char zakonopisac[0x28000000];
 int sigo;
-
 inline void putin(const char* ubacaj){
 	int josi=strlen(ubacaj);
 	memcpy(zakonopisac+sigo,ubacaj,josi);
 	sigo+=josi;
 }
-
 inline int novokvir(int star, int novo){
 	switch(star*3+novo){
 		case 1: // 0 u 1
@@ -48,14 +29,12 @@ inline int novokvir(int star, int novo){
 	}
 	return novo;
 }
-
 #define novo(x) okvir=novokvir(okvir,x)
 void pisi(){
 	sigo=0;
-	putin("#!/bin/bash\n\nprintf ");
+	putin("printf ");
 	int okvir=0;
 	char tc[2]={0,0};
-	
 	for(int i=0;true;++i){
 		tc[0]=zakon[i];
 		switch(tc[0]){
@@ -134,19 +113,17 @@ void pisi(){
 		}
 	}
 	nap:;
-	
 	novo(0);
-	putin("\n");
 }
 #undef novo
 
 int main(int argc, char* argv[]){
-	if(argc!=3){
+	if(argc!=1){
 		printf("si ti retardiran?\n");
 		return 69;
 	}
-	sio::open(argv[1],zakon);
+	for(int offs=0,tr;(tr=fread(zakon+offs,1,4096,stdin));offs+=tr);
 	pisi();
-	sio::save(argv[2],zakonopisac,strlen(zakonopisac));
+	printf("#!/bin/bash\n\n%s\n",zakonopisac);
 	return 0;
 }
