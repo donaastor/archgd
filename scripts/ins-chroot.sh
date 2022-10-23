@@ -1,62 +1,42 @@
 #!/bin/bash
 
-num_of_args=$#
-if [ "$num_of_args" -lt "5" ]; then
-  printf "At least 5 arguments expected:\n1. BIOS type: BIOS or EFI\n2. Boot partition\n3. Root partition\n4. (optional, only if BIOS selected) name of the whole drive\n5. username\n6. parameters... a string of 0's and 1's (and other digits)\n    first bit: set:\n      0 - if you have an Intel CPU,\n      1 - if you have an AMD pre-Zen CPU, or\n      2 - if you have an AMD Zen CPU\n    second bit: set:\n      0 - for no graphics driver,\n      1 - if you have an AMD GCN-2 or older GPU,\n      2 - if you have a GCN-1 or GCN-2, but want newer drivers, or\n      3 - if you have a newer AMD GPU (for newer drivers)\n      4 - if you have an RDNA 2 or newer GPU\n    third bit: set if WiFi available and ethernet not available\n    fourth bit: set if you want to set up for HiDPI\n    fifth bit: set if you have a battery\n    sixth bit: set if you want more programs installed\n7. (optional, only if WiFi selected) SSID\n"
-  exit 1
-fi
-if [ "$1" = "EFI" ]; then
+if [ "$1" = EFI ]; then
   EFI=1
   username="$4"
   params="$5"
-elif [ "$1" = "BIOS" ]; then
+else
   EFI=0
-  if [ -z "$6" ]; then
-    echo "Missing arguments"
-    exit 1
-  fi
   drive_name="$4"
   username="$5"
   params="$6"
-else
-  printf "Can't recognize the BIOS type,\nset either EFI or BIOS.\n"
-  exit 1
 fi
 prt1="$2"
 prt2="$3"
 CPU="${params:0:1}"
-if ! [[ $CPU =~ [0-2] ]]; then CPU=0; fi
+if ! [[ "$CPU" =~ [0-2] ]]; then CPU=0; fi
 GPU="${params:1:1}"
-if ! [[ $GPU =~ [0-4] ]]; then GPU=0; fi
+if ! [[ "$GPU" =~ [0-4] ]]; then GPU=0; fi
 if [ "${params:2:1}" = "1" ]; then
   WIFI=1
   if [ $EFI = 1 ]; then
-    if [ -z "$6" ]; then
-      echo "Missing arguments"
-      exit 1
-    fi
     ssid_dft="$6"
   else
-    if [ -z "$7" ]; then
-      echo "Missing arguments"
-      exit 1
-    fi
     ssid_dft="$7"
   fi
 else
   WIFI=0
 fi
-if [ "${params:3:1}" = "1" ]; then
+if [ "${params:3:1}" = 1 ]; then
   HIDPI=1
 else
   HIDPI=0
 fi
-if [ "${params:4:1}" = "1" ]; then
+if [ "${params:4:1}" = 1 ]; then
   BATT=1
 else
   BATT=0
 fi
-if [ "${params:5:1}" = "1" ]; then
+if [ "${params:5:1}" = 1 ]; then
   MORE_PROGS=1
 else
   MORE_PROGS=0
@@ -84,7 +64,7 @@ reconnect() {
       if getent hosts archlinux.org; then
         JOS=0
       else
-        printf "."
+        printf .
       fi
     fi
     WWAIT=1
@@ -165,7 +145,7 @@ fi
 
 #			fstab
 
-printf "\ntmpfs /root/tren tmpfs defaults,size=2048M 0 0\ntmpfs /home/$username/tren tmpfs defaults,size=2048M 0 0\ntmpfs /home/$username/.cache/pikaur tmpfs defaults 0 0\ntmpfs /home/$username/.local/share/pikaur/aur_repos tmpfs defaults,size=2048M 0 0\ntmpfs /home/$username/.local/share/xorg tmpfs defaults,size=1280M 0 0\ntmpfs /var/lib/systemd/coredump tmpfs defaults,size=512M 0 0\ntmpfs /home/$username/.cargo tmpfs defaults,size=640M 0 0\ntmpfs /home/$username/chromium/cache tmpfs noatime,nodev,nosuid,size=1152M 0 0\ntmpfs /var/cache/pacman/pkg tmpfs defaults,size=2560M 0 0\n" >> "/root/tren/fstab_radni"
+printf "\ntmpfs /root/tren tmpfs defaults,size=2048M 0 0\ntmpfs /home/$username/tren tmpfs defaults,size=2048M 0 0\ntmpfs /home/$username/.cache/pikaur tmpfs defaults 0 0\ntmpfs /home/$username/.local/share/pikaur/aur_repos tmpfs defaults,size=2048M 0 0\ntmpfs /home/$username/.local/share/xorg tmpfs defaults,size=1280M 0 0\ntmpfs /var/lib/systemd/coredump tmpfs defaults,size=512M 0 0\ntmpfs /home/$username/.cargo tmpfs defaults,size=640M 0 0\ntmpfs /home/$username/chromium/cache tmpfs noatime,nodev,nosuid,size=1152M 0 0\ntmpfs /var/cache/pacman/pkg tmpfs defaults,size=2560M 0 0\n" >> /root/tren/fstab_radni
 cp /root/tren/fstab_radni /etc/fstab
 cd "/home/$username"
 sudo -u "$username" mkdir tren
@@ -185,7 +165,7 @@ sudo -u "$username" mkdir chromium/cache
 if [ $GPU = 1 ]; then
   sed -e 's/^MODULES=(\(..*\))$/MODULES=(radeon \1)/' -e 's/^MODULES=()$/MODULES=(radeon)/' -i /etc/mkinitcpio.conf
   mkinitcpio -P
-elif [ $GPU = 2 ] || [ $GPU = 3 ] || [ $GPU = 4 ]; then
+elif [[ $GPU =~ [2-4] ]]; then
   sed -e 's/^MODULES=(\(..*\))$/MODULES=(amdgpu \1)/' -e 's/^MODULES=()$/MODULES=(amdgpu)/' -i /etc/mkinitcpio.conf
   mkinitcpio -P
 fi
@@ -206,7 +186,7 @@ mkdir /tmp/grub_radni
 cd /tmp/grub_radni
 cp /etc/default/grub grub
 sed -i 's/^GRUB_TIMEOUT=.*$/GRUB_TIMEOUT=1/' grub
-if [ $GPU = 0 ] || [ $GPU = 1 ]; then
+if [[ $GPU =~ [0-1] ]]; then
   sed -i 's/\(^GRUB_CMDLINE_LINUX_DEFAULT.*\)\"/\1 mitigations=off\"/' grub
 elif [ $GPU = 2 ]; then
   sed -i 's/\(^GRUB_CMDLINE_LINUX_DEFAULT.*\)\"/\1 mitigations=off radeon.si_support=0 radeon.cik_support=0 amdgpu.si_support=1 amdgpu.cik_support=1 amdgpu.ppfeaturemask=0xffffffff\"/' grub
@@ -252,13 +232,13 @@ fi
 #			getty
 
 cd /etc/systemd/system
-mkdir "getty@tty1.service.d"
-cd "getty@tty1.service.d"
+mkdir getty@tty1.service.d
+cd getty@tty1.service.d
 printf "[Service]\nExecStart=\nExecStart=-/sbin/agetty -o \'-p -f -- \\\\\\\\u\' --noclear --autologin root - \$TERM\nType=simple\n" > autologin.conf
 if [ $WIFI = 1 ]; then
-  printf "\n/bin/bash \"/home/$username/scripts/ins-late.sh\" $username \"$params\" \"$ssid_dft\"\n" >> "/root/.bash_profile"
+  printf "\n/bin/bash \"/home/$username/scripts/ins-late.sh\" $username \"$params\" \"$ssid_dft\"\n" >> /root/.bash_profile
 else
-  printf "\n/bin/bash \"/home/$username/scripts/ins-late.sh\" $username \"$params\"\n" >> "/root/.bash_profile"
+  printf "\n/bin/bash \"/home/$username/scripts/ins-late.sh\" $username \"$params\"\n" >> /root/.bash_profile
 fi
 
 #			exit
