@@ -186,7 +186,7 @@ nakon sto bootujemo u arch live, radimo:
 		echo "1" > /sys/class/drm/card0/device/hwmon/hwmon0/pwm1_enable
 		echo "104" > /sys/class/drm/card0/device/hwmon/hwmon0/pwm1
 	
-	/etc/systemd/system/gpu_mclk.service:
+	/etc/systemd/system/gpu_fan.service:
 	
 		[Unit]
 		Description=Set GPU fans to 40%
