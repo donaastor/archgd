@@ -1,7 +1,7 @@
 #!/bin/bash
 
 username=$USER
-if [ "$username" = "root" ]; then
+if [ $username = root ]; then
   echo "Don't run this script as root!"
   exit 2
 fi
@@ -57,7 +57,7 @@ reconnect() {
       if getent hosts archlinux.org; then
         JOS=0
       else
-        printf "."
+        printf .
       fi
     fi
     WWAIT=1
@@ -106,7 +106,7 @@ aur_get_one() {
     find . -maxdepth 1 -type f -iregex "^\./$1.*\.pkg\.tar\.zst$" > tren5
     local pkg_name="$(sed -n '1p' tren5)"
     rm tren5
-    while ! sudo pacman -U --noconfirm --needed "${pkg_name}"; do
+    while ! sudo pacman -U --noconfirm --needed "$pkg_name"; do
       reconnect
     done
     rm -rf /tmp/aur_repos/*
@@ -114,14 +114,14 @@ aur_get_one() {
 }
 
 aur_get() {
-  while (( "$#" )); do
+  while (( $# )); do
     aur_get_one $1
     shift
   done
 }
 
 if [ $WIFI = 1 ]; then
-  2>/dev/null 1>/dev/null bash "/home/$username/scripts/wifi-guard.sh" "$ssid_dft" &
+  2>/dev/null 1>/dev/null bash /home/$username/scripts/wifi-guard.sh "$ssid_dft" &
 fi
 
 if ! [ -d /tmp/aur_repos ]; then
@@ -141,12 +141,10 @@ while getopts ":a" OPTION; do
 done
 
 if [ $AUTO = 1 ]; then
-  pacad="--noconfirm"
-else
-  pacad=""
+  pacad=--noconfirm
 fi
 
-while ! sudo pacman -S --needed "$pacad" cups hplip; do
+while ! sudo pacman -S --needed $pacad cups hplip; do
   reconnect
 done
 if [ $AUTO = 1 ]; then
@@ -160,10 +158,10 @@ Q1_F=1
 while [ $Q1_F == 1 ]; do
   printf "Are you accessing your printer directly (yes/no)? "
   read dir_odg
-  if [ "$dir_odg" == "yes" ]; then
+  if [ "$dir_odg" == yes ]; then
     FWD=0
     Q1_F=0
-  elif [ "$dir_odg" == "no" ]; then
+  elif [ "$dir_odg" == no ]; then
     FWD=1
     Q1_F=0
   fi
@@ -211,8 +209,8 @@ while ! lpadmin -p "$p_name" -o PageSize=A4; do
   echo "Waiting for CUPS to load printer..."
   sleep 1
 done
-if [ -f "/home/$username/.config/gtk-3.0/settings.ini" ]; then
-  mv "/home/$username/.config/gtk-3.0/settings.ini" "/home/$username/.config/gtk-3.0/settings-before-print-setup.ini"
+if [ -f /home/$username/.config/gtk-3.0/settings.ini ]; then
+  mv /home/$username/.config/gtk-3.0/settings.ini /home/$username/.config/gtk-3.0/settings-before-print-setup.ini
 fi
-printf "[Settings]\ngtk-print-backends=file,cups,pdf\n" > "/home/$username/.config/gtk-3.0/settings.ini"
+printf "[Settings]\ngtk-print-backends=file,cups,pdf\n" > /home/$username/.config/gtk-3.0/settings.ini
 echo "Exiting setup..."
