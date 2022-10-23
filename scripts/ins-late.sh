@@ -247,7 +247,7 @@ if [[ $GPU =~ [2-4] ]]; then
   printf "[Unit]\nDescription=Turning on GPU fans\nAfter=suspend.target\n\n[Service]\nType=oneshot\nExecStart=/opt/gpu_fan\n\n[Install]\nWantedBy=multi-user.target suspend.target\n" > /etc/systemd/system/gpu_fan.service
   systemctl enable gpu_fan
 fi
-printf "\nsleep() {\n  if [ \"\$1\" = \"on\" ]; then\n    if ! pgrep -f xidlehook; then\n      if [ \"\$USER\" = \"\$username\" ]; then\n        xidlehook --timer 600 'systemctl suspend -i' '' &\n      else\n        sudo -u \$username xidlehook --timer 600 'systemctl suspend -i' '' &\n      fi\n    fi\n  elif [ \"\$1\" = \"off\" ]; then\n    pkill xidlehook\n  else\n    echo \"wrong parameter\"\n  fi\n}\nvol() {\n  if [ -z \"\$1\" ]; then\n    pactl get-sink-volume @DEFAULT_SINK@\n  else\n    pactl set-sink-volume @DEFAULT_SINK@ \$1%%\n  fi\n}\n${GPUFA}alias ls='ls --color=tty'\nalias lsa='ls -la'\nalias ip='ip -color=auto'\nalias cal='cal -m3'\nalias q='exit'\nalias cl='clear'\nalias stfu='shutdown now'\nalias sus='systemctl suspend'\n" >> /etc/bash.bashrc
+printf "\nsleep() {\n  if [ \"\$1\" = on ]; then\n    if ! pgrep -f xidlehook; then\n      if [ \$USER = \$username ]; then\n        xidlehook --timer 600 'systemctl suspend -i' '' &\n      else\n        sudo -u \$username xidlehook --timer 600 'systemctl suspend -i' '' &\n      fi\n    fi\n  elif [ \"\$1\" = off ]; then\n    pkill xidlehook\n  else\n    echo \"wrong parameter\"\n  fi\n}\nvol() {\n  if [ -z \"\$1\" ]; then\n    pactl get-sink-volume @DEFAULT_SINK@\n  else\n    pactl set-sink-volume @DEFAULT_SINK@ \$1%%\n  fi\n}\n${GPUFA}alias ls='ls --color=tty'\nalias lsa='ls -la'\nalias ip='ip -color=auto'\nalias cal='cal -m3'\nalias q='exit'\nalias cl='clear'\nalias stfu='shutdown now'\nalias sus='systemctl suspend'\n" >> /etc/bash.bashrc
 if ! [ -d /etc/modprobe.d ]; then
   mkdir /etc/modprobe.d
 fi
@@ -329,7 +329,7 @@ mv kbswtb /opt/kbswtb
 cd /home/$username/.config/i3
 chmod 755 status_script.sh
 mandb
-printf '<?xml version=\"1.0\"?>\n<!DOCTYPE fontconfig SYSTEM \"urn:fontconfig:fonts.dtd\">\n<fontconfig>\n	<match target=\"pattern\">\n	<test name=\"family\" qual=\"any\">\n		<string>monospace</string>\n	</test>\n	<edit binding=\"strong\" mode=\"prepend\" name=\"family\">\n		<string>LiberationMono</string>\n	</edit>\n	</match>\n</fontconfig>\n' > /etc/fonts/local.conf
+printf '<?xml version="1.0"?>\n<!DOCTYPE fontconfig SYSTEM "urn:fontconfig:fonts.dtd">\n<fontconfig>\n	<match target="pattern">\n	<test name="family" qual="any">\n		<string>monospace</string>\n	</test>\n	<edit binding="strong" mode="prepend" name="family">\n		<string>LiberationMono</string>\n	</edit>\n	</match>\n</fontconfig>\n' > /etc/fonts/local.conf
 systemctl start ufw
 systemctl enable ufw
 ufw default allow outgoing
@@ -351,7 +351,7 @@ fi
 #			ungoogled-chromium
 
 if [ $MORE_PROGS = 1 ]; then
-  while ! curl -s https://download.opensuse.org/repositories/home:/ungoogled_chromium/Arch/x86_64/home_ungoogled_chromium_Arch.key | pacman-key -a -; do
+  while ! curl -s "https://download.opensuse.org/repositories/home:/ungoogled_chromium/Arch/x86_64/home_ungoogled_chromium_Arch.key" | pacman-key -a -; do
     reconnect
   done
   printf "[home_ungoogled_chromium_Arch]\nSigLevel = Required TrustAll\nServer = https://download.opensuse.org/repositories/home:/ungoogled_chromium/Arch/\$arch\n" | tee --append /etc/pacman.conf
@@ -360,9 +360,9 @@ if [ $MORE_PROGS = 1 ]; then
   done
   rm -rf /var/cache/pacman/pkg/*
   if [ $GPU != 0 ]; then
-    printf "--disk-cache-dir=/home/$username/chromium/cache\n--disk-cache-size=1073741824\n--extension-mime-request-handling\n--load-extension=/home/$username/chromium/extensions/uBlock\n--ignore-gpu-blocklist\n--enable-gpu-rasterization\n--enable-zero-copy\n--enable-features=VaapiVideoDecoder\n--use-gl=egl\n" > /etc/chromium-flags.conf
+    printf -- "--disk-cache-dir=/home/$username/chromium/cache\n--disk-cache-size=1073741824\n--extension-mime-request-handling\n--load-extension=/home/$username/chromium/extensions/uBlock\n--ignore-gpu-blocklist\n--enable-gpu-rasterization\n--enable-zero-copy\n--enable-features=VaapiVideoDecoder\n--use-gl=egl\n" > /etc/chromium-flags.conf
   else
-    printf "--disk-cache-dir=/home/$username/chromium/cache\n--disk-cache-size=1073741824\n--extension-mime-request-handling\n--load-extension=/home/$username/chromium/extensions/uBlock" > /etc/chromium-flags.conf
+    printf -- "--disk-cache-dir=/home/$username/chromium/cache\n--disk-cache-size=1073741824\n--extension-mime-request-handling\n--load-extension=/home/$username/chromium/extensions/uBlock" > /etc/chromium-flags.conf
   fi
   chown $username:wheel /etc/chromium-flags.conf
   mkdir /home/$username/chromium/extensions
