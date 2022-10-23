@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ "$1" = EFI ]; then
+if [ $1 = EFI ]; then
   EFI=1
   username="$4"
   params="$5"
