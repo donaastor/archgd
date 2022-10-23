@@ -2,12 +2,12 @@
 
 if [ $1 = EFI ]; then
   EFI=1
-  username="$4"
+  username=$4
   params="$5"
 else
   EFI=0
   drive_name="$4"
-  username="$5"
+  username=$5
   params="$6"
 fi
 prt1="$2"
