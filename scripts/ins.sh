@@ -35,6 +35,10 @@ else
   printf "Can't recognize the BIOS type,\nset either EFI or BIOS.\n"
   exit 1
 fi
+if [[ "$username" =~ [^a-z] ]]; then
+  echo "Invalid username"
+  exit 1
+fi
 prt1="$2"
 prt2="$3"
 CPU="${params:0:1}"
