@@ -221,7 +221,7 @@ if [ $BATT = 1 ]; then
   rm -rf /var/cache/pacman/pkg/*
 fi
 aur_get xidlehook xkb-switch-i3 xkblayout-state-git $aur_progs
-if [ $GPU -ne 4 ]; then
+if [ $GPU = 1 ]; then
   rm -rf /var/cache/pacman/pkg/*
   aur_get corectrl
   if ! [ -d "/home/$username/.config/autostart" ]; then
@@ -258,8 +258,13 @@ rm /root/.bash_profile
 
 sensors-detect --auto
 sed -i 's/^# set zap/set zap/' /etc/nanorc
-printf "\nsleep() {\n  if [ \"\$USER\" = \"$username\" ]; then\n    if [ \"\$1\" = \"on\" ]; then\n      if ! pgrep -f xidlehook; then\n        xidlehook --timer 600 'systemctl suspend -i' '' &\n      fi\n    elif [ \"\$1\" = \"off\" ]; then\n      sudo pkill xidlehook\n    else\n      echo \"wrong parameter\"\n    fi\n  else\n    if [ \"\$1\" = \"on\" ]; then\n      if ! pgrep -f xidlehook; then\n        xidlehook --timer 600 'systemctl suspend -i' '' &\n      fi\n    elif [ \"\$1\" = \"off\" ]; then\n      pkill xidlehook\n    else\n      echo \"wrong parameter\"\n    fi\n  fi\n}\nvol() {\n  if [ -z \"\$1\" ]; then\n    pactl get-sink-volume @DEFAULT_SINK@\n  else\n    pactl set-sink-volume @DEFAULT_SINK@ \$1%%\n  fi\n}\nalias ls=\'ls --color=tty\'\nalias lsa=\'ls -la\'\nalias ip=\'ip -color=auto\'\nalias cal=\'cal -m3\'\nalias q=\'exit\'\nalias cl=\'clear\'\nalias stfu=\'shutdown now\'\nalias sus=\'systemctl suspend\'\n" >> /etc/bash.bashrc
-
+if (($GPU>=2$$$GPU<=4)); then
+  GPUFA="gpf() {\n  local dflt=104\n  bash /opt/gpu_fan \$dflt \$1\n}\n"
+  printf '#!'"/bin/bash\nisi() {\n  [[ \"\$1\" =~ ^[1-9][0-9]*\$ ]] || [[ \"\$1\" == \"0\" ]]\n}\nisr() {\n  [[ \"\$1\" =~ ^[0-9][0-9]*\\\\.[0-9][0-9]*\$ ]] && ! [[ \"\${1:0:2}\" =~ ^0[^.]\$ ]]\n}\nisb() {\n  [[ \$(echo \"1-(\$1>=0)*(\$1<=\$2)\" | bc) = 0 ]]\n}\nisf() {\n  isi \"\$1\" && isb \"\$1\" 255\n}\ngetp() {\n  if (isi \"\$1\" || isr \"\$1\") && isb \"\$1\" 100; then\n    printf \"%%.0f\" \$(echo \"\$1*2.55\" | bc)\n  else printf 256; fi\n}\nif [ -z \"\$2\" ]; then P=256\nelse P=\$(getp \"\$2\"); fi\nif [ \$P = 256 ]; then\n  if [ -f /tmp/gpu_fan_last ]; then\n    P=\"\$(cat /tmp/gpu_fan_last)\"\n    if ! isf \"\$P\"; then P=256; fi\n  fi\nelse\n  printf \"\$P\" > /tmp/gpu_fan_last\nfi\nif [ \$P = 256 ]; then\n  P=\$(getp \"\$1\")\n  if [ \$P = 256 ]; then P=104; fi\n  printf \"\$P\" > /tmp/gpu_fan_last\nfi\npisi() {\n  if [ -w \"\$2\" ]; then printf \"\$1\" > \"\$2\"\n  else\n    printf \"\$1\" | sudo tee \"\$2\" 1> /dev/null\n  fi\n}\nGPUL=\"/sys/class/drm/card0/device/hwmon/hwmon0/pwm1\"\nif [ -z \"\$1\" ]; then\n  pisi 1 \"\${GPUL}_enable\"\nfi\npisi \"\$P\\\\n\" \"\$GPUL\"\n" > /opt/gpu_fan
+  printf "[Unit]\nDescription=Set GPU fans to 40%%\nAfter=suspend.target\n\n[Service]\nType=oneshot\nExecStart=/opt/gpu_fan\n\n[Install]\nWantedBy=multi-user.target suspend.target\n" > /etc/systemd/system/gpu_fan.service
+  systemctl enable gpu_fan
+fi
+printf "\nsleep() {\n  if [ \"\$USER\" = \"$username\" ]; then\n    if [ \"\$1\" = \"on\" ]; then\n      if ! pgrep -f xidlehook; then\n        xidlehook --timer 600 'systemctl suspend -i' '' &\n      fi\n    elif [ \"\$1\" = \"off\" ]; then\n      sudo pkill xidlehook\n    else\n      echo \"wrong parameter\"\n    fi\n  else\n    if [ \"\$1\" = \"on\" ]; then\n      if ! pgrep -f xidlehook; then\n        xidlehook --timer 600 'systemctl suspend -i' '' &\n      fi\n    elif [ \"\$1\" = \"off\" ]; then\n      pkill xidlehook\n    else\n      echo \"wrong parameter\"\n    fi\n  fi\n}\nvol() {\n  if [ -z \"\$1\" ]; then\n    pactl get-sink-volume @DEFAULT_SINK@\n  else\n    pactl set-sink-volume @DEFAULT_SINK@ \$1%%\n  fi\n}\n${GPUFA}alias ls=\'ls --color=tty\'\nalias lsa=\'ls -la\'\nalias ip=\'ip -color=auto\'\nalias cal=\'cal -m3\'\nalias q=\'exit\'\nalias cl=\'clear\'\nalias stfu=\'shutdown now\'\nalias sus=\'systemctl suspend\'\n" >> /etc/bash.bashrc
 if ! [ -d /etc/modprobe.d ]; then
   mkdir /etc/modprobe.d
 fi
@@ -278,24 +283,12 @@ if [ $HIDPI = 1 ]; then
   printf "Xft.dpi: 192\n" > .Xresources
   chown $username:wheel .Xresources
   # echo "done with .Xresources"; read line
+  TMUD="export QT_SCREEN_SCALE_FACTORS=1.5\n"
 fi
-if [ $GPU -ne 0 ] && [ $GPU -ne 4 ]; then
-  if [ $HIDPI = 1 ]; then
-    printf '#!'"/bin/sh\n\n[[ -f ~/.Xresources ]] && xrdb -merge -I\$HOME ~/.Xresources\nif [ -d /etc/X11/xinit/xinitrc.d ] ; then\n for f in /etc/X11/xinit/xinitrc.d/\?*.sh ; do\n  [ -x \"\$f\" ] && . \"\$f\"\n done\n unset f\nfi\nxset s noblank\nxset s noexpose\nxset s 0 0\nxset +dpms\nxset dpms 0 180 0\nxset r rate 250 30\nnumlockx &\nxbindkeys &\n(sleep 1.5 && /opt/kbswtb) &\nif ! pgrep -f xidlehook; then\n  xidlehook --timer 600 'systemctl suspend -i' '' &\nfi\npicom --experimental-backends &\nexport QT_SCREEN_SCALE_FACTORS=1.5\ncorectrl &\nnitrogen --restore &\nexec i3\n" > .xinitrc-tobe
-  else
-    printf '#!'"/bin/sh\n\n[[ -f ~/.Xresources ]] && xrdb -merge -I\$HOME ~/.Xresources\nif [ -d /etc/X11/xinit/xinitrc.d ] ; then\n for f in /etc/X11/xinit/xinitrc.d/\?*.sh ; do\n  [ -x \"\$f\" ] && . \"\$f\"\n done\n unset f\nfi\nxset s noblank\nxset s noexpose\nxset s 0 0\nxset +dpms\nxset dpms 0 180 0\nxset r rate 250 30\nnumlockx &\nxbindkeys &\n(sleep 1.5 && /opt/kbswtb) &\nif ! pgrep -f xidlehook; then\n  xidlehook --timer 600 'systemctl suspend -i' '' &\nfi\npicom --experimental-backends &\ncorectrl &\nnitrogen --restore &\nexec i3\n" > .xinitrc-tobe
-  fi
-else
-  if [ $HIDPI = 1 ]; then
-    printf '#!'"/bin/sh\n\n[[ -f ~/.Xresources ]] && xrdb -merge -I\$HOME ~/.Xresources\nif [ -d /etc/X11/xinit/xinitrc.d ] ; then\n for f in /etc/X11/xinit/xinitrc.d/\?*.sh ; do\n  [ -x \"\$f\" ] && . \"\$f\"\n done\n unset f\nfi\nxset s noblank\nxset s noexpose\nxset s 0 0\nxset +dpms\nxset dpms 0 180 0\nxset r rate 250 30\nnumlockx &\nxbindkeys &\n(sleep 1.5 && /opt/kbswtb) &\nif ! pgrep -f xidlehook; then\n  xidlehook --timer 600 'systemctl suspend -i' '' &\nfi\npicom --experimental-backends &\nexport QT_SCREEN_SCALE_FACTORS=1.5\nnitrogen --restore &\nexec i3\n" > .xinitrc-tobe
-  else
-    printf '#!'"/bin/sh\n\n[[ -f ~/.Xresources ]] && xrdb -merge -I\$HOME ~/.Xresources\nif [ -d /etc/X11/xinit/xinitrc.d ] ; then\n for f in /etc/X11/xinit/xinitrc.d/\?*.sh ; do\n  [ -x \"\$f\" ] && . \"\$f\"\n done\n unset f\nfi\nxset s noblank\nxset s noexpose\nxset s 0 0\nxset +dpms\nxset dpms 0 180 0\nxset r rate 250 30\nnumlockx &\nxbindkeys &\n(sleep 1.5 && /opt/kbswtb) &\nif ! pgrep -f xidlehook; then\n  xidlehook --timer 600 'systemctl suspend -i' '' &\nfi\npicom --experimental-backends &\nnitrogen --restore &\nexec i3\n" > .xinitrc-tobe
-  fi
-fi
+if [ $GPU = 1 ]; then TMUD="${TMUD}corectrl\n"; fi
+printf '#!'"/bin/sh\n\n[[ -f ~/.Xresources ]] && xrdb -merge -I\$HOME ~/.Xresources\nif [ -d /etc/X11/xinit/xinitrc.d ] ; then\n for f in /etc/X11/xinit/xinitrc.d/\?*.sh ; do\n  [ -x \"\$f\" ] && . \"\$f\"\n done\n unset f\nfi\nxset s noblank\nxset s noexpose\nxset s 0 0\nxset +dpms\nxset dpms 0 180 0\nxset r rate 250 30\nnumlockx &\nxbindkeys &\n(sleep 1.5 && /opt/kbswtb) &\nif ! pgrep -f xidlehook; then\n  xidlehook --timer 600 'systemctl suspend -i' '' &\nfi\npicom --experimental-backends &\n${TMUD}nitrogen --restore &\nexec i3\n" > .xinitrc-tobe
 if [ $MORE_PROGS = 1 ]; then
   xit_ad="printf '"'#!'"'\"/bin/bash\\\\n\\\\npsd\\\\ncd /home/$username/.config/psd\\\\nxcn=0\\\\nwhile :; do\\\\n  if [ -f psd.conf ]; then\\\\n    sed -i 's/^.*USE_BACKUPS=\\\\\\\\\\\\\\\\\\\\\"yes\\\\\\\\\\\\\\\\\\\\\".*\\\\\$/USE_BACKUPS=\\\\\\\\\\\\\\\\\\\\\"no\\\\\\\\\\\\\\\\\\\\\"/' psd.conf\\\\n    break\\\\n  else\\\\n    xcn=\\\\\$(( \\\\\$xcn + 1 ))\\\\n    if [ \\\\\$xcn = 400 ]; then break; fi\\\\n    sleep 0.3\\\\n  fi\\\\ndone\\\\nsystemctl --user enable psd\\\\nsystemctl --user start psd\\\\nrm -rf /tmp/psdconf.sh\\\\n\" > /tmp/psdconf.sh\n(sleep 1.37 && bash /tmp/psdconf.sh) &\n"
-else
-  xit_ad=""
 fi
 printf '#!'"/bin/sh\n\nprintf '"'#!'"'\"/bin/bash\\\\n\\\\ngotov() {\\\\n  exec bash --norc -c \\\\\"rm /tmp/to100.sh; exit \\\\\$1\\\\\"\\\\n}\\\\n\\\\nvrti() {\\\\n  xcn=0\\\\n  ycn=0\\\\n  while :; do\\\\n    if pactl set-sink-volume @DEFAULT_SINK@ 100%%%%; then gotov 0; fi\\\\n    xcn=\\\\\$(( \\\\\$xcn + 1 ))\\\\n    if [ \\\\\$xcn = \\\\\$1 ]; then\\\\n      xcn=0\\\\n      ycn=\\\\\$(( \\\\\$ycn + 1 ))\\\\n      if [ \\\\\$ycn = \\\\\$2 ]; then break; fi\\\\n      sleep 1\\\\n    fi\\\\n  done\\\\n}\\\\n\\\\nsystemctl --user start pipewire-pulse\\\\nvrti 3 4\\\\nvrti 2 5\\\\nvrti 1 8\\\\n\\\\ngotov 1\\\\n\" > /tmp/to100.sh\n(sleep 1.33 && bash /tmp/to100.sh) &\n""$xit_ad""exec bash -c \"cd /home/$username; mv .xinitrc-tobe .xinitrc && source .xinitrc\"\n" > .xinitrc
 sudo -u "$username" mkdir .config/nitrogen
