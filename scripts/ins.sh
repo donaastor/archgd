@@ -38,9 +38,9 @@ fi
 prt1="$2"
 prt2="$3"
 CPU="${params:0:1}"
-if ! [[ $CPU =~ [0-2] ]]; then CPU=0; fi
+if ! [[ "$CPU" =~ [0-2] ]]; then CPU=0; fi
 GPU="${params:1:1}"
-if ! [[ $GPU =~ [0-4] ]]; then GPU=0; fi
+if ! [[ "$GPU" =~ [0-4] ]]; then GPU=0; fi
 if [ "${params:2:1}" = 1 ]; then
   WIFI=1
   if [ $EFI = 1 ]; then
