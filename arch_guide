@@ -99,6 +99,11 @@ nakon sto bootujemo u arch live, radimo:
 	ili jednostavno posle dosta vremena...
 	mozes i enablovati timer koji to obavlja nedeljno:
 		sudo systemd enable fstrim.timer
+	da ocistis ceo disk, idi:
+		blkdiscard "/dev/device"
+	imas opcije:
+		--secure (za brisanje garbedza)
+		-z / --zeroout (za punjenje nulama)
 4. HiDPI:
 	bitno je da namestis Xft.dpi za X, da bi sistem znao
 	DPI monitora, a za aplikacije namestaj rucno jer svaka
