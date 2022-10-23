@@ -147,18 +147,18 @@ fi
 
 printf "\ntmpfs /root/tren tmpfs defaults,size=2048M 0 0\ntmpfs /home/$username/tren tmpfs defaults,size=2048M 0 0\ntmpfs /home/$username/.cache/pikaur tmpfs defaults 0 0\ntmpfs /home/$username/.local/share/pikaur/aur_repos tmpfs defaults,size=2048M 0 0\ntmpfs /home/$username/.local/share/xorg tmpfs defaults,size=1280M 0 0\ntmpfs /var/lib/systemd/coredump tmpfs defaults,size=512M 0 0\ntmpfs /home/$username/.cargo tmpfs defaults,size=640M 0 0\ntmpfs /home/$username/chromium/cache tmpfs noatime,nodev,nosuid,size=1152M 0 0\ntmpfs /var/cache/pacman/pkg tmpfs defaults,size=2560M 0 0\n" >> /root/tren/fstab_radni
 cp /root/tren/fstab_radni /etc/fstab
-cd "/home/$username"
-sudo -u "$username" mkdir tren
-sudo -u "$username" mkdir .cache
-sudo -u "$username" mkdir .cache/pikaur
-sudo -u "$username" mkdir .local
-sudo -u "$username" mkdir .local/share
-sudo -u "$username" mkdir .local/share/pikaur
-sudo -u "$username" mkdir .local/share/pikaur/aur_repos
+cd /home/$username
+sudo -u $username mkdir tren
+sudo -u $username mkdir .cache
+sudo -u $username mkdir .cache/pikaur
+sudo -u $username mkdir .local
+sudo -u $username mkdir .local/share
+sudo -u $username mkdir .local/share/pikaur
+sudo -u $username mkdir .local/share/pikaur/aur_repos
 mkdir /var/lib/systemd/coredumps
-sudo -u "$username" mkdir .cargo
-sudo -u "$username" mkdir chromium
-sudo -u "$username" mkdir chromium/cache
+sudo -u $username mkdir .cargo
+sudo -u $username mkdir chromium
+sudo -u $username mkdir chromium/cache
 
 #			modules
 
@@ -218,15 +218,15 @@ while ! sudo -u "$username" git clone --depth 1 https://github.com/donaastor/arc
 done
 cd archgd
 rm -rf .git
-sudo -u "$username" mv scripts "/home/$username/scripts"
-sudo -u "$username" mv arch_guide sharing_guide "/home/$username/scripts/"
-sudo -u "$username" mkdir "/home/$username/Pictures"
-sudo -u "$username" mv poz_r.jpg "/home/$username/Pictures/poz.jpg"
-sudo -u "$username" mkdir "/home/$username/.config"
+sudo -u $username mv scripts /home/$username/scripts
+sudo -u $username mv arch_guide sharing_guide /home/$username/scripts/
+sudo -u $username mkdir /home/$username/Pictures
+sudo -u $username mv poz_r.jpg /home/$username/Pictures/poz.jpg
+sudo -u $username mkdir /home/$username/.config
 if [ $MORE_PROGS = 1 ]; then
-  sudo -u "$username" mv "geany" "/home/$username/.config/geany"
-  sudo -u "$username" mv "pcmanfm" "/home/$username/.config/pcmanfm"
-  sudo -u "$username" mv "libfm" "/home/$username/.config/libfm"
+  sudo -u $username mv geany /home/$username/.config/geany
+  sudo -u $username mv pcmanfm /home/$username/.config/pcmanfm
+  sudo -u $username mv libfm /home/$username/.config/libfm
 fi
 
 #			getty
