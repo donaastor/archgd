@@ -185,7 +185,7 @@ if [ $MORE_PROGS = 1 ]; then
   ad_progs="texlive-core texlive-formatsextra texlive-langcyrillic texlive-latexextra texlive-science openssh tmux vlc feh zathura zathura-djvu zathura-pdf-poppler flameshot calc geany geany-plugins pcmanfm-gtk3 gvfs simplescreenrecorder gimp transmission-qt torsocks php python python-requests python-pysocks python-pip unrar inetutils"
   aur_progs=""
 fi
-while ! pacman -S --noconfirm --needed nano xorg-server xorg-xinit xorg-xrdb xorg-xinput numlockx xbindkeys i3-gaps i3status i3lock ntfs-3g rofi nitrogen picom pipewire pipewire-pulse pipewire-jack wireplumber rtkit alacritty xdg-utils ttf-liberation man-db man-pages nnn htop perl-file-mimeinfo zip unzip p7zip ufw lshw usbutils smartmontools exfatprogs $ad_progs; do
+while ! pacman -S --noconfirm --needed nano xorg-server xorg-xinit xorg-xrdb xorg-xinput numlockx xbindkeys i3-gaps i3status i3lock ntfs-3g rofi nitrogen picom pipewire pipewire-pulse pipewire-jack wireplumber rtkit alacritty xdg-utils ttf-liberation man-db man-pages nnn htop perl-file-mimeinfo zip unzip p7zip ufw lshw usbutils smartmontools exfatprogs bc $ad_progs; do
   reconnect
 done
 rm -rf /var/cache/pacman/pkg/*
