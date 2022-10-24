@@ -277,7 +277,7 @@ geany(i root):
 		unmark Show Sidebar
 		unmark Show Toolbar
 	Open any .cpp file, go to Build -> Set Build Commands and set:
-		[common]:		g++ "%f" -o "%e" -pipe -fwrapv -fno-plt -fno-semantic-interposition -std=c++20 -mcmodel=large -march=x86-64 -mtune=generic -Wshadow -Wno-unused-result -Wall -I/usr/local/include/mylib -L/usr/lib -lm -lz -lcrypt -lutil -ldl -lpthread -lrt
+		[common]:		g++ "%f" -o "%e" -pipe -fwrapv -fno-plt -fno-semantic-interposition -std=gnu++20 -mcmodel=large -maddress-mode=long -march=x86-64 -m64 -mtune=generic -Wshadow -Wno-unused-result -Wall -I/usr/local/include/mylib -L/usr/lib -Wl,--as-needed -lm -lz -lpthread -lutil -ldl -lrt -lcrypt -lgcrypt -lcurl -lncurses -Wl,-Bstatic -ltomcrypt -ltfm -Wl,-Bdynamic
 		Compile:		-O3
 		Build:			-g -fsanitize=address -fsanitize=undefined -D_GLIBCXX_DEBUG
 		[python]:		-I/usr/include/python3.10 -lpython3.10
