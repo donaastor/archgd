@@ -21,4 +21,16 @@
 	JobRetryInterval 5
 	JobRetryLimit 17280
 
+3. nadji fixove za:
+	3.1. wifi na laptopu:
+		(ovo je poslednji pokusaj, neuspesan)
+		u fajl /etc/NetworkManager/conf.d/wifi-powersave.conf stavi:
+			[connection]
+			wifi.powersave = 2
+		u grub config stavi ovaj kernel parametar:
+			pci=noaer
+		sudo grub-mkconfig -o /boot/grub/grub.cfg
+	3.2. keyboard rate resetovanje
+	3.3. i3-gaps nekad pokaze okvir, nekad ne pokaze
+
 3. BEZI NA GITLAB
