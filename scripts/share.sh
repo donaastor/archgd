@@ -220,7 +220,7 @@ if [ "$R" = 1 ]; then
 else STR=(":" ":"); fi
 PN="$(grep -e "^SHARE_NICKS=(" $HOME/.bashrc )"
 if [ -z "$PN" ]; then
-  sed "s/^\\(PS1=.\\[\\\\u@\\\\h \\\\W\\]\\\\. .\\)$/\\1\n\nSHARE_NICKS=(\"$loc_nick\" \"$rem_nick\")\nshon_local(){ ${STL[0]};}\nshoff_local(){ ${STL[1]};}\nshon_remote(){ ${STR[0]};}\nshoff_remote(){ ${STR[1]};}\nshflips=(shon_local shon_remote shoff_local shoff_remote)\nshflip(){\n  if \\[ -z \"\$2\" \\]; then\n    \${shflips[\$1]}; \${shflips[\$1+1]}\n  else\n    for i in {0..1}; do\n      if [ \"\$2\" = \"\${SHARE_NICKS[i]}\" ]; then\n        \${shflips[\$1+i]}; fi; done\n}\nshon(){ shflip 0 \"\$1\";}\nshoff(){ shflip 2 \"\$1\";}\n/" -i $HOME/.bashrc
+  sed "s/^\\(PS1=.\\[\\\\u@\\\\h \\\\W\\]\\\\. .\\)$/\\1\n\nSHARE_NICKS=(\"$loc_nick\" \"$rem_nick\")\nshon_local(){ ${STL[0]};}\nshoff_local(){ ${STL[1]};}\nshon_remote(){ ${STR[0]};}\nshoff_remote(){ ${STR[1]};}\nshflips=(shon_local shon_remote shoff_local shoff_remote)\nshflip(){\n  if \\[ -z \"\$2\" \\]; then\n    \${shflips[\$1]}; \${shflips[\$1+1]}\n  else\n    for i in {0..1}; do\n      if [ \"\$2\" = \"\${SHARE_NICKS[i]}\" ]; then\n        \${shflips[\$1+i]}; fi; done; fi\n}\nshon(){ shflip 0 \"\$1\";}\nshoff(){ shflip 2 \"\$1\";}\n/" -i $HOME/.bashrc
 else
   old_local="$(echo "$PN" | sed "s/.*\\\"\\(.*\\)\\\".*\\\"\\(.*\\)\\\".*/\\1/")"
   old_remote="$(echo "$PN" | sed "s/.*\\\"\\(.*\\)\\\".*\\\"\\(.*\\)\\\".*/\\2/")"
