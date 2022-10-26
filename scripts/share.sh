@@ -68,10 +68,10 @@ reconnect() {
   sleep 1
 }
 getnet() {
-  if [ $STN = 1 ]; then
+  if [ "$STN" = 1 ]; then
     return 0
   fi
-  if pacman -Q iwd; then
+  if pacman -Q iwd 1>/dev/null 2>/dev/null; then
     ima_iwd=1
   else
     ima_iwd=0
@@ -132,7 +132,7 @@ checkcifs() {
 getpackages() {
   if [ -z "$TOI" ]; then return 0; fi
   printf "Downloading: $TOI\n"
-  getnet()
+  getnet
   if [ "$A" = 1 ]; then
     while ! sudo pacman -S --needed --noconfirm $TOI; do reconnect; done
   else
@@ -142,7 +142,6 @@ getpackages() {
 
 #			skripta
 
-getsamba
 [ -d $HOME/sharing ] || mkdir $HOME/sharing
 if [ $? != 0 ]; then echo "Error: $HOME/sharing already exists and isn't a directory"; exit 1; fi
 if [ "$L" = 1 ]; then checksamba; fi
@@ -159,7 +158,7 @@ if [ "$L" = 1 ]; then
   if [ "$med" != "" ] && [ "$med" != "tmpfs tmpfs" ]; then
     echo "Error: $HOME/sharing/write is already mounted, but isn't tmpfs"; exit 1; fi
   if [ "$ufs" = "" ] || [ "$med" = "" ]; then
-    printf "Size of local share (in MB): "
+    printf "Size of the local share (in MB): "
     read ssize
     while ! [[ "$ssize" =~ ^[1-9][0-9]*$ ]]; do
       printf "Bad format, try again: "
@@ -242,6 +241,3 @@ else
   STR[1]="${STR[1]//\/\\\/}"
   sed -n -e "s/^SHARE_NICKS=(.*)/SHARE_NICKS=(\\\"$loc_nick\\\" \\\"$rem_nick\\\")/" -e "s/^shon_local()[ \\t]*{.*$/shon_local(){ ${STL[0]};}/" -e "s/^shoff_local()[ \\t]*{.*$/shoff_local(){ ${STL[1]};}/" -e "s/^shon_remote()[ \\t]*{.*$/${STR[0]}/" -e "s/^shoff_remote()[ \\t]*{.*$/shoff_remote(){ ${STR[1]};}/" -i $HOME/.bashrc
 fi
-
-# sudo mkdir /usr/local/samba
-# sudo mkdir /usr/local/samba/var
