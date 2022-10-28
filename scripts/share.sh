@@ -192,6 +192,7 @@ if [ "$L" = 1 ]; then
       printf "Moved old samba config to $tmc\n"; fi
   fi
   printf "[global]\nworkgroup = WORKGROUP\nserver string = Samba Server\nserver role = standalone server\nlog file = /usr/local/samba/var/log.%%m\nmax log size = 50\ndns proxy = no\nserver smb encrypt = desired\nmin protocol = SMB2\nprotocol = SMB3\n\n[$loc_name]\npath = $HOME/sharing/write\navailable = yes\nbrowsable = yes\nread only = yes\nvalid users = $USER\n" | sudo tee /etc/samba/smb.conf 1> /dev/null
+  sudo ufw allow CIFS
 fi
 if [ "$R" = 1 ]; then
   [ -d $HOME/sharing/read ] || mkdir $HOME/sharing/read
