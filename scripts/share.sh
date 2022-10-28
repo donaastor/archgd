@@ -171,6 +171,10 @@ if [ "$L" = 1 ]; then
     printf "\ntmpfs $HOME/sharing/write tmpfs defaults,size=${ssize}M 0 0\n" | sudo tee -a /etc/fstab > /dev/null; fi
   if [ "$med" = "" ]; then
     sudo mount -t tmpfs tmpfs $HOME/sharing/write -o defaults,size=${ssize}M; fi
+  [ -d /usr/local/samba ] || mkdir /usr/local/samba
+  if [ $? != 0 ]; then echo "Error: /usr/local/samba already exists and isn't a directory"; exit 1; fi
+  [ -d /usr/local/samba/var ] || mkdir /usr/local/samba/var
+  if [ $? != 0 ]; then echo "Error: /usr/local/samba/var already exists and isn't a directory"; exit 1; fi
   printf "Name your share: "
   read loc_name
   printf "Give bash nickname to your share: "
