@@ -205,7 +205,7 @@ while ! lpadmin -d "$p_name"; do
   echo "Waiting for CUPS to load printer..."
   sleep 1
 done
-while ! lpadmin -p "$p_name" -o PageSize=A4; do
+while ! lpoptions -p "$p_name" -o PageSize=A4; do
   echo "Waiting for CUPS to load printer..."
   sleep 1
 done
