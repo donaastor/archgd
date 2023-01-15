@@ -209,6 +209,10 @@ while ! lpadmin -p "$p_name" -o PageSize=A4; do
   echo "Waiting for CUPS to load printer..."
   sleep 1
 done
+while ! lpadmin -p "$p_name" -u allow:$username; do
+  echo "Waiting for CUPS to load printer..."
+  sleep 1
+done
 if [ -f /home/$username/.config/gtk-3.0/settings.ini ]; then
   mv /home/$username/.config/gtk-3.0/settings.ini /home/$username/.config/gtk-3.0/settings-before-print-setup.ini
 fi
