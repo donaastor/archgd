@@ -201,6 +201,11 @@ nakon sto bootujemo u arch live, radimo:
 		[Install]
 		WantedBy=multi-user.target suspend.target
 	
+10. updatovanje:
+	1. metod:
+		sudo pacman -Sy
+	2. metod:
+		...
 --------------- SETUP ---------------
 
 	konfigurisi:
