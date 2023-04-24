@@ -1,4 +1,4 @@
-1. dodaj mehanizam da odglavljivanje skidanja u ins-late.sh:
+1. dodaj mehanizam za odglavljivanje skidanja u ins-late.sh:
 	1.1. prvo sva instaliranja podeli na skidanje i instaliranje
 	1.2. napravi skriptu koja cita redove (read line) i razume tri vrste linije:
 		 pocetak procesa,
@@ -31,6 +31,5 @@
 			pci=noaer
 		sudo grub-mkconfig -o /boot/grub/grub.cfg
 	3.2. keyboard rate resetovanje
-	3.3. i3-gaps nekad pokaze okvir, nekad ne pokaze
 
 3. BEZI NA GITLAB
