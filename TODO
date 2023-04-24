@@ -32,4 +32,9 @@
 		sudo grub-mkconfig -o /boot/grub/grub.cfg
 	3.2. keyboard rate resetovanje
 
-3. BEZI NA GITLAB
+4. malo o C++:
+	4.1. napravi u bashrc funkciju za kompajliranje cppc u kojoj lako mogu da otkomentiram dodatke kada nesto instaliram i koja ima opcije za debug i object
+	4.2. napravi malu setup skriptu za mylib
+	4.3. popravi geany funkcije za kopmajliranje
+
+5. BEZI NA GITLAB
