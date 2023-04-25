@@ -17,6 +17,13 @@ CPPC_WARNINGS="-Wshadow -Wno-unused-result -Wall"
 # CPPC_ARCH+=("-mbmi2") # BMI2 support
 # CPPC_ARCH+=("-mmovbe") # forcing MOV's
 
+if [ $# -eq 1 ] && [ "$1" == "-l" ]; then
+  # -fPIC -O3
+  CPPC_FINAL_LIB_A=("-O3" "$CPPC_CONST" "${CPPC_ARCH[@]}" "${CPPC_F[@]}" "-fPIC")
+  echo "${CPPC_FINAL_LIB_A[@]}"
+  exit 0
+fi
+
 CPPC_LIBS+=("-lm") # math.h
 CPPC_LIBS+=("-lz") # zlib
 CPPC_LIBS+=("-lrt") # shm_open
