@@ -185,8 +185,55 @@ nakon sto bootujemo u arch live, radimo:
 	/opt/gpu_fan:
 	
 		#!/bin/bash
-		echo "1" > /sys/class/drm/card0/device/hwmon/hwmon0/pwm1_enable
-		echo "104" > /sys/class/drm/card0/device/hwmon/hwmon0/pwm1
+		isi() {
+		  [[ "$1" =~ ^[1-9][0-9]*$ ]] || [[ "$1" == "0" ]]
+		}
+		isr() {
+		  [[ "$1" =~ ^[0-9][0-9]*\.[0-9][0-9]*$ ]] && ! [[ "${1:0:2}" =~ ^0[^.]$ ]]
+		}
+		isb() {
+		  [[ $(echo "1-($1>=0)*($1<=$2)" | bc) = 0 ]]
+		}
+		isf() {
+		  isi "$1" && isb "$1" 255
+		}
+		getp() {
+		  if (isi "$1" || isr "$1") && isb "$1" 100; then
+		    printf "%.0f" $(echo "$1*2.55" | bc)
+		  else printf 256; fi
+		}
+		if [ -z "$2" ]; then P=256
+		else P=$(getp "$2"); fi
+		gfl=/tmp/gpu_fan_last
+		if [ $P = 256 ]; then
+		  if [ -f $gfl ]; then
+		    P="$(cat $gfl)"
+		    if ! isf "$P"; then P=256; fi
+		  fi
+		else T=1; fi
+		if [ $P = 256 ]; then
+		  P=$(getp "$1")
+		  if [ $P = 256 ]; then P=105; fi
+		  T=1
+		fi
+		if [ "$T" = 1 ]; then
+		  if [ -w /root ]; then
+		    printf "$P" > $gfl
+		  else
+		    printf "$P" | sudo tee $gfl 1> /dev/null
+		  fi
+		fi
+		pisi() {
+		  if [ -w "$2" ]; then printf "$1" > "$2"
+		  else
+		    printf "$1" | sudo tee "$2" 1> /dev/null
+		  fi
+		}
+		GPUL=/sys/class/drm/card0/device/hwmon/hwmon0/pwm1
+		if [ -z "$1" ]; then
+		  pisi 1 ${GPUL}_enable
+		fi
+		pisi "$P\n" $GPUL
 	
 	/etc/systemd/system/gpu_fan.service:
 	
@@ -200,6 +247,13 @@ nakon sto bootujemo u arch live, radimo:
 		
 		[Install]
 		WantedBy=multi-user.target suspend.target
+	
+	dodaj u /etc/bash.bashrc:
+	
+		gpf() {
+		  local dflt=45
+		  bash /opt/gpu_fan $dflt $1
+		}
 	
 10. updatovanje:
 	1. metod:
