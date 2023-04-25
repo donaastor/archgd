@@ -224,7 +224,7 @@ cd archgd
 rm -rf .git
 sudo -u $username mv scripts /home/$username/scripts
 sudo -u $username mv arch_guide sharing_guide /home/$username/scripts/
-sudo -u $username mv extra/cppc.sh /home/$username/
+mv extra/cppc /opt/
 sudo -u $username mkdir /home/$username/Pictures
 sudo -u $username mv pics/poz_r.jpg /home/$username/Pictures/poz.jpg
 sudo -u $username mkdir /home/$username/.config
