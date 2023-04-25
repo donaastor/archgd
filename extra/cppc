@@ -37,7 +37,7 @@ CPPC_LIBS+=("-lncurses") # ncurses
 # magick
 # CPPC_I_PATHS+=("-I/usr/include/ImageMagick-7"); CPPC_LIBS+=("-lMagick++-7.Q16HDRI" "-lMagickCore-7.Q16HDRI" "-lMagickWand-7.Q16HDRI")
 # mylib
-# CPPC_I_PATHS+=("-I/usr/local/include/mylib"); CPPC_L_PATHS+=("-L/usr/local/include/mylib/shared")
+# CPPC_I_PATHS+=("-I/usr/local/include/mylib");
 
 CPPC_MODE_DEBUG=0
 CPPC_MODE_OBJECT=0
