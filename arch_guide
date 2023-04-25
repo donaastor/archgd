@@ -291,25 +291,7 @@ geany(i root):
 
 --------   g++
 
-base:						g++ "%f" -o "%e" -pipe -fwrapv -fno-plt -fno-semantic-interposition -std=gnu++23 -mcmodel=large -maddress-mode=long -m64 -march=znver3 -mtune=znver3 -mabm -mbmi -mbmi2 -mmovbe -Wshadow -Wno-unused-result -Wall
-
-optimization:					-O3
-debugging:					-g -fsanitize=address -fsanitize=undefined -D_GLIBCXX_DEBUG
-mylib:						-I/usr/local/include/mylib -L/usr/local/include/mylib/shared
-library opener:					-L/usr/lib -Wl,--as-needed
-math:						-lm
-zlib:						-lz
-Run-Time Solaris:				-lrt
-curl:						-lcurl
-ncurses:					-lncurses
-python:						-I/usr/include/python3.10 -lpython3.10
-jpg:						-ljpgd -ljpge
-magick:						-I/usr/include/ImageMagick-7 -lMagick++-7.Q16HDRI -lMagickCore-7.Q16HDRI -lMagickWand-7.Q16HDRI
-tomcrypt:					-Wl,-Bstatic -ltomcrypt -ltfm -Wl,-Bdynamic
-X:						-lX11 -lXext -lXrender
-
-included in glibc 2.34:				-lpthread -lutil -ldl
-unused crypting:				-lcrypt -lgcrypt
+pogledaj extra/cppc skriptu
 
 --------   gimp
 
