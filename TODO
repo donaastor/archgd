@@ -34,7 +34,7 @@
 
 4. malo o C++:
 	done 4.1. napravi novi rc fajl koji ces da inkludujes u bashrc fajlu i u njemu napravi funkciju za kompajliranje cppc u kojoj lako mogu da otkomentiram dodatke kada nesto instaliram i koja ima opcije za debug i object
-	4.2. napravi malu setup skriptu za mylib
+	done 4.2. napravi malu setup skriptu za mylib
 	done 4.3. popravi geany funkcije za kopmajliranje i okaci to na archgd
 	done 4.4. popravi archgd skripte da ukljucuju i ovaj fajl
 
