@@ -248,7 +248,7 @@ if [[ $GPU =~ [2-4] ]]; then
   printf "[Unit]\nDescription=Turning on GPU fans\nAfter=suspend.target\n\n[Service]\nType=oneshot\nExecStart=/opt/gpu_fan\n\n[Install]\nWantedBy=multi-user.target suspend.target\n" > /etc/systemd/system/gpu_fan.service
   systemctl enable gpu_fan
 fi
-printf "\nsleep() {\n  if [ \"\$1\" = on ]; then\n    if ! pgrep -f xidlehook; then\n      if [ \$USER = \$username ]; then\n        xidlehook --timer 600 'systemctl suspend -i' '' &\n      else\n        sudo -u \$username xidlehook --timer 600 'systemctl suspend -i' '' &\n      fi\n    fi\n  elif [ \"\$1\" = off ]; then\n    pkill xidlehook\n  else\n    echo \"wrong parameter\"\n  fi\n}\nvol() {\n  if [ -z \"\$1\" ]; then\n    pactl get-sink-volume @DEFAULT_SINK@\n  else\n    pactl set-sink-volume @DEFAULT_SINK@ \$1%%\n  fi\n}\n${GPUFA}\nexport LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:/usr/local/include/mylib/shared\n\nalias ls='ls --color=tty'\nalias lsa='ls -la'\nalias ip='ip -color=auto'\nalias cal='cal -m3'\nalias q='exit'\nalias cl='clear'\nalias stfu='shutdown now'\nalias sus='systemctl suspend'\nalias cdf='cd /home/$username/tren'\n" >> /etc/bash.bashrc
+printf "\nsleep() {\n  if [ \"\$1\" = on ]; then\n    if ! pgrep -f xidlehook; then\n      if [ \$USER = \$username ]; then\n        xidlehook --timer 600 'systemctl suspend -i' '' &\n      else\n        sudo -u \$username xidlehook --timer 600 'systemctl suspend -i' '' &\n      fi\n    fi\n  elif [ \"\$1\" = off ]; then\n    pkill xidlehook\n  else\n    echo \"wrong parameter\"\n  fi\n}\nvol() {\n  if [ -z \"\$1\" ]; then\n    pactl get-sink-volume @DEFAULT_SINK@\n  else\n    pactl set-sink-volume @DEFAULT_SINK@ \$1%%\n  fi\n}\n${GPUFA}\n\nexport HISTFILE=/tmp/root_bash_history\nexport HISTFILESIZE=10000\nexport HISTSIZE=10000\nexport PYTHONSTARTUP=/usr/local/etc/.pythonrc\nexport LESSHISTFILE=-\nexport CALCHISTFILE=/tmp/calc_history\n\nalias ls='ls --color=tty'\nalias lsa='ls -la'\nalias ip='ip -color=auto'\nalias cal='cal -m3'\nalias q='exit'\nalias cl='clear'\nalias stfu='shutdown now'\nalias sus='systemctl suspend'\nalias cdf='cd /home/$username/tren'\n" >> /etc/bash.bashrc
 if ! [ -d /etc/modprobe.d ]; then
   mkdir /etc/modprobe.d
 fi
@@ -281,7 +281,7 @@ chown $username:wheel .xinitrc .xinitrc-tobe .config/nitrogen/bg-saved.cfg
 cp /home/$username/.bashrc /tmp/bashrc_radni
 chmod 777 /tmp/bashrc_radni
 sed -i 's/^alias ls.*$//' /tmp/bashrc_radni
-printf "\nalias aur=\'pikaur\'\nalias udsc=\'bash /home/$username/scripts/update.sh\'\nalias mountu=\'sudo mount -o uid=$username,gid=wheel,fmask=113,dmask=002,sync\'\n\nif [ -z \"\${DISPLAY}\" ] && [ \"\${XDG_VTNR}\" -eq 1 ]; then\n  startx\nfi\n" >> /tmp/bashrc_radni
+printf "\nexport HISTFILE=/tmp/korsic_bash_history\n\nalias aur=\'pikaur\'\nalias udsc=\'bash /home/$username/scripts/update.sh\'\nalias mountu=\'sudo mount -o uid=$username,gid=wheel,fmask=113,dmask=002,sync\'\n\nif ! [ -d /tmp/rtorrent-session ]; then\n  mkdir /tmp/rtorrent-session\nfi\n\nif [ -z \"\${DISPLAY}\" ] && [ \"\${XDG_VTNR}\" -eq 1 ]; then\n  startx\nfi\n" >> /tmp/bashrc_radni
 sudo -u $username cp /tmp/bashrc_radni /home/$username/.bashrc
 printf '#!/bin/bash\n\nfor tty in /dev/tty{1..6}\ndo\n  /usr/bin/setleds -D +num < \"$tty\";\ndone\n' > /usr/local/bin/numlock
 chmod 755 /usr/local/bin/numlock
