@@ -408,6 +408,6 @@ terminal:
 --------   latex
 
 terminal:
-	pacman -S --needed lyx texlive-formatsextra texlive-langcyrillic texlive-latexextra texlive-science texlive-fontsextra
+	pacman -S --needed texlive-core texlive-formatsextra texlive-langcyrillic texlive-latexextra texlive-science texlive-fontsextra
 	pikaur -S tikzit
 
