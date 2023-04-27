@@ -281,12 +281,20 @@ chown $username:wheel .xinitrc .xinitrc-tobe .config/nitrogen/bg-saved.cfg
 cp /home/$username/.bashrc /tmp/bashrc_radni
 chmod 777 /tmp/bashrc_radni
 sed -i 's/^alias ls.*$//' /tmp/bashrc_radni
-printf "\nexport HISTFILE=/tmp/korsic_bash_history\n\nalias aur=\'pikaur\'\nalias udsc=\'bash /home/$username/scripts/update.sh\'\nalias mountu=\'sudo mount -o uid=$username,gid=wheel,fmask=113,dmask=002,sync\'\n\nif ! [ -d /tmp/rtorrent-session ]; then\n  mkdir /tmp/rtorrent-session\nfi\n\nif [ -z \"\${DISPLAY}\" ] && [ \"\${XDG_VTNR}\" -eq 1 ]; then\n  startx\nfi\n" >> /tmp/bashrc_radni
+if [ $MORE_PROGS = 1 ]; then
+  RTS_CMD="\nif ! [ -d /tmp/rtorrent-session ]; then\n  mkdir /tmp/rtorrent-session\nfi\n"
+fi
+printf "\nexport HISTFILE=/tmp/korsic_bash_history\n\nalias aur=\'pikaur\'\nalias udsc=\'bash /home/$username/scripts/update.sh\'\nalias mountu=\'sudo mount -o uid=$username,gid=wheel,fmask=113,dmask=002,sync\'\n$RTS_CMD\nif [ -z \"\${DISPLAY}\" ] && [ \"\${XDG_VTNR}\" -eq 1 ]; then\n  startx\nfi\n" >> /tmp/bashrc_radni
 sudo -u $username cp /tmp/bashrc_radni /home/$username/.bashrc
 printf '#!/bin/bash\n\nfor tty in /dev/tty{1..6}\ndo\n  /usr/bin/setleds -D +num < \"$tty\";\ndone\n' > /usr/local/bin/numlock
 chmod 755 /usr/local/bin/numlock
 printf "[Unit]\nDescription=numlock\n\n[Service]\nExecStart=/usr/local/bin/numlock\nStandardInput=tty\nRemainAfterExit=yes\n\n[Install]\nWantedBy=multi-user.target" > /etc/systemd/system/numlock.service
 systemctl enable numlock
+if [ $MORE_PROGS = 1 ]; then
+  printf "directory.default.set = /tmp\nsession.path.set = /tmp/rtorrent-session\n" > /home/$username/.rtorrent.rc
+  chown $username:wheel /home/$username/.rtorrent.rc
+fi
+printf "import readline\nreadline.write_history_file = lambda *args: None\n" > /usr/local/etc/.pythonrc
 cd /usr/share/icons/default
 mkdir cursors
 cd cursors
