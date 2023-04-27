@@ -230,7 +230,8 @@ sudo -u $username mkdir /home/$username/Pictures
 sudo -u $username mv pics/poz_r.jpg /home/$username/Pictures/poz.jpg
 sudo -u $username mkdir /home/$username/.config
 if [ $MORE_PROGS = 1 ]; then
-  sudo -u $username mv geany /home/$username/.config/geany
+  sudo -u $username mv geany /home/$username/.config/geany-base
+  sudo -u $username ln -s /tmp/geany-conf /home/$username/.config/geany
   sudo -u $username mv pcmanfm /home/$username/.config/pcmanfm
   sudo -u $username mv libfm /home/$username/.config/libfm
 fi
