@@ -12,10 +12,11 @@ CPPC_F=("-fwrapv" "-fno-plt" "-fno-semantic-interposition")
 CPPC_WARNINGS="-Wshadow -Wno-unused-result -Wall"
 
 # CPPC_ARCH+=("-march=native" "-mtune=native") # optimize for local machine
-# CPPC_ARCH+=("-mabm") # ABM support
-# CPPC_ARCH+=("-mbmi") # BMI support
-# CPPC_ARCH+=("-mbmi2") # BMI2 support
-# CPPC_ARCH+=("-mmovbe") # forcing MOV's
+CPPC_ARCH+=("-march=znver3" "-mtune=znver3")
+CPPC_ARCH+=("-mabm") # ABM support
+CPPC_ARCH+=("-mbmi") # BMI support
+CPPC_ARCH+=("-mbmi2") # BMI2 support
+CPPC_ARCH+=("-mmovbe") # forcing MOV's
 
 if [ $# -eq 1 ] && [ "$1" == "-l" ]; then
   # -fPIC -O3
@@ -29,15 +30,15 @@ CPPC_LIBS+=("-lz") # zlib
 CPPC_LIBS+=("-lrt") # shm_open
 CPPC_LIBS+=("-lcurl") # curl
 CPPC_LIBS+=("-lncurses") # ncurses
-# CPPC_LIBS+=("-ljpgd" "-ljpge") # jpg
-# CPPC_LIBS+=("-lX11" "-lXext" "-lXrender") # X
-# CPPC_LIBS_STATIC+=("-ltomcrypt" "-ltfm") # tomcrypt
+CPPC_LIBS+=("-ljpgd" "-ljpge") # jpg
+CPPC_LIBS+=("-lX11" "-lXext" "-lXrender") # X
+CPPC_LIBS_STATIC+=("-ltomcrypt" "-ltfm") # tomcrypt
 # python "3.10
-# CPPC_I_PATHS+=("-I/usr/include/python3.10"); CPPC_LIBS+=("-lpython3.10")
+CPPC_I_PATHS+=("-I/usr/include/python3.10"); CPPC_LIBS+=("-lpython3.10")
 # magick
-# CPPC_I_PATHS+=("-I/usr/include/ImageMagick-7"); CPPC_LIBS+=("-lMagick++-7.Q16HDRI" "-lMagickCore-7.Q16HDRI" "-lMagickWand-7.Q16HDRI")
+CPPC_I_PATHS+=("-I/usr/include/ImageMagick-7"); CPPC_LIBS+=("-lMagick++-7.Q16HDRI" "-lMagickCore-7.Q16HDRI" "-lMagickWand-7.Q16HDRI")
 # mylib
-# CPPC_I_PATHS+=("-I/usr/local/include/mylib");
+CPPC_I_PATHS+=("-I/usr/local/include/mylib"); CPPC_L_PATHS+=("-L/usr/local/include/mylib/shared")
 
 CPPC_MODE_DEBUG=0
 CPPC_MODE_OBJECT=0
@@ -46,8 +47,7 @@ while [[ $# -gt 0 ]]; do
   case "$1" in
     -d) CPPC_MODE_DEBUG=1;;
     -o) CPPC_MODE_OBJECT=1;;
-    -do) CPPC_MODE_DEBUG=1; CPPC_MODE_OBJECT=1;;
-    -od) CPPC_MODE_OBJECT=1; CPPC_MODE_DEBUG=1;;
+    -do | -od) CPPC_MODE_DEBUG=1; CPPC_MODE_OBJECT=1;;
     *) if [[ "$1" == "-D"* ]]; then
          CPPC_DEFINES+=("$1")
        else
