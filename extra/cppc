@@ -7,6 +7,7 @@ declare -a CPPC_L_PATHS
 declare -a CPPC_LIBS
 declare -a CPPC_LIBS_STATIC
 declare -a CPPC_DEFINES
+declare -a CPPC_SOURCES
 
 CPPC_F=("-fwrapv" "-fno-plt" "-fno-semantic-interposition")
 CPPC_WARNINGS="-Wshadow -Wno-unused-result -Wall"
@@ -41,39 +42,53 @@ CPPC_LIBS+=("-lncurses") # ncurses
 
 CPPC_MODE_DEBUG=0
 CPPC_MODE_OBJECT=0
-CPPC_SOURCE=""
 while [[ $# -gt 0 ]]; do
   case "$1" in
     -d) CPPC_MODE_DEBUG=1;;
     -o) CPPC_MODE_OBJECT=1;;
-    -do) CPPC_MODE_DEBUG=1; CPPC_MODE_OBJECT=1;;
-    -od) CPPC_MODE_OBJECT=1; CPPC_MODE_DEBUG=1;;
+    -do | -od) CPPC_MODE_DEBUG=1; CPPC_MODE_OBJECT=1;;
     *) if [[ "$1" == "-D"* ]]; then
          CPPC_DEFINES+=("$1")
-       else
-         if [ -z "$CPPC_SOURCE" ]; then
-           CPPC_SOURCE="$1"
+       elif [[ "$1" == "-l"* ]]; then
+         CPPC_LIBS+=("$1")
+       elif [[ "$1" == "-n"* ]]; then
+         if [ -z "$CPPC_OFN" ]; then
+           CPPC_OFN="$1"
          else
-           echo "Unknown option: \`$1\`"
+           echo "You can specify only one output file."
            exit 2
          fi
+       else
+         CPPC_SOURCES+=("$1")
        fi
        ;;
   esac
   shift
 done
-if [ -z "$CPPC_SOURCE" ]; then
-  echo "No source file provided."
+if [ ${#CPPC_SOURCES[@]} -eq 0 ]; then
+  echo "No input files."
   exit 1
 fi
-if [[ "$CPPC_SOURCE" == *.cpp ]]; then
-  CPPC_SOURCE="${CPPC_SOURCE:0:-4}"
+if [ -z "$CPPC_OFN" ]; then
+  case "${CPPC_SOURCES[0]}" in
+    *.cpp|*.hpp) CPPC_OFN="${CPPC_SOURCES[0]:0:-4}";;
+    *.c|*.h|*.o|*.a) CPPC_OFN="${CPPC_SOURCES[0]:0:-2}";;
+    *) CPPC_OFN="${CPPC_SOURCES[0]}";;
+  esac
 fi
+for afi in "${!CPPC_SOURCES[@]}"; do
+  case "${CPPC_SOURCES[$afi]}" in
+    *.cpp|*.c|*.hpp|*.h|*.o|*.a)
+      CPPC_SOURCES[$afi]="\"${CPPC_SOURCES[$afi]}\"";;
+    *)
+      CPPC_SOURCES[$afi]="\"${CPPC_SOURCES[$afi]}.cpp\"";;
+  esac
+done
 if [ $CPPC_MODE_OBJECT -eq 1 ]; then
   CPPC_F+=("-fPIC")
-  CPPC_CMD+=("-c" "\"${CPPC_SOURCE}.cpp\"" "-o" "\"${CPPC_SOURCE}.o\"")
+  CPPC_CMD+=("-c" "${CPPC_SOURCES[@]}" "-o" "\"${CPPC_OFN}.o\"")
 else
-  CPPC_CMD+=("\"${CPPC_SOURCE}.cpp\"" "-o" "\"$CPPC_SOURCE\"")
+  CPPC_CMD+=("${CPPC_SOURCES[@]}" "-o" "\"$CPPC_OFN\"")
 fi
 if [ $CPPC_MODE_DEBUG -eq 1 ]; then
   CPPC_CMD+=("-g")
