@@ -1,0 +1,7 @@
+[build-menu]
+FT_00_LB=XeTeX: _PDF
+FT_00_CM=xelatex "%f"
+FT_00_WD=
+FT_01_LB=LuaLaTeX: _PDF
+FT_01_CM=lualatex "%f"
+FT_01_WD=
