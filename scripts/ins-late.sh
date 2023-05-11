@@ -240,7 +240,7 @@ fi
 rm /root/.bash_profile
 
 sensors-detect --auto
-sed -i 's/^# set zap/set zap/' /etc/nanorc
+printf "set zap\nset tabsize 4\n" > /etc/nanorc
 if [[ $GPU =~ [2-4] ]]; then
   GPUFA="gpf() {\n  local dflt=104\n  bash /opt/gpu_fan \$dflt \$1\n}\n"
   printf '#!'"/bin/bash\nisi() {\n  [[ \"\$1\" =~ ^[1-9][0-9]*\$ ]] || [[ \"\$1\" == \"0\" ]]\n}\nisr() {\n  [[ \"\$1\" =~ ^[0-9][0-9]*\\\\.[0-9][0-9]*\$ ]] && ! [[ \"\${1:0:2}\" =~ ^0[^.]\$ ]]\n}\nisb() {\n  [[ \$(echo \"1-(\$1>=0)*(\$1<=\$2)\" | bc) = 0 ]]\n}\nisf() {\n  isi \"\$1\" && isb \"\$1\" 255\n}\ngetp() {\n  if (isi \"\$1\" || isr \"\$1\") && isb \"\$1\" 100; then\n    printf \"%%.0f\" \$(echo \"\$1*2.55\" | bc)\n  else printf 256; fi\n}\nif [ -z \"\$2\" ]; then P=256\nelse P=\$(getp \"\$2\"); fi\ngfl=/tmp/gpu_fan_last\nif [ \$P = 256 ]; then\n  if [ -f \$gfl ]; then\n    P=\"\$(cat \$gfl)\"\n    if ! isf \"\$P\"; then P=256; fi\n  fi\nelse T=1; fi\nif [ \$P = 256 ]; then\n  P=\$(getp \"\$1\")\n  if [ \$P = 256 ]; then P=105; fi\n  T=1\nfi\nif [ \"\$T\" = 1 ]; then\n  if [ -w /root ]; then\n    printf \"\$P\" > \$gfl\n  else\n    printf \"\$P\" | sudo tee \$gfl 1> /dev/null\n  fi\nfi\npisi() {\n  if [ -w \"\$2\" ]; then printf \"\$1\" > \"\$2\"\n  else\n    printf \"\$1\" | sudo tee \"\$2\" 1> /dev/null\n  fi\n}\nGPUL=/sys/class/drm/card0/device/hwmon/hwmon0/pwm1\nif [ -z \"\$1\" ]; then\n  pisi 1 \${GPUL}_enable\nfi\npisi \"\$P\\\\n\" \$GPUL\n" > /opt/gpu_fan
