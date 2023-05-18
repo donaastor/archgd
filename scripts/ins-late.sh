@@ -345,7 +345,7 @@ ufw default allow outgoing
 ufw default deny incoming
 ufw enable
 if [ $MORE_PROGS = 1 ]; then
-  sudo -u $username xdg-mime default feh.desktop image/png image/jpeg
+  sudo -u $username xdg-mime default feh.desktop image/png image/jpeg image/webp
   sudo -u $username xdg-mime default org.pwmt.zathura.desktop application/pdf image/vnd.djvu
   sudo -u $username xdg-mime default lyx.desktop text/x-tex
   sudo -u $username xdg-mime default onlyoffice-desktopeditors.desktop application/msword application/msexcel application/vnd.ms-word application/vnd.ms-excel application/vnd.openxmlformats-officedocument.spreadsheetml.sheet application/vnd.openxmlformats-officedocument.wordprocessingml.document
