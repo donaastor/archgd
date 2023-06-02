@@ -232,6 +232,8 @@ sudo -u $username mkdir /home/$username/.config
 if [ $MORE_PROGS = 1 ]; then
   sudo -u $username mv geany /home/$username/.config/geany-base
   sudo -u $username ln -s /tmp/geany-conf /home/$username/.config/geany
+  sudo -u $username mkdir /home/$username/.config/chromium-base
+  sudo -u $username ln -s /tmp/chromium-conf /home/$username/.config/chromium
   sudo -u $username mv pcmanfm /home/$username/.config/pcmanfm
   sudo -u $username mv libfm /home/$username/.config/libfm
 fi
