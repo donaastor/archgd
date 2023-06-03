@@ -161,7 +161,7 @@ sed -i 's/donteditbydefault = no/donteditbydefault = yes/' /tmp/pikaur_radni.con
 sudo -u $username cp /tmp/pikaur_radni.conf /home/$username/.config/pikaur.conf
 if [ $GPU -ne 0 ]; then
   if [[ $GPU =~ [2-3] ]]; then
-    while ! pacman -S --noconfirm --needed mesa xf86-video-amdgpu mesa-vdpau libva-mesa-driver vulkan-radeon vulkan-tools mesa-utils libva-utils; do
+    while ! pacman -S --noconfirm --needed mesa xf86-video-amdgpu mesa-vdpau libva-mesa-driver vulkan-radeon vulkan-tools mesa-utils libva-utils libva-vdpau-driver libvdpau-va-gl; do
       reconnect
     done
   elif [ $GPU = 4 ]; then
@@ -172,7 +172,7 @@ if [ $GPU -ne 0 ]; then
       reconnect
     done
     aur_get mesa-git xf86-video-amdgpu-git
-    while ! pacman -S --noconfirm --needed vulkan-tools mesa-utils libva-utils; do
+    while ! pacman -S --noconfirm --needed vulkan-tools mesa-utils libva-utils libva-vdpau-driver libvdpau-va-gl; do
       reconnect
     done
   elif [ $GPU = 1 ]; then
@@ -369,7 +369,7 @@ if [ $MORE_PROGS = 1 ]; then
   done
   rm -rf /var/cache/pacman/pkg/*
   if [ $GPU != 0 ]; then
-    printf -- "--disk-cache-dir=/home/$username/chromium/cache\n--disk-cache-size=1073741824\n--extension-mime-request-handling\n--load-extension=/home/$username/chromium/extensions/uBlock\n--ignore-gpu-blocklist\n--enable-gpu-rasterization\n--enable-zero-copy\n--enable-features=VaapiVideoDecoder\n--use-gl=egl\n" > /etc/chromium-flags.conf
+    printf -- "--disk-cache-dir=/home/$username/chromium/cache\n--disk-cache-size=1073741824\n--extension-mime-request-handling\n--load-extension=/home/$username/chromium/extensions/uBlock\n--ignore-gpu-blocklist\n--enable-gpu-rasterization\n--enable-zero-copy\n--enable-features=VaapiVideoDecoder\n" > /etc/chromium-flags.conf
   else
     printf -- "--disk-cache-dir=/home/$username/chromium/cache\n--disk-cache-size=1073741824\n--extension-mime-request-handling\n--load-extension=/home/$username/chromium/extensions/uBlock" > /etc/chromium-flags.conf
   fi
