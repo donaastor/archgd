@@ -257,7 +257,7 @@ nakon sto bootujemo u arch live, radimo:
 	
 10. updatovanje:
 	1. metod:
-		sudo pacman -Sy
+		sudo pacman -Sy      # this only updates the repository "local list of all programs", to actually update run -Syu instead
 	2. metod:
 		sudo pacman -S pacman-mirrorlist
 		cp /etc/pacman.d/mirrorlist.pacnew ~/tren/
