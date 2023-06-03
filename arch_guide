@@ -262,8 +262,8 @@ nakon sto bootujemo u arch live, radimo:
 		sudo pacman -S pacman-mirrorlist
 		cp /etc/pacman.d/mirrorlist.pacnew ~/tren/
 		cd ~/tren
-		sed -i 's/^#Server/Server/' mirrorlist.pacnew    # ili uradi ovo rucno, odaberi neke mirrore
-		rankmirrors -n 10 mirrorlist.pacnew > mirrorlist
+		sed -i 's/^#Server/Server/' mirrorlist.pacnew      # ili uradi ovo rucno, odaberi neke mirrore
+		rankmirrors -n 10 mirrorlist.pacnew > mirrorlist   # ali prvo outputuj u terminal, pa onda sacuvaj u fajl
 		cp mirrorlist /etc/pacman.d/
 		sudo pacman -S archlinux-keyring
 		sudo pacman-key --populate
