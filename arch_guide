@@ -259,7 +259,8 @@ nakon sto bootujemo u arch live, radimo:
 	1. metod:
 		sudo pacman -Sy
 	2. metod:
-		...
+		sudo pacman -S archlinux-keyring
+		sudo pacman-key --populate
 --------------- SETUP ---------------
 
 	konfigurisi:
