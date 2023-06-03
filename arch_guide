@@ -259,9 +259,15 @@ nakon sto bootujemo u arch live, radimo:
 	1. metod:
 		sudo pacman -Sy
 	2. metod:
-		sudo pacman -S archlinux-keyring
 		sudo pacman -S pacman-mirrorlist
+		cp /etc/pacman.d/mirrorlist.pacnew ~/tren/
+		cd ~/tren
+		sed -i 's/^#Server/Server/' mirrorlist.pacnew    # ili uradi ovo rucno, odaberi neke mirrore
+		rankmirrors -n 10 mirrorlist.pacnew > mirrorlist
+		cp mirrorlist /etc/pacman.d/
+		sudo pacman -S archlinux-keyring
 		sudo pacman-key --populate
+		sudo pacman -Sy
 --------------- SETUP ---------------
 
 	konfigurisi:
