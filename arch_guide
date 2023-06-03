@@ -260,6 +260,7 @@ nakon sto bootujemo u arch live, radimo:
 		sudo pacman -Sy
 	2. metod:
 		sudo pacman -S archlinux-keyring
+		sudo pacman -S pacman-mirrorlist
 		sudo pacman-key --populate
 --------------- SETUP ---------------
 
