@@ -164,6 +164,15 @@ sudo -u $username mkdir .cargo
 sudo -u $username mkdir chromium
 sudo -u $username mkdir chromium/cache
 
+#     journal
+
+if [ -f /etc/systemd/journald.conf ]; then
+  sed -i 's/^#Storage.*$/Storage=volatile/' /etc/systemd/journald.conf
+else
+  printf "[Journal]\nStorage=volatile\n" > /etc/systemd/journald.conf
+fi
+if [ -d /var/log/journal ]; then rm -rf /var/log/journal; fi
+
 #			modules
 
 if [ $GPU = 1 ]; then
