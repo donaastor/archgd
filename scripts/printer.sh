@@ -9,6 +9,7 @@
 # ako ne radi:
 # PAZI da su IP adrese u redu i da je forwardovanje u redu ! proveri ufw (enabled, /etc/ufw/sysctl.conf, /etc/ufw/before.rules) i ruter (IP printera, forwardovanje)
 # PAZI da su programi hplip i hplip-plugin iste verzije
+# PAZI da je ufw ucitao promene: ufw reload
 
 username=$USER
 if [ $username = root ]; then
