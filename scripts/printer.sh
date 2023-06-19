@@ -7,7 +7,7 @@
 # dodaj hp prineter rucno: hp-setup -i -x IP_ADRESA
 
 # ako ne radi:
-# PAZI da su IP adrese u redu i da je forwardovanje u redu ! proveri ufw (enabled, /etc/ufw/sysctl.conf, /etc/ufw/before.rules) i IP printera na ruteru
+# PAZI da su IP adrese u redu i da je forwardovanje u redu ! proveri ufw (enabled, /etc/ufw/sysctl.conf, /etc/ufw/before.rules) i ruter (IP printera, forwardovanje)
 # PAZI da su programi hplip i hplip-plugin iste verzije
 
 username=$USER
