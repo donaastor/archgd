@@ -14,6 +14,11 @@
 # http://localhost:631/
 #   barem uradi/proveri u Administraciji: server defualt, default options (A4), allowed users (tvoj user)
 
+# errori:
+#   timeout write_channel -> restartuj printer, ali pazi da cancelujes sve jobove da ne bi pobrljavio
+#   prnt/backend/hp.c ERROR (5012, device communication error) i (ERROR open device failed stat=12)
+#     -> posalji manje strana
+
 username=$USER
 if [ $username = root ]; then
   echo "Don't run this script as root!"
