@@ -11,6 +11,9 @@
 # PAZI da su programi hplip i hplip-plugin iste verzije
 # PAZI da je ufw ucitao promene: ufw reload
 
+# http://localhost:631/
+#   barem uradi/proveri u Administraciji: server defualt, default options (A4), allowed users (tvoj user)
+
 username=$USER
 if [ $username = root ]; then
   echo "Don't run this script as root!"
