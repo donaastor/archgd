@@ -191,8 +191,10 @@ if [ $FWD == 1 ]; then
   pt161=${fwpa[2]}
   pt162=${fwpa[3]}
   sudo sed "s/^\(\*filter\)$/\*nat\n:OUTPUT ACCEPT \[0:0\]\n-A OUTPUT -p tcp -d $fake_ip --dport 80   -j DNAT --to-destination $real_ip:$pt80\n-A OUTPUT -p tcp -d $fake_ip --dport 9100 -j DNAT --to-destination $real_ip:$pt9100\n-A OUTPUT -p udp -d $fake_ip --dport 9100 -j DNAT --to-destination $real_ip:$pt9100\n-A OUTPUT -p tcp -d $fake_ip --dport 161  -j DNAT --to-destination $real_ip:$pt161\n-A OUTPUT -p udp -d $fake_ip --dport 161  -j DNAT --to-destination $real_ip:$pt161\n-A OUTPUT -p tcp -d $fake_ip --dport 162  -j DNAT --to-destination $real_ip:$pt162\n-A OUTPUT -p udp -d $fake_ip --dport 162  -j DNAT --to-destination $real_ip:$pt162\nCOMMIT\n\1/" -i /etc/ufw/before.rules
-  sudo ufw disable
-  sudo ufw enable
+# sudo ufw disable
+# sudo ufw enable
+# probacemo ovo:
+  sudo systemctl restart ufw
 else
   printf "Printer IP: "
   read fake_ip
