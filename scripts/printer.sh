@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# listaj printere: lpstat -v
+# printaj fajl: lpadmin -o page-ranges=a-b,c-d filename      https://www.cups.org/doc/options.html
+# citaj error: systemctl status cups
+# error log: /var/log/cups/error_log
+# dodaj hp prineter rucno: hp-setup -i -x IP_ADRESA
+
 username=$USER
 if [ $username = root ]; then
   echo "Don't run this script as root!"
@@ -167,7 +173,7 @@ while [ $Q1_F == 1 ]; do
   fi
 done
 if [ $FWD == 1 ]; then
-  sudo sed 's/^#\(net.ipv4.ip_forward\).*$/\1=1/' -i /etc/ufw/sysctl.conf
+  sudo sed 's/^#\(net.ipv4.ip_forward\).*$/\1=1/' -i /etc/ufw/sysctl.conf # ovo se ponistilo jednom posle updata, pazi
   sudo sed 's/^\(DEFAULT_OUTPUT_POLICY\).*$/\1="ACCEPT"/' -i /etc/default/ufw
   printf "Real printer IP: "
   read real_ip
