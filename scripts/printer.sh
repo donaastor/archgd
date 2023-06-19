@@ -6,6 +6,10 @@
 # error log: /var/log/cups/error_log
 # dodaj hp prineter rucno: hp-setup -i -x IP_ADRESA
 
+# ako ne radi:
+# PAZI da su IP adrese u redu i da je forwardovanje u redu ! proveri ufw (enabled, /etc/ufw/sysctl.conf, /etc/ufw/before.rules) i IP printera na ruteru
+# PAZI da su programi hplip i hplip-plugin iste verzije
+
 username=$USER
 if [ $username = root ]; then
   echo "Don't run this script as root!"
