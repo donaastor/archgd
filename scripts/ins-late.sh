@@ -359,6 +359,9 @@ fi
 #			ungoogled-chromium
 
 if [ $MORE_PROGS = 1 ]; then
+  mkdir /tmp/chromium-conf
+  ln -s /tmp/chromium-conf /home/$username/.config/chromium
+  mkdir /home/$username/.config/chromium-base
   while ! curl -s "https://download.opensuse.org/repositories/home:/ungoogled_chromium/Arch/x86_64/home_ungoogled_chromium_Arch.key" | pacman-key -a -; do
     reconnect
   done
