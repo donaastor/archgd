@@ -282,7 +282,7 @@ cp /home/$username/.bashrc /tmp/bashrc_radni
 chmod 777 /tmp/bashrc_radni
 sed -i 's/^alias ls.*$//' /tmp/bashrc_radni
 if [ $MORE_PROGS = 1 ]; then
-  RTS_CMD="\nif ! [ -d /tmp/rtorrent-session ]; then\n  mkdir /tmp/rtorrent-session\nfi\n\nif ! [ -d /tmp/geany-conf ]; then\n  mkdir /tmp/geany-conf\n  cp -r /home/$username/.config/geany-base/* /tmp/geany-conf/\nfi\n\nif ! [ -d /tmp/chromium-conf ]; then\n  mkdir /tmp/chromium-conf\n  cp -r /home/$username/.config/chromium-base/* /tmp/chromium-conf/\nfi\n"
+  RTS_CMD="\nif ! [ -d /tmp/rtorrent-session ]; then\n  mkdir /tmp/rtorrent-session\nfi\n\nif ! [ -d /tmp/geany-conf ]; then\n  mkdir /tmp/geany-conf\n  cp -r /home/$username/.config/geany-base/* /tmp/geany-conf/\nfi\n\nif ! [ -d /tmp/zathura-data ]; then\n  mkdir /tmp/zathura-data\nfi\n\nif ! [ -d /tmp/chromium-conf ]; then\n  mkdir /tmp/chromium-conf\n  cp -r /home/$username/.config/chromium-base/* /tmp/chromium-conf/\nfi\n"
 fi
 printf "\nexport HISTFILE=/tmp/korsic_bash_history\n\nalias aur=\'pikaur\'\nalias udsc=\'bash /home/$username/scripts/update.sh\'\nalias mountu=\'sudo mount -o uid=$username,gid=wheel,fmask=113,dmask=002,sync\'\n$RTS_CMD\nif [ -z \"\${DISPLAY}\" ] && [ \"\${XDG_VTNR}\" -eq 1 ]; then\n  startx\nfi\n" >> /tmp/bashrc_radni
 sudo -u $username cp /tmp/bashrc_radni /home/$username/.bashrc
