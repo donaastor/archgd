@@ -145,7 +145,7 @@ fi
 
 #			fstab
 
-printf "\ntmpfs /root/tren tmpfs defaults,size=2048M 0 0\ntmpfs /home/$username/tren tmpfs defaults,size=2048M 0 0\ntmpfs /home/$username/.cache/pikaur tmpfs defaults 0 0\ntmpfs /home/$username/.local/share/pikaur/aur_repos tmpfs defaults,size=2048M 0 0\ntmpfs /home/$username/.local/share/xorg tmpfs defaults,size=1280M 0 0\ntmpfs /var/lib/systemd/coredump tmpfs defaults,size=512M 0 0\ntmpfs /home/$username/.cargo tmpfs defaults,size=640M 0 0\ntmpfs /home/$username/chromium/cache tmpfs noatime,nodev,nosuid,size=1152M 0 0\ntmpfs /var/cache/pacman/pkg tmpfs defaults,size=2560M 0 0\ntmpfs /home/korsic/.cache/fontconfig tmpfs defaults,size=512M 0 0\ntmpfs /home/korsic/.cache/mesa_shader_cache tmpfs defaults,size=1024M 0 0\ntmpfs /home/korsic/.cache/pip tmpfs defaults,size=2560M 0 0\ntmpfs /home/korsic/.cache/thumbnails tmpfs defaults,size=512M 0 0\n" >> /root/tren/fstab_radni
+printf "\ntmpfs /root/tren tmpfs defaults,size=2048M 0 0\ntmpfs /home/$username/tren tmpfs defaults,size=2048M 0 0\ntmpfs /home/$username/.cache/pikaur tmpfs defaults 0 0\ntmpfs /home/$username/.local/share/pikaur/aur_repos tmpfs defaults,size=2048M 0 0\ntmpfs /home/$username/.local/share/xorg tmpfs defaults,size=1280M 0 0\ntmpfs /var/lib/systemd/coredump tmpfs defaults,size=512M 0 0\ntmpfs /home/$username/.cargo tmpfs defaults,size=640M 0 0\ntmpfs /home/$username/chromium/cache tmpfs noatime,nodev,nosuid,size=1152M 0 0\ntmpfs /var/cache/pacman/pkg tmpfs defaults,size=2560M 0 0\ntmpfs /home/$username/.cache/fontconfig tmpfs defaults,size=512M 0 0\ntmpfs /home/$username/.cache/mesa_shader_cache tmpfs defaults,size=1024M 0 0\ntmpfs /home/$username/.cache/pip tmpfs defaults,size=2560M 0 0\ntmpfs /home/$username/.cache/thumbnails tmpfs defaults,size=512M 0 0\ntmpfs /home/$username/.cache/babl tmpfs defaults,size=256M 0 0\n" >> /root/tren/fstab_radni
 cp /root/tren/fstab_radni /etc/fstab
 cd /home/$username
 sudo -u $username mkdir tren
@@ -155,6 +155,7 @@ sudo -u $username mkdir .cache/fontconfig
 sudo -u $username mkdir .cache/mesa_shader_cache
 sudo -u $username mkdir .cache/pip
 sudo -u $username mkdir .cache/thumbnails
+sudo -u $username mkdir .cache/babl
 sudo -u $username mkdir .local
 sudo -u $username mkdir .local/share
 sudo -u $username mkdir .local/share/pikaur
