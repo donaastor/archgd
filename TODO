@@ -16,13 +16,43 @@
 	namestim da tokom skidanja 'read line' ubija proces za skidanje npr tako sto
 	forkujem proces nekako da jedan ceka read line a drugi skida
 
-2. u /etc/cups/cupsd.conf i /etc/cups/printers.conf promeni opciju "ErrorPolicy stop-printer" u:
+2. napravi sistem sto vise read-only:
+	1. na ovaj nacin mogu se samo folderi spasiti:
+		- mountuju se na tmpfs u fstabu
+	2. na ovaj nacin mogu se i foldei i fajlovi spasiti:
+		- prvo, nekim servisom ili skriptom posle boota:
+			- naprave se ili se kopiraju folderi i fajlovi u /tmp
+		- drugo, za stalno:
+			- naprave se i soft-linkuju se folderi i fajlovi u ove nove u /tmp
+	3. za neke foldere treba pazljivo namestiti servise u systemd da sacekaju da se ti folderi mountuju
+	4. sve sto treba srediti:
+		- sve sto stoji u:
+			- /etc/fstab
+			- /etc/bash.bashrc
+			- ~/.bashrc
+		- folderi (* znaci da ima neceg unutra):
+			/var/log
+			/var/tmp
+			/var/lib/NetworkManager
+			/var/lib/pacman/sync
+			~/.local/share/xorg
+			~/.local/share/vlc
+			~/.local/share/gvfs-metadata (*)
+			~/.config/vlc (*)
+			~/.config/gtk-2.0 (*)
+			~/.config/dconf (*)
+		- fajlovi:
+			~/.local/share/recently-used.xbel     <- veoma invazivan
+			~/.cache/rofi3.druncache
+			~/.config/QtProject.conf
+
+3. u /etc/cups/cupsd.conf i /etc/cups/printers.conf promeni opciju "ErrorPolicy stop-printer" u:
 	ErrorPolicy retry-job
 	JobRetryInterval 5
 	JobRetryLimit 17280
 
-3. nadji fixove za:
-	3.1. wifi na laptopu:
+4. nadji fixove za:
+	4.1. wifi na laptopu:
 		(ovo je poslednji pokusaj, neuspesan)
 		u fajl /etc/NetworkManager/conf.d/wifi-powersave.conf stavi:
 			[connection]
@@ -30,12 +60,12 @@
 		u grub config stavi ovaj kernel parametar:
 			pci=noaer
 		sudo grub-mkconfig -o /boot/grub/grub.cfg
-	3.2. keyboard rate resetovanje
+	4.2. keyboard rate resetovanje
 
-4. malo o C++:
-	done 4.1. napravi novi rc fajl koji ces da inkludujes u bashrc fajlu i u njemu napravi funkciju za kompajliranje cppc u kojoj lako mogu da otkomentiram dodatke kada nesto instaliram i koja ima opcije za debug i object
-	done 4.2. napravi malu setup skriptu za mylib
-	done 4.3. popravi geany funkcije za kopmajliranje i okaci to na archgd
-	done 4.4. popravi archgd skripte da ukljucuju i ovaj fajl
+5. malo o C++:
+	done 5.1. napravi novi rc fajl koji ces da inkludujes u bashrc fajlu i u njemu napravi funkciju za kompajliranje cppc u kojoj lako mogu da otkomentiram dodatke kada nesto instaliram i koja ima opcije za debug i object
+	done 5.2. napravi malu setup skriptu za mylib
+	done 5.3. popravi geany funkcije za kopmajliranje i okaci to na archgd
+	done 5.4. popravi archgd skripte da ukljucuju i ovaj fajl
 
-5. BEZI NA GITLAB
+6. BEZI NA GITLAB
