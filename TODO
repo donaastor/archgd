@@ -16,7 +16,10 @@
 	namestim da tokom skidanja 'read line' ubija proces za skidanje npr tako sto
 	forkujem proces nekako da jedan ceka read line a drugi skida
 
-2. napravi sistem sto vise read-only:
+2. mkdir -p:
+	svuda gde si u bash-u prvo checkirao da li folder postoji pre nego sto ga napravis, sad samo koristi mkdir -p komandu
+
+3. napravi sistem sto vise read-only:
 	1. na ovaj nacin mogu se samo folderi spasiti:
 		- mountuju se na tmpfs u fstabu
 	2. na ovaj nacin mogu se i foldei i fajlovi spasiti:
@@ -46,13 +49,13 @@
 			~/.cache/rofi3.druncache
 			~/.config/QtProject.conf
 
-3. u /etc/cups/cupsd.conf i /etc/cups/printers.conf promeni opciju "ErrorPolicy stop-printer" u:
+4. u /etc/cups/cupsd.conf i /etc/cups/printers.conf promeni opciju "ErrorPolicy stop-printer" u:
 	ErrorPolicy retry-job
 	JobRetryInterval 5
 	JobRetryLimit 17280
 
-4. nadji fixove za:
-	4.1. wifi na laptopu:
+5. nadji fixove za:
+	5.1. wifi na laptopu:
 		(ovo je poslednji pokusaj, neuspesan)
 		u fajl /etc/NetworkManager/conf.d/wifi-powersave.conf stavi:
 			[connection]
@@ -60,12 +63,12 @@
 		u grub config stavi ovaj kernel parametar:
 			pci=noaer
 		sudo grub-mkconfig -o /boot/grub/grub.cfg
-	4.2. keyboard rate resetovanje
+	5.2. keyboard rate resetovanje
 
-5. malo o C++:
-	done 5.1. napravi novi rc fajl koji ces da inkludujes u bashrc fajlu i u njemu napravi funkciju za kompajliranje cppc u kojoj lako mogu da otkomentiram dodatke kada nesto instaliram i koja ima opcije za debug i object
-	done 5.2. napravi malu setup skriptu za mylib
-	done 5.3. popravi geany funkcije za kopmajliranje i okaci to na archgd
-	done 5.4. popravi archgd skripte da ukljucuju i ovaj fajl
+6. malo o C++:
+	done 6.1. napravi novi rc fajl koji ces da inkludujes u bashrc fajlu i u njemu napravi funkciju za kompajliranje cppc u kojoj lako mogu da otkomentiram dodatke kada nesto instaliram i koja ima opcije za debug i object
+	done 6.2. napravi malu setup skriptu za mylib
+	done 6.3. popravi geany funkcije za kopmajliranje i okaci to na archgd
+	done 6.4. popravi archgd skripte da ukljucuju i ovaj fajl
 
-6. BEZI NA GITLAB
+7. BEZI NA GITLAB
