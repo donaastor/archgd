@@ -270,6 +270,37 @@ nakon sto bootujemo u arch live, radimo:
 		sudo pacman -Sy
 	3. posle toga:
 		sudo pacman -Su
+
+11. locales:
+	1. skracenica: "i18n" = "Internationalization and localization"
+	2. to je formalno samo standard
+	3. glibc sadrzi sistemski deo ovog standarda (stvari koje se koriste u sistemu,
+		a mogu biit lokalizovane, kao format brojeva, valuta, vremena, itd...)
+	4. locale C (i C.UTF-8) su posebni, univerzalni i postoje nezavisno od
+		toga koji su generisani (kompajlovani)
+	5. programi koriste (glibc koristi) binarne fajlove za definiciju od locales,
+		a covek definicije pravi u tekstualnom formati, pa se za taj prevod
+		koristi locale-gen program (komanda)
+	6. folderi i fajlovi:
+		/usr/share/i18n/SUPPORTED - suportovani locales
+		/usr/share/i18n/locales/ - definicije (tekstualne) od locales (sistemski)
+		/etc/locale.gen - spisak locala koji ce da se kompajluju
+		/usr/lib/locale/ - kompajlovani locales (sistemski)
+	7. po raznim drugim lokacijama (uglavnom u /usr/share) postoje fajlovi
+		.po (GNU gettext message caalogue, prekompajlovani) i
+		.mo (GNU message catalogue, kompajlovani),
+		koji sadrze tekstove za prevod nesistemskih programa na druge locales
+	8. trenutni locale koji neki program koristi se moze definisati pomocu
+		environment variabli (default je C) ili preko glibc funkcija (ne znam koje su...)
+	9. na pocetku sesije se pokrece /etc/profile.d/locale.sh da setuje da setuje environment variable
+		za locale sesije
+	10. komande:
+		za kompajlovanje sistemskih locala: locale-gen
+		za prikaz trenutnih locala u programu: locale
+		za prikaz svih enablovanih locales: locale -a
+		za prikaz svih kompajlovanih locales: localedef --list-archive
+		za listanje "available" locala: localectl list-locales
+
 --------------- SETUP ---------------
 
 	konfigurisi:
