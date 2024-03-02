@@ -235,7 +235,9 @@ rm -rf .git
 sudo -u $username mv scripts /home/$username/scripts
 sudo -u $username mv arch_guide sharing_guide /home/$username/scripts/
 mv extra/cppc /usr/local/bin/
+mv extra/ejex /usr/local/bin/
 chmod 755 /usr/local/bin/cppc
+chmod 755 /usr/local/bin/ejex
 sudo -u $username mkdir /home/$username/Pictures
 sudo -u $username mv pics/poz_r.jpg /home/$username/Pictures/poz.jpg
 sudo -u $username mkdir /home/$username/.config
