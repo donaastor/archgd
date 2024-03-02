@@ -2,7 +2,7 @@
 LIST="$(lsblk -d -n -oNAME)"
 shopt -s extglob
 while X= read -r line; do
-	if [ "$line" != "abc" ] && [ ! -z "$line" ]; then
+	if [ ! -z "$line" ]; then
 		DNM="$(cat /sys/class/block/$line/device/model)"
 		DNM="${DNM%%+([[:space:]])}"
 		printf "powering off $line ($DNM): "
