@@ -1,0 +1,21 @@
+#!/bin/bash
+LIST="$(lsblk -d -n -oNAME)"
+shopt -s extglob
+while X= read -r line; do
+	if [ "$line" != "abc" ] && [ ! -z "$line" ]; then
+		DNM="$(cat /sys/class/block/$line/device/model)"
+		DNM="${DNM%%+([[:space:]])}"
+		printf "powering off $line ($DNM): "
+		date +"[%F %T] powering off $line ($DNM): " >> /tmp/ejex.log
+		udisksctl power-off -b "/dev/$line" >> /tmp/ejex.log 2>&1
+		if [ $? -eq 0 ]; then
+			tput setaf 14
+			echo "SUCCESS"
+			tput sgr0
+		else
+			tput setaf 9
+			echo "FAIL"
+			tput sgr0
+		fi
+	fi
+done <<< "$LIST"
