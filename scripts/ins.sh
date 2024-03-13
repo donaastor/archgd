@@ -126,13 +126,13 @@ timedatectl set-ntp true
 
 mkfs.fat -F 32 "$prt1"
 mkfs.ext4 "$prt2"
-mount "$prt2" /mnt
+mount -o defaults,noatime "$prt2" /mnt
 if [ $EFI = 1 ]; then
   mkdir /mnt/efi
-  mount "$prt1" /mnt/efi
+  mount -o defaults,noatime "$prt1" /mnt/efi
 else
   mkdir /mnt/boot
-  mount "$prt1" /mnt/boot
+  mount -o defaults,noatime "$prt1" /mnt/boot
 fi
 
 #			linux
