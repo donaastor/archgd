@@ -286,9 +286,9 @@ if [ $MORE_PROGS = 1 ]; then
 fi
 printf "\nexport HISTFILE=/tmp/korsic_bash_history\n\nalias aur=\'pikaur\'\nalias udsc=\'bash /home/$username/scripts/update.sh\'\nalias mountu=\'sudo mount -o uid=$username,gid=wheel,fmask=113,dmask=002,sync\'\n$RTS_CMD\nif [ -z \"\${DISPLAY}\" ] && [ \"\${XDG_VTNR}\" -eq 1 ]; then\n  startx\nfi\n" >> /tmp/bashrc_radni
 sudo -u $username cp /tmp/bashrc_radni /home/$username/.bashrc
-printf '#!/bin/bash\n\nfor tty in /dev/tty{1..6}\ndo\n  /usr/bin/setleds -D +num < \"$tty\";\ndone\n' > /usr/local/bin/numlock
-chmod 755 /usr/local/bin/numlock
-printf "[Unit]\nDescription=numlock\n\n[Service]\nExecStart=/usr/local/bin/numlock\nStandardInput=tty\nRemainAfterExit=yes\n\n[Install]\nWantedBy=multi-user.target" > /etc/systemd/system/numlock.service
+printf '#!/bin/bash\nfor tty in /dev/tty{1..6}; do\n  /usr/bin/setleds -D +num < \"$tty\";\ndone\n' > /opt/numlock
+chmod 755 /opt/numlock
+printf "[Unit]\nDescription=numlock\n\n[Service]\nExecStart=/opt/numlock\nStandardInput=tty\nRemainAfterExit=yes\n\n[Install]\nWantedBy=multi-user.target" > /etc/systemd/system/numlock.service
 systemctl enable numlock
 if [ $MORE_PROGS = 1 ]; then
   printf "directory.default.set = /tmp\nsession.path.set = /tmp/rtorrent-session\n" > /home/$username/.rtorrent.rc
