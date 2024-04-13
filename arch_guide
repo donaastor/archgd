@@ -156,7 +156,7 @@ nakon sto bootujemo u arch live, radimo:
 	
 		SERVICE:
 	
-	/opt/gpu_mclk:
+	/usr/local/bin/gpu_mclk:
 	
 		#!/bin/bash
 		echo "manual" > /sys/class/drm/card0/device/power_dpm_force_performance_level
@@ -169,7 +169,7 @@ nakon sto bootujemo u arch live, radimo:
 		
 		[Service]
 		Type=oneshot
-		ExecStart=/opt/gpu_mclk
+		ExecStart=/usr/local/bin/gpu_mclk
 		
 		[Install]
 		WantedBy=multi-user.target
@@ -182,7 +182,7 @@ nakon sto bootujemo u arch live, radimo:
 	
 		SERVICE
 	
-	/opt/gpu_fan:
+	/usr/local/bin/gpu_fan:
 	
 		#!/bin/bash
 		isi() {
@@ -243,7 +243,7 @@ nakon sto bootujemo u arch live, radimo:
 		
 		[Service]
 		Type=oneshot
-		ExecStart=/opt/gpu_fan
+		ExecStart=/usr/local/bin/gpu_fan
 		
 		[Install]
 		WantedBy=multi-user.target suspend.target
@@ -252,7 +252,7 @@ nakon sto bootujemo u arch live, radimo:
 	
 		gpf() {
 		  local dflt=45
-		  bash /opt/gpu_fan $dflt $1
+		  bash /usr/local/bin/gpu_fan $dflt $1
 		}
 	
 10. updatovanje:
