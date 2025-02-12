@@ -1,3 +1,5 @@
 mount [-t fstype] [-o options] device (/dev/...) mountpoint (directory...)
-
-7z 
+mount -t tmpfs tmpfs [-o options] mountpoint (directory...)
+7z a -p -mhe=on -ms=on -mx=9 [archive name with .7z] [list of files and directories...]
+tar -xvf (***.tar)
+tar --zstd -xvf (***.pkg.tar.zst)
