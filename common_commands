@@ -1,0 +1,3 @@
+mount [-t fstype] [-o options] device (/dev/...) mountpoint (directory...)
+
+7z 
