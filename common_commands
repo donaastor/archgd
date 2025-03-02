@@ -6,3 +6,4 @@ $ tar --zstd -xvf (***.pkg.tar.zst)
 # fstrim --all
 # fstrim -v /
 # fstrim /
+# fstrim -av
